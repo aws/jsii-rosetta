@@ -1,6 +1,6 @@
 import * as ts from 'typescript';
 
-import { TargetLanguage } from '.';
+import type { TargetLanguage } from './target-language';
 import { analyzeObjectLiteral, ObjectLiteralStruct } from '../jsii/jsii-types';
 import { isNamedLikeStruct, isJsiiProtocolType } from '../jsii/jsii-utils';
 import { OTree, NO_SYNTAX } from '../o-tree';

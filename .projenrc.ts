@@ -85,15 +85,26 @@ const project = new typescript.TypeScriptProject({
 
   vscode: true,
 
-  devDeps: ['@actions/core', '@actions/github', '@types/commonmark', '@types/workerpool', 'ts-node'],
+  devDeps: [
+    '@actions/core',
+    '@actions/github',
+    '@types/commonmark',
+    '@types/mock-fs',
+    '@types/tar',
+    '@types/workerpool',
+    'mock-fs',
+    'tar',
+    'ts-node',
+  ],
   deps: [
     '@jsii/check-node',
     '@jsii/spec',
+    '@xmldom/xmldom',
     'commonmark',
     'fast-glob',
     `jsii@v${versionMajorMinor}-next`,
-    'semver',
     'semver-intersect',
+    'semver',
     'typescript',
     'workerpool',
     'yargs',
@@ -104,7 +115,7 @@ const project = new typescript.TypeScriptProject({
 // for a given TypeScript file with the TypeScript language server. In order to make this "seamless"
 // we'll be dropping `tsconfig.json` files at strategic locations in the project. These will not be
 // committed as they are only here for VSCode comfort.
-for (const dir of ['build-tools', 'projenrc', 'test']) {
+for (const dir of ['build-tools', 'projenrc', 'test', 'test/translations']) {
   new JsonFile(project, `${dir}/tsconfig.json`, {
     allowComments: true,
     committed: false,
@@ -120,6 +131,9 @@ project.tsconfig?.file?.patch(
   JsonPatch.add('/compilerOptions/composite', true),
   JsonPatch.add('/compilerOptions/declarationMap', true),
 );
+// Don't try to compile files under the `test/translations` directory with tests...
+project.tsconfigDev.addExclude('test/translations/**/*.ts');
+project.eslint?.addIgnorePattern('test/translations/**/*.ts');
 
 // Don't show .gitignore'd files in the VSCode explorer
 project.vscode!.settings.addSetting('explorer.excludeGitIgnore', true);

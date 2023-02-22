@@ -248,7 +248,7 @@ export class SnippetTranslator {
     return renderTree(converted, { indentChar: visitor.indentChar, visibleSpans: this.visibleSpans });
   }
 
-  public syntaxKindCounter(): Record<string, number> {
+  public syntaxKindCounter(): Partial<Record<ts.SyntaxKind, number>> {
     const kindCounter = new SyntaxKindCounter(this.visibleSpans);
     return kindCounter.countKinds(this.compilation.rootFile);
   }

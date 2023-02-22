@@ -13,19 +13,19 @@ export interface VisitorFactory {
 }
 
 export const TARGET_LANGUAGES: { [key in TargetLanguage]: VisitorFactory } = {
-  python: {
+  [TargetLanguage.PYTHON]: {
     version: PythonVisitor.VERSION,
     createVisitor: () => new PythonVisitor(),
   },
-  csharp: {
+  [TargetLanguage.CSHARP]: {
     version: CSharpVisitor.VERSION,
     createVisitor: () => new CSharpVisitor(),
   },
-  java: {
+  [TargetLanguage.JAVA]: {
     version: JavaVisitor.VERSION,
     createVisitor: () => new JavaVisitor(),
   },
-  go: {
+  [TargetLanguage.GO]: {
     version: GoVisitor.VERSION,
     createVisitor: () => new GoVisitor(),
   },

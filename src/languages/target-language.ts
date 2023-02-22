@@ -63,6 +63,7 @@ export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'jav
  */
 export function supportsTransitiveSubmoduleAccess(language: TargetLanguage): boolean {
   switch (language) {
+    case TargetLanguage.VISUALIZE:
     case TargetLanguage.PYTHON:
       return true;
     case TargetLanguage.CSHARP:

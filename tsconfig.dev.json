@@ -38,6 +38,7 @@
     "build-tools/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "test/translations/**/*.ts"
   ]
 }

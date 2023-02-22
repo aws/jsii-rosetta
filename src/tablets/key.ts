@@ -1,6 +1,6 @@
 import * as crypto from 'node:crypto';
 
-import { RecordReferencesVisitor } from '../languages/record-references';
+import { RECORD_REFERENCES_VERSION } from '../languages/record-references-version';
 import { TypeScriptSnippet, renderApiLocation } from '../snippet';
 
 /**
@@ -8,7 +8,7 @@ import { TypeScriptSnippet, renderApiLocation } from '../snippet';
  */
 export function snippetKey(snippet: TypeScriptSnippet) {
   const h = crypto.createHash('sha256');
-  h.update(String(RecordReferencesVisitor.VERSION));
+  h.update(String(RECORD_REFERENCES_VERSION));
   // Mix in API location to distinguish between similar snippets
   h.update(renderApiLocation(snippet.location.api));
   h.update(':');

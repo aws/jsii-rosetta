@@ -3,21 +3,20 @@ import * as ts from 'typescript';
 import { Spans } from './visible-spans';
 
 export class SyntaxKindCounter {
-  private readonly counter: Record<string, number>;
+  private readonly counter: Partial<Record<ts.SyntaxKind, number>>;
 
   public constructor(private readonly visibleSpans: Spans) {
     this.counter = {};
   }
 
-  public countKinds(sourceFile: ts.SourceFile): Record<string, number> {
+  public countKinds(sourceFile: ts.SourceFile): Partial<Record<ts.SyntaxKind, number>> {
     this.countNode(sourceFile);
     return this.counter;
   }
 
   private countNode(node: ts.Node) {
     if (this.visibleSpans.containsStartOfNode(node)) {
-      const value = node.kind.valueOf();
-      this.counter[value] = this.counter[value] ? this.counter[value] + 1 : 1;
+      this.counter[node.kind] = (this.counter[node.kind] ?? 0) + 1;
     }
 
     // The two recursive options produce differing results. `ts.forEachChild()` ignores some unimportant kinds.

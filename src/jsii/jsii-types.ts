@@ -18,6 +18,15 @@ export function determineJsiiType(typeChecker: ts.TypeChecker, type: ts.Type): J
     return { kind: 'unknown' };
   }
 
+  // The non-nullable version of `void` is `never`, so check first...
+  if ((type.flags & (ts.TypeFlags.Void | ts.TypeFlags.VoidLike)) !== 0) {
+    return { kind: 'builtIn', builtIn: 'void' };
+  }
+  // The non-nullable version of `unknown` is some ObjectType, so check first...
+  if ((type.flags & (ts.TypeFlags.Unknown | ts.TypeFlags.Any)) !== 0) {
+    return { kind: 'builtIn', builtIn: 'any' };
+  }
+
   type = type.getNonNullableType();
 
   const mapValuesType = mapElementType(type, typeChecker);
@@ -67,10 +76,6 @@ export function determineJsiiType(typeChecker: ts.TypeChecker, type: ts.Type): J
       kind: 'error',
       message: `Type unions or intersections are not supported in examples, got: ${typeChecker.typeToString(type)}`,
     };
-  }
-
-  if ((type.flags & (ts.TypeFlags.Void | ts.TypeFlags.VoidLike)) !== 0) {
-    return { kind: 'builtIn', builtIn: 'void' };
   }
 
   return { kind: 'unknown' };

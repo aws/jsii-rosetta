@@ -20,6 +20,7 @@
     "jest.config.json",
     "LICENSE",
     "projenrc/tsconfig.json",
+    "test/translations/tsconfig.json",
     "test/tsconfig.json",
     "tsconfig.dev.json",
     "tsconfig.json"

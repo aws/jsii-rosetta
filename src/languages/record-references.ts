@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 
 import { DefaultVisitor } from './default';
+import { RECORD_REFERENCES_VERSION } from './record-references-version';
 import { lookupJsiiSymbol } from '../jsii/jsii-utils';
 import { TargetLanguage } from '../languages/target-language';
 import { OTree, NO_SYNTAX } from '../o-tree';
@@ -17,7 +18,7 @@ type RecordReferencesRenderer = AstRenderer<RecordReferencesContext>;
  * A visitor that collects all types referenced in a particular piece of sample code
  */
 export class RecordReferencesVisitor extends DefaultVisitor<RecordReferencesContext> {
-  public static readonly VERSION = '2';
+  public static readonly VERSION = RECORD_REFERENCES_VERSION;
 
   public readonly language = TargetLanguage.VISUALIZE;
   public readonly defaultContext = {};
