@@ -1,4 +1,5 @@
 import { DependencyType, javascript, JsonFile, JsonPatch, typescript } from 'projen';
+import { versionMajorMinor } from 'typescript';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
 
@@ -84,8 +85,19 @@ const project = new typescript.TypeScriptProject({
 
   vscode: true,
 
-  devDeps: ['@actions/core', '@actions/github', '@jsii/check-node', 'semver', 'ts-node'],
-  deps: ['typescript', 'yargs'],
+  devDeps: ['@actions/core', '@actions/github', '@types/commonmark', '@types/workerpool', 'ts-node'],
+  deps: [
+    '@jsii/check-node',
+    '@jsii/spec',
+    'commonmark',
+    'fast-glob',
+    `jsii@v${versionMajorMinor}-next`,
+    'semver',
+    'semver-intersect',
+    'typescript',
+    'workerpool',
+    'yargs',
+  ],
 });
 
 // VSCode will look at the "closest" file named "tsconfig.json" when deciding on which config to use

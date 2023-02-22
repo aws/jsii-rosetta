@@ -1,0 +1,107 @@
+import * as cm from 'commonmark';
+
+import { makeXmlEscaper } from './escapes';
+import { prefixLines, RendererContext } from './markdown';
+import { MarkdownRenderer, para, stripPara } from './markdown-renderer';
+
+const ESCAPE = makeXmlEscaper();
+
+// The types for 'xmldom' are not complete.
+/* eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports */
+const { DOMParser, XMLSerializer } = require('@xmldom/xmldom');
+
+/**
+ * A renderer that will render a CommonMark tree to .NET XML comments
+ *
+ * Mostly concerns itself with code annotations and escaping; tags that the
+ * XML formatter doesn't have equivalents for will be rendered back to MarkDown.
+ */
+export class CSharpXmlCommentRenderer extends MarkdownRenderer {
+  public override block_quote(_node: cm.Node, context: RendererContext) {
+    return para(prefixLines('    ', stripPara(context.content())));
+  }
+
+  public override code(node: cm.Node, _context: RendererContext) {
+    return `<c>${ESCAPE.text(node.literal)}</c>`;
+  }
+
+  public override code_block(node: cm.Node, _context: RendererContext) {
+    return para(`<code><![CDATA[\n${node.literal}]]></code>`);
+  }
+
+  public override text(node: cm.Node, _context: RendererContext) {
+    return ESCAPE.text(node.literal) ?? '';
+  }
+
+  public override link(node: cm.Node, context: RendererContext) {
+    return `<a href="${ESCAPE.attribute(node.destination) ?? ''}">${context.content()}</a>`;
+  }
+
+  public override image(node: cm.Node, context: RendererContext) {
+    return `<img alt="${ESCAPE.text2attr(context.content())}" src="${ESCAPE.attribute(node.destination) ?? ''}" />`;
+  }
+
+  public override emph(_node: cm.Node, context: RendererContext) {
+    return `<em>${context.content()}</em>`;
+  }
+
+  public override strong(_node: cm.Node, context: RendererContext) {
+    return `<strong>${context.content()}</strong>`;
+  }
+
+  public override heading(node: cm.Node, context: RendererContext) {
+    return para(`<h${node.level}>${context.content()}</h${node.level}>`);
+  }
+
+  public override list(node: cm.Node, context: RendererContext) {
+    const listType = node.listType === 'bullet' ? 'bullet' : 'number';
+
+    return para(`<list type="${listType}">\n${context.content()}</list>`);
+  }
+
+  public override item(_node: cm.Node, context: RendererContext) {
+    return `<description>${stripPara(context.content())}</description>\n`;
+  }
+
+  public override thematic_break(_node: cm.Node, _context: RendererContext) {
+    return para('<hr />');
+  }
+
+  /**
+   * HTML needs to be converted to XML
+   *
+   * If we don't do this, the parser will reject the whole XML block once it seens an unclosed
+   * <img> tag.
+   */
+  public override html_inline(node: cm.Node, _context: RendererContext) {
+    const html = node.literal ?? '';
+    try {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      return new XMLSerializer().serializeToString(doc);
+    } catch {
+      // Could not parse - we'll escape unsafe XML entities here...
+      return html.replace(/[<>&]/g, (char: string) => {
+        switch (char) {
+          case '&':
+            return '&amp;';
+          case '<':
+            return '&lt;';
+          case '>':
+            return '&gt;';
+          default:
+            return char;
+        }
+      });
+    }
+  }
+
+  /**
+   * HTML needs to be converted to XML
+   *
+   * If we don't do this, the parser will reject the whole XML block once it seens an unclosed
+   * <img> tag.
+   */
+  public override html_block(node: cm.Node, context: RendererContext) {
+    return this.html_inline(node, context);
+  }
+}

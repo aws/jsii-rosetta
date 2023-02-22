@@ -9,7 +9,7 @@
       "type": "build"
     },
     {
-      "name": "@jsii/check-node",
+      "name": "@types/commonmark",
       "type": "build"
     },
     {
@@ -19,6 +19,10 @@
     {
       "name": "@types/node",
       "version": "^14",
+      "type": "build"
+    },
+    {
+      "name": "@types/workerpool",
       "type": "build"
     },
     {
@@ -78,10 +82,6 @@
       "type": "build"
     },
     {
-      "name": "semver",
-      "type": "build"
-    },
-    {
       "name": "ts-jest",
       "type": "build"
     },
@@ -90,7 +90,40 @@
       "type": "build"
     },
     {
+      "name": "@jsii/check-node",
+      "type": "runtime"
+    },
+    {
+      "name": "@jsii/spec",
+      "type": "runtime"
+    },
+    {
+      "name": "commonmark",
+      "type": "runtime"
+    },
+    {
+      "name": "fast-glob",
+      "type": "runtime"
+    },
+    {
+      "name": "jsii",
+      "version": "v4.9-next",
+      "type": "runtime"
+    },
+    {
+      "name": "semver",
+      "type": "runtime"
+    },
+    {
+      "name": "semver-intersect",
+      "type": "runtime"
+    },
+    {
       "name": "typescript",
+      "type": "runtime"
+    },
+    {
+      "name": "workerpool",
       "type": "runtime"
     },
     {
