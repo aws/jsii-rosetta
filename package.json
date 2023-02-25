@@ -53,14 +53,14 @@
     "mock-fs": "^5.2.0",
     "npm-check-updates": "^16",
     "prettier": "^2.8.4",
-    "projen": "^0.67.64",
+    "projen": "^0.67.65",
     "tar": "^6.1.13",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@jsii/check-node": "^1.75.0",
-    "@jsii/spec": "^1.75.0",
+    "@jsii/check-node": "^1.76.0",
+    "@jsii/spec": "^1.76.0",
     "@xmldom/xmldom": "^0.8.6",
     "commonmark": "*",
     "fast-glob": "^3.2.12",
@@ -68,7 +68,7 @@
     "semver": "^7.3.8",
     "semver-intersect": "^1.4.0",
     "typescript": "~4.9.5",
-    "workerpool": "^6.3.1",
+    "workerpool": "^6.4.0",
     "yargs": "^17.7.1"
   },
   "engines": {
