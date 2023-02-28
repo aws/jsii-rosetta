@@ -1,0 +1,2 @@
+object.getPropertyA();
+object.getPropertyB();
