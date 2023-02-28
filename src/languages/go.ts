@@ -503,7 +503,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
     // a regex that checks for the last "."-delimited segment if there's dots in there...
     const expressionLooksLikeTypeReference =
       expressionType.symbol == null &&
-      /(?:\.|^)[A-Z][^.]*$/.exec(node.expression.getText(node.expression.getSourceFile())) != null;
+      /(?:\.|^)[A-Z][^.)]*$/.exec(node.expression.getText(node.expression.getSourceFile())) != null;
 
     // Whether the node is an enum member reference.
     const isEnumMember =
@@ -1007,7 +1007,14 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
    */
   private goName(input: string, renderer: GoRenderer, symbol: ts.Symbol | undefined) {
     let text = input.replace(/[^a-z0-9_]/gi, '');
-    const prev = this.idMap.get(symbol ?? input) ?? this.idMap.get(input);
+
+    // Symbols can be an index signature, if this is a dot-style access to a map member. In this
+    // case we should not cache against the symbol as this would cause all such accesses to the same
+    // object to return the same text, which would be incorrect!
+    const indexSignature = ts.SymbolFlags.Signature | ts.SymbolFlags.Transient;
+    const cacheKey = symbol != null && (symbol.flags & indexSignature) === indexSignature ? input : symbol ?? input;
+
+    const prev = this.idMap.get(cacheKey) ?? this.idMap.get(input);
 
     if (prev) {
       // If an identifier has been renamed go get it
@@ -1023,7 +1030,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
     text = prefixReserved(text);
 
     if (text !== input && prev == null) {
-      this.idMap.set(symbol ?? input, { formatted: text, type: getDeclarationType(renderer.currentContext) });
+      this.idMap.set(cacheKey, { formatted: text, type: getDeclarationType(renderer.currentContext) });
     }
 
     if (

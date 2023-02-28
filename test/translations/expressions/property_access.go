@@ -1,0 +1,2 @@
+object.propertyA
+object.propertyB

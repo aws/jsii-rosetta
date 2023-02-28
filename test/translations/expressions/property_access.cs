@@ -1,0 +1,2 @@
+object.PropertyA;
+object.PropertyB;

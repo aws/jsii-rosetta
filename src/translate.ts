@@ -48,7 +48,9 @@ export class Translator {
   public constructor(private readonly includeCompilerDiagnostics: boolean) {}
 
   public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
-    logging.debug(`Translating ${snippetKey(snip)} ${inspect(snip.parameters ?? {})}`);
+    const key = snippetKey(snip);
+
+    logging.debug(`Translating ${key} ${inspect(snip.parameters ?? {})}`);
     const translator = this.translatorFor(snip);
 
     const translations = mkDict(
@@ -58,6 +60,9 @@ export class Translator {
           return [];
         }
         const languageConverterFactory = TARGET_LANGUAGES[lang];
+        if (key === 'f30b9ce840cff1a59ae7e630b7918179e732389ab9b773d94113037e2a2d3ff6' && lang === TargetLanguage.GO) {
+          debugger;
+        }
         const translated = translator.renderUsing(languageConverterFactory.createVisitor());
         return [[lang, { source: translated, version: languageConverterFactory.version }] as const];
       }),
