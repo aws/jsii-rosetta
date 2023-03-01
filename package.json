@@ -59,10 +59,10 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@jsii/check-node": "^1.76.0",
+    "@jsii/check-node": "1.76.0",
     "@jsii/spec": "^1.76.0",
     "@xmldom/xmldom": "^0.8.6",
-    "commonmark": "*",
+    "commonmark": "^0.30.0",
     "fast-glob": "^3.2.12",
     "jsii": "v4.9-next",
     "semver": "^7.3.8",
