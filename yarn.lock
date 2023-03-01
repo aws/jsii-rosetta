@@ -651,7 +651,7 @@
     chalk "^4.1.2"
     semver "^7.3.8"
 
-"@jsii/check-node@^1.76.0":
+"@jsii/check-node@1.76.0":
   version "1.76.0"
   resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.76.0.tgz#3fcb41e916ae8bfba1fca0cbdc406fe0e0b2c7f5"
   integrity sha512-iAQohlms0FQNtmAsXOV9Rrd7QDikkLw68R2TPwhlVKuLPdHPKIK3gyeN0jqZzc0luNQ9h+3P7kSqfpKd+Kr79Q==
@@ -1785,7 +1785,7 @@ comment-json@4.2.2:
     has-own-prop "^2.0.0"
     repeat-string "^1.6.1"
 
-commonmark@*:
+commonmark@^0.30.0:
   version "0.30.0"
   resolved "https://registry.yarnpkg.com/commonmark/-/commonmark-0.30.0.tgz#38811dc7bbf0f59d277ae09054d4d73a332f2e45"
   integrity sha512-j1yoUo4gxPND1JWV9xj5ELih0yMv1iCWDG6eEQIPLSWLxzCXiFoyS7kvB+WwU+tZMf4snwJMMtaubV0laFpiBA==
