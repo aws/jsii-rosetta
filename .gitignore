@@ -49,6 +49,7 @@ jspm_packages/
 /test/tsconfig.json
 /test/translations/tsconfig.json
 !/.vscode/settings.json
+!/.vscode/extensions.json
 !/.github/workflows/build.yml
 !/.github/workflows/auto-merge.yml
 !/.github/workflows/release.yml
