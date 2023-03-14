@@ -199,6 +199,10 @@ project.eslint?.addRules({
 new BuildWorkflow(project);
 
 // Add the custom release workflow
-new ReleaseWorkflow(project);
+new ReleaseWorkflow(project).autoTag({
+  preReleaseId: 'dev',
+  runName: 'Auto-Tag Prerelease (default branch)',
+  schedule: '0 0 * * *',
+});
 
 project.synth();

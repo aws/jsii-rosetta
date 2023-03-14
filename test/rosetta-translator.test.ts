@@ -1,3 +1,6 @@
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { withTemporaryDirectory } from './testutil';
 import { RosettaTranslator, typeScriptSnippetFromVisibleSource, SnippetLocation, TargetLanguage } from '../lib';
 
@@ -23,19 +26,24 @@ test('translator can translate', async () => {
 test('translator can read from cache', async () => {
   await withTemporaryDirectory(async () => {
     // GIVEN: prepare cache
-    const cacheBuilder = new RosettaTranslator({ includeCompilerDiagnostics: true });
-    const snippet = typeScriptSnippetFromVisibleSource('console.log("hello world");', location, true);
-    await cacheBuilder.translateAll([snippet]);
-    await cacheBuilder.tablet.save('temp.tabl.json');
+    const cacheDir = await mkdtemp(join(tmpdir(), 'rosetta-temp-cache-'));
+    try {
+      const cacheBuilder = new RosettaTranslator({ includeCompilerDiagnostics: true });
+      const snippet = typeScriptSnippetFromVisibleSource('console.log("hello world");', location, true);
+      await cacheBuilder.translateAll([snippet]);
+      await cacheBuilder.tablet.save(join(cacheDir, 'temp.tabl.json'));
 
-    // WHEN: new translatro
-    const translator = new RosettaTranslator({ includeCompilerDiagnostics: true });
-    await translator.loadCache('temp.tabl.json');
+      // WHEN: new translater
+      const translator = new RosettaTranslator({ includeCompilerDiagnostics: true });
+      await translator.loadCache(join(cacheDir, 'temp.tabl.json'));
 
-    const cached = translator.readFromCache([snippet]);
+      const cached = translator.readFromCache([snippet]);
 
-    expect(cached.translations).toHaveLength(1);
-    expect(cached.remaining).toHaveLength(0);
-    expect(translator.tablet.snippetKeys).toHaveLength(1);
+      expect(cached.translations).toHaveLength(1);
+      expect(cached.remaining).toHaveLength(0);
+      expect(translator.tablet.snippetKeys).toHaveLength(1);
+    } finally {
+      await rm(cacheDir, { force: true, recursive: true });
+    }
   });
 });
