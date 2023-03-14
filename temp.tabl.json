@@ -1,0 +1,48 @@
+{
+  "version": "2",
+  "toolVersion": "0.0.0",
+  "snippets": {
+    "d54054dded92a8c59670816ed22b893ca888d5e2cab871b833af1723039662c9": {
+      "translations": {
+        "python": {
+          "source": "print(\"hello world\")",
+          "version": "2"
+        },
+        "csharp": {
+          "source": "Console.WriteLine(\"hello world\");",
+          "version": "1"
+        },
+        "java": {
+          "source": "System.out.println(\"hello world\");",
+          "version": "1"
+        },
+        "go": {
+          "source": "fmt.Println(\"hello world\")",
+          "version": "1"
+        },
+        "$": {
+          "source": "console.log(\"hello world\");",
+          "version": "0"
+        }
+      },
+      "location": {
+        "api": {
+          "api": "file",
+          "fileName": "test.ts"
+        }
+      },
+      "didCompile": false,
+      "fqnsReferenced": [],
+      "fullSource": "console.log(\"hello world\");",
+      "syntaxKindCounter": {
+        "10": 1,
+        "79": 2,
+        "208": 1,
+        "210": 1,
+        "241": 1,
+        "308": 1
+      },
+      "fqnsFingerprint": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}
