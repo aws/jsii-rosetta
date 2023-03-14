@@ -16,9 +16,12 @@ import { TargetLanguage } from './languages';
 import { PythonVisitor } from './languages/python';
 import { VisualizeAstVisitor } from './languages/visualize';
 import * as logging from './logging';
+import { emitSupportPolicyInformation } from './support';
 import { File, fmap, printDiagnostics } from './util';
 
-function main() {
+async function main() {
+  await emitSupportPolicyInformation();
+
   const argv = yargs
     .usage('$0 <cmd> [args]')
     .option('verbose', {
@@ -557,4 +560,7 @@ function roundPercentage(num: number): number {
   return Math.round(10000 * num) / 100;
 }
 
-main();
+main().catch((cause) => {
+  console.error(cause);
+  process.exitCode = -1;
+});

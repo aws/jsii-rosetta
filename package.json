@@ -62,6 +62,7 @@
     "@jsii/check-node": "1.77.0",
     "@jsii/spec": "^1.77.0",
     "@xmldom/xmldom": "^0.8.6",
+    "chalk": "^4",
     "commonmark": "^0.30.0",
     "fast-glob": "^3.2.12",
     "jsii": "v4.9-next",

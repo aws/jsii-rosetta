@@ -2,6 +2,7 @@ import { DependencyType, javascript, JsonFile, JsonPatch, typescript } from 'pro
 import { versionMajorMinor } from 'typescript';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
+import { SupportPolicy } from './projenrc/support';
 
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
@@ -100,6 +101,7 @@ const project = new typescript.TypeScriptProject({
     '@jsii/check-node',
     '@jsii/spec',
     '@xmldom/xmldom',
+    'chalk@^4',
     'commonmark',
     'fast-glob',
     `jsii@v${versionMajorMinor}-next`,
@@ -134,6 +136,8 @@ project.tsconfig?.file?.patch(
 // Don't try to compile files under the `test/translations` directory with tests...
 project.tsconfigDev.addExclude('test/translations/**/*.ts');
 project.eslint?.addIgnorePattern('test/translations/**/*.ts');
+
+new SupportPolicy(project);
 
 // Don't show .gitignore'd files in the VSCode explorer
 project.vscode!.settings.addSetting('explorer.excludeGitIgnore', true);

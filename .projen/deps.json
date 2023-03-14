@@ -118,6 +118,11 @@
       "type": "runtime"
     },
     {
+      "name": "chalk",
+      "version": "^4",
+      "type": "runtime"
+    },
+    {
       "name": "commonmark",
       "type": "runtime"
     },
