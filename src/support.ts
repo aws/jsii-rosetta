@@ -94,7 +94,7 @@ export async function emitSupportPolicyInformation() {
 }
 
 /**
- * Downloads the latest `releases.json` document from 'https://raw.githubusercontent.com/aws/jsii-compiler/main/releases.json'
+ * Downloads the latest `releases.json` document from 'https://raw.githubusercontent.com/aws/jsii-rosetta/main/releases.json'
  * if possible, or falls back to the built-in version of that file if that fails in any way.
  */
 async function getReleasesDocument(): Promise<ReleasesDocument> {
