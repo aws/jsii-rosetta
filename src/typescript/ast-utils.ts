@@ -383,7 +383,15 @@ export function quoteStringLiteral(x: string) {
   return x.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
-export function visibility(x: ts.PropertyLikeDeclaration | ts.FunctionLikeDeclarationBase) {
+export function visibility(
+  x:
+    | ts.AccessorDeclaration
+    | ts.FunctionLikeDeclaration
+    | ts.GetAccessorDeclaration
+    | ts.PropertyDeclaration
+    | ts.PropertySignature
+    | ts.SetAccessorDeclaration,
+) {
   const flags = ts.getCombinedModifierFlags(x);
   if (flags & ts.ModifierFlags.Private) {
     return 'private';
@@ -401,9 +409,14 @@ function hasFlag<T extends ts.Declaration>(flag: ts.ModifierFlags) {
   };
 }
 
-export const isReadOnly = hasFlag<ts.PropertyLikeDeclaration | ts.FunctionLikeDeclarationBase>(
-  ts.ModifierFlags.Readonly,
-);
+export const isReadOnly = hasFlag<
+  | ts.AccessorDeclaration
+  | ts.FunctionLikeDeclaration
+  | ts.GetAccessorDeclaration
+  | ts.PropertyDeclaration
+  | ts.PropertySignature
+  | ts.SetAccessorDeclaration
+>(ts.ModifierFlags.Readonly);
 export const isExported = hasFlag(ts.ModifierFlags.Export);
 export const isPrivate = hasFlag(ts.ModifierFlags.Private);
 export const isProtected = hasFlag(ts.ModifierFlags.Private);
