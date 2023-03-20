@@ -64,7 +64,7 @@ export class ReleaseWorkflow {
           run: 'yarn ts-node projenrc/publish-target.ts ${{ github.ref_name }}',
           env: {
             // A GitHub token is required to list GitHub Releases, so we can tell if the `latest` dist-tag is needed.
-            GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
+            GITHUB_TOKEN: '${{ github.token }}',
           },
         },
         {
@@ -145,6 +145,9 @@ export class ReleaseWorkflow {
             'echo "result=false" >> $GITHUB_OUTPUT',
             'fi',
           ].join('\n'),
+          env: {
+            GH_TOKEN: '${{ github.token }}',
+          },
         },
         {
           name: 'Create PreRelease',
@@ -157,6 +160,9 @@ export class ReleaseWorkflow {
             '--verify-tag',
             '--prerelease',
           ].join(' '),
+          env: {
+            GH_TOKEN: '${{ github.token }}',
+          },
         },
         {
           name: 'Create Release',
@@ -168,6 +174,9 @@ export class ReleaseWorkflow {
             '--title=${{ github.ref_name }}',
             '--verify-tag',
           ].join(' '),
+          env: {
+            GH_TOKEN: '${{ github.token }}',
+          },
         },
         {
           name: 'Attach assets',
@@ -177,6 +186,9 @@ export class ReleaseWorkflow {
             '--clobber',
             '${{ github.workspace }}/**/*',
           ].join(' '),
+          env: {
+            GH_TOKEN: '${{ github.token }}',
+          },
         },
       ],
     });
