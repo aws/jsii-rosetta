@@ -50,6 +50,7 @@ jobs:
       - name: Sign Tarball
         if: fromJSON(steps.publish-target.outputs.github-release)
         run: |-
+          set -eo pipefail
           export GNUPGHOME=$(mktemp -d)
           echo "charset utf-8"   >  ${GNUPGHOME}/gpg.conf
           echo "no-comments"     >> ${GNUPGHOME}/gpg.conf
@@ -60,10 +61,10 @@ jobs:
           passphrase=$(node -p "(${secret}).Passphrase")
           echo "::add-mask::${passphrase}"
           unset secret
-          echo ${passphrase} | gpg --batch --yes --import --armor --pinentry-mode=loopback --passphrase-fd=0 <(echo "${privatekey}")
+          echo ${passphrase} | gpg --batch --yes --import --armor --passphrase-fd=0 <(echo "${privatekey}")
           unset privatekey
           for file in $(find dist -type f -not -iname "*.asc"); do
-            echo ${passphrase} | gpg --batch --yes --local-user="aws-jsii@amazon.com" --detach-sign --armor --passphrase-fd=0 ${file}
+            echo ${passphrase} | gpg --pinentry-mode=loopback --batch --yes --local-user="aws-jsii@amazon.com" --detach-sign --armor --passphrase-fd=0 ${file}
           done
           unset passphrase
           find ${GNUPGHOME} -type f -exec shred --remove {} \;

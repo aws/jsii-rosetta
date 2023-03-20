@@ -76,6 +76,7 @@ export class ReleaseWorkflow {
           name: 'Sign Tarball',
           if: `fromJSON(steps.publish-target.outputs.${PublishTargetOutput.GITHUB_RELEASE})`,
           run: [
+            'set -eo pipefail',
             // First, we're going to be configuring GPG "correctly"
             'export GNUPGHOME=$(mktemp -d)',
             'echo "charset utf-8"   >  ${GNUPGHOME}/gpg.conf',
@@ -88,11 +89,11 @@ export class ReleaseWorkflow {
             'passphrase=$(node -p "(${secret}).Passphrase")',
             'echo "::add-mask::${passphrase}"', // !!! IMPORTANT !!! (Ensures the value does not leak into public logs)
             'unset secret',
-            'echo ${passphrase} | gpg --batch --yes --import --armor --pinentry-mode=loopback --passphrase-fd=0 <(echo "${privatekey}")',
+            'echo ${passphrase} | gpg --batch --yes --import --armor --passphrase-fd=0 <(echo "${privatekey}")',
             'unset privatekey',
             // Now we can actually detach-sign the artifacts
             'for file in $(find dist -type f -not -iname "*.asc"); do',
-            `  echo \${passphrase} | gpg --batch --yes --local-user=${JSON.stringify(
+            `  echo \${passphrase} | gpg --pinentry-mode=loopback --batch --yes --local-user=${JSON.stringify(
               CODE_SIGNING_USER_ID,
             )} --detach-sign --armor --passphrase-fd=0 \${file}`,
             'done',
