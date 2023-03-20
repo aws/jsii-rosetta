@@ -237,7 +237,7 @@ export class ReleaseWorkflow {
         {
           name: 'Tag "latest"',
           if: `fromJSON(needs.build.outputs.${PublishTargetOutput.IS_LATEST})`,
-          run: 'npm dist-tag add jsii@${{ github.ref_name }} latest',
+          run: 'npm dist-tag add jsii-rosetta@${{ github.ref_name }} latest',
         },
       ],
     });

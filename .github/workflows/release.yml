@@ -150,4 +150,4 @@ jobs:
         run: npm publish ${{ github.workspace }}/js/jsii-*.tgz --access=public --tag=${{ needs.build.outputs.dist-tag }}
       - name: Tag "latest"
         if: fromJSON(needs.build.outputs.latest)
-        run: npm dist-tag add jsii@${{ github.ref_name }} latest
+        run: npm dist-tag add jsii-rosetta@${{ github.ref_name }} latest
