@@ -88,7 +88,7 @@ export class ReleaseWorkflow {
             'passphrase=$(node -p "(${secret}).Passphrase")',
             'echo "::add-mask::${passphrase}"', // !!! IMPORTANT !!! (Ensures the value does not leak into public logs)
             'unset secret',
-            'echo ${passphrase} | gpg --batch --yes --import --armor --passphrase-fd=0 <(echo "${privatekey}")',
+            'echo ${passphrase} | gpg --batch --yes --import --armor --pinentry-mode=loopback --passphrase-fd=0 <(echo "${privatekey}")',
             'unset privatekey',
             // Now we can actually detach-sign the artifacts
             'for file in $(find dist -type f -not -iname "*.asc"); do',
