@@ -26,6 +26,10 @@
       "type": "build"
     },
     {
+      "name": "@types/stream-json",
+      "type": "build"
+    },
+    {
       "name": "@types/tar",
       "type": "build"
     },
@@ -141,6 +145,10 @@
     },
     {
       "name": "semver-intersect",
+      "type": "runtime"
+    },
+    {
+      "name": "stream-json",
       "type": "runtime"
     },
     {
