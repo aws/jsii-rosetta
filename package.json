@@ -38,6 +38,7 @@
     "@types/jest": "^29.5.0",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^14",
+    "@types/stream-json": "^1.7.3",
     "@types/tar": "^6.1.4",
     "@types/workerpool": "^6.4.0",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -68,6 +69,7 @@
     "jsii": "v5.0-next",
     "semver": "^7.3.8",
     "semver-intersect": "^1.4.0",
+    "stream-json": "^1.7.5",
     "typescript": "~5.0.2",
     "workerpool": "^6.4.0",
     "yargs": "^17.7.1"
