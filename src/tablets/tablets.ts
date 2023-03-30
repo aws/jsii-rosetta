@@ -2,7 +2,6 @@ import { createReadStream, createWriteStream, existsSync, promises as fs } from 
 import * as path from 'node:path';
 import { Readable, Writable } from 'node:stream';
 import * as zlib from 'node:zlib';
-import { chain } from 'stream-chain';
 
 import { snippetKey } from './key';
 import { TabletSchema, TranslatedSnippetSchema, ORIGINAL_SNIPPET_KEY } from './schema';
@@ -187,12 +186,10 @@ export class LanguageTablet {
     await fs.mkdir(path.dirname(filename), { recursive: true });
 
     const writeStream: Writable = createWriteStream(filename, { flags: 'w' });
+    const gzip = compress ? zlib.createGzip() : undefined;
+    gzip?.pipe(writeStream, { end: true });
 
-    const coutputStream = compress
-      ? chain([zlib.createGzip(), writeStream], { readableObjectMode: false, writableObjectMode: false })
-      : writeStream;
-
-    return stringify(this.toSchema(), coutputStream);
+    return stringify(this.toSchema(), gzip ?? writeStream);
   }
 
   private toSchema(): TabletSchema {
