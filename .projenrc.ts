@@ -105,7 +105,7 @@ const project = new typescript.TypeScriptProject({
     'chalk@^4',
     'commonmark',
     'fast-glob',
-    `jsii@v${versionMajorMinor}-next`,
+    `jsii@${versionMajorMinor}.x`,
     'semver-intersect',
     'semver',
     'stream-json',
