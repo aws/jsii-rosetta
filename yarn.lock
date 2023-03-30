@@ -3689,10 +3689,10 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
-jsii@v5.0-next:
-  version "5.0.2-dev.0"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.0.2-dev.0.tgz#8c4680af7f350e1ea150320ee60f199ddff0732c"
-  integrity sha512-YK4DxKElwzqlatIKbEjm7OUzfV36lgJUaT625OEQCNaxYKfVFQirOrA2BmWVwIwidNVkuOr/khBe5fizJlBTng==
+jsii@5.0.x:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.0.1.tgz#5c63873794f18228bd07aee80fc5765dd32722b3"
+  integrity sha512-gf4+M1VJEr4o+LsB5p2a6OTCCBP6aFlUCwVdsSJkn2oUfX0SG+ZIGL/8FhFpvbYX82Ga5ZYEiV1LHoxEZFxy1w==
   dependencies:
     "@jsii/check-node" "1.79.0"
     "@jsii/spec" "^1.79.0"
