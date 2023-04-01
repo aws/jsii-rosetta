@@ -54,7 +54,7 @@
     "mock-fs": "^5.2.0",
     "npm-check-updates": "^16",
     "prettier": "^2.8.7",
-    "projen": "^0.70.1",
+    "projen": "^0.70.4",
     "tar": "^6.1.13",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1"
@@ -62,7 +62,7 @@
   "dependencies": {
     "@jsii/check-node": "1.79.0",
     "@jsii/spec": "^1.79.0",
-    "@xmldom/xmldom": "^0.8.6",
+    "@xmldom/xmldom": "^0.8.7",
     "chalk": "^4",
     "commonmark": "^0.30.0",
     "fast-glob": "^3.2.12",
