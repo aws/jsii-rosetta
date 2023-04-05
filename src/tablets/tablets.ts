@@ -187,7 +187,6 @@ export class LanguageTablet {
 
     const writeStream: Writable = createWriteStream(filename, { flags: 'w' });
     const gzip = compress ? zlib.createGzip() : undefined;
-    gzip?.pipe(writeStream, { end: true });
 
     return stringify(this.toSchema(), ...(gzip ? [gzip] : []), writeStream);
   }
