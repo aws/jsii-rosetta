@@ -517,7 +517,7 @@ function handleDiagnostics(diagnostics: readonly RosettaDiagnostic[], fail: bool
   if (fail !== false) {
     // Fail on any diagnostic
     if (diagnostics.length > 0) {
-      printDiagnostics(diagnostics, process.stderr);
+      printDiagnostics(diagnostics, process.stderr, process.stderr.isTTY);
       logging.error(
         [
           `${diagnostics.length} diagnostics encountered in ${snippetCount} snippets`,
@@ -534,7 +534,7 @@ function handleDiagnostics(diagnostics: readonly RosettaDiagnostic[], fail: bool
   // (so it's very clear what is failing the build), otherwise print everything.
   const strictDiagnostics = diagnostics.filter((diag) => diag.isFromStrictAssembly);
   if (strictDiagnostics.length > 0) {
-    printDiagnostics(strictDiagnostics, process.stderr);
+    printDiagnostics(strictDiagnostics, process.stderr, process.stderr.isTTY);
     const remaining = diagnostics.length - strictDiagnostics.length;
     logging.warn(
       [
@@ -547,7 +547,7 @@ function handleDiagnostics(diagnostics: readonly RosettaDiagnostic[], fail: bool
   }
 
   if (diagnostics.length > 0) {
-    printDiagnostics(diagnostics, process.stderr);
+    printDiagnostics(diagnostics, process.stderr, process.stderr.isTTY);
     logging.warn(`${diagnostics.length} diagnostics encountered in ${snippetCount} snippets`);
   }
 }
