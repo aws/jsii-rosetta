@@ -5,7 +5,12 @@ import { TypeFingerprinter } from './jsii/fingerprinting';
 import { TARGET_LANGUAGES } from './languages';
 import * as logging from './logging';
 import { TypeScriptSnippet, completeSource } from './snippet';
-import { collectDependencies, validateAvailableDependencies, prepareDependencyDirectory } from './snippet-dependencies';
+import {
+  collectDependencies,
+  validateAvailableDependencies,
+  prepareDependencyDirectory,
+  expandWithTransitiveDependencies,
+} from './snippet-dependencies';
 import { snippetKey } from './tablets/key';
 import { LanguageTablet, TranslatedSnippet } from './tablets/tablets';
 import { translateAll, TranslateAllResult } from './translate_all';
@@ -168,6 +173,7 @@ export class RosettaTranslator {
         : { addToTablet: optionsOrAddToTablet };
 
     const exampleDependencies = collectDependencies(snippets);
+    await expandWithTransitiveDependencies(exampleDependencies);
 
     let compilationDirectory;
     let cleanCompilationDir = false;

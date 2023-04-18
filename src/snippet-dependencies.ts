@@ -3,11 +3,12 @@ import { promises as fsPromises } from 'node:fs';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
+import { PackageJson } from '@jsii/spec';
 import * as fastGlob from 'fast-glob';
 import * as semver from 'semver';
 import { intersect } from 'semver-intersect';
 
-import { findDependencyDirectory, findUp } from './find-utils';
+import { findDependencyDirectory, findUp, isBuiltinModule } from './find-utils';
 import * as logging from './logging';
 import { TypeScriptSnippet, CompilationDependency } from './snippet';
 import { mkDict, formatList, pathExists } from './util';
@@ -25,6 +26,66 @@ export function collectDependencies(snippets: TypeScriptSnippet[]) {
     }
   }
   return ret;
+}
+
+/**
+ * Add transitive dependencies of concrete dependencies to the array
+ *
+ * This is necessary to prevent multiple copies of transitive dependencies on disk, which
+ * jsii-based packages might not deal with very well.
+ */
+export async function expandWithTransitiveDependencies(deps: Record<string, CompilationDependency>) {
+  const pathsSeen = new Set<string>();
+  const queue = Object.values(deps).filter(isConcrete);
+
+  let next = queue.shift();
+  while (next) {
+    await addDependenciesOf(next.resolvedDirectory);
+    next = queue.shift();
+  }
+
+  async function addDependenciesOf(dir: string) {
+    if (pathsSeen.has(dir)) {
+      return;
+    }
+    pathsSeen.add(dir);
+    const pj: PackageJson = JSON.parse(
+      await fsPromises.readFile(path.join(dir, 'package.json'), { encoding: 'utf-8' }),
+    );
+
+    for (const [name, dep] of Object.entries(await resolveDependenciesFromPackageJson(pj, dir))) {
+      if (!deps[name]) {
+        deps[name] = dep;
+        queue.push(dep);
+      }
+    }
+  }
+}
+
+/**
+ * Find the corresponding package directories for all dependencies in a package.json
+ */
+export async function resolveDependenciesFromPackageJson(packageJson: PackageJson | undefined, directory: string) {
+  return mkDict(
+    await Promise.all(
+      Object.keys({ ...packageJson?.dependencies, ...packageJson?.peerDependencies })
+        .filter((name) => !isBuiltinModule(name))
+        .filter(
+          (name) =>
+            !packageJson?.bundledDependencies?.includes(name) && !packageJson?.bundleDependencies?.includes(name),
+        )
+        .map(
+          async (name) =>
+            [
+              name,
+              {
+                type: 'concrete',
+                resolvedDirectory: await fsPromises.realpath(await findDependencyDirectory(name, directory)),
+              },
+            ] as const,
+        ),
+    ),
+  );
 }
 
 function resolveConflict(
@@ -148,42 +209,38 @@ export async function prepareDependencyDirectory(deps: Record<string, Compilatio
     ]),
   );
 
-  // Use 'npm install' only for the symbolic packages. For the concrete packages,
-  // npm is going to try and find transitive dependencies as well and it won't know
-  // about monorepos.
-  const symbolicInstalls = Object.entries(resolvedDeps).flatMap(([name, dep]) =>
-    isSymbolic(dep) ? [`${name}@${dep.versionRange}`] : [],
-  );
-  const linkedInstalls = mkDict(
-    Object.entries(resolvedDeps).flatMap(([name, dep]) =>
-      isConcrete(dep) ? [[name, dep.resolvedDirectory] as const] : [],
+  const dependencies: Record<string, string> = {};
+  for (const [name, dep] of Object.entries(resolvedDeps)) {
+    if (isConcrete(dep)) {
+      logging.debug(`${name} -> ${dep.resolvedDirectory}`);
+      dependencies[name] = `file:${dep.resolvedDirectory}`;
+    } else {
+      logging.debug(`${name} @ ${dep.versionRange}`);
+      dependencies[name] = dep.versionRange;
+    }
+  }
+
+  await fsPromises.writeFile(
+    path.join(tmpDir, 'package.json'),
+    JSON.stringify(
+      {
+        name: 'examples',
+        version: '0.0.1',
+        private: true,
+        dependencies,
+      },
+      undefined,
+      2,
     ),
+    {
+      encoding: 'utf-8',
+    },
   );
 
-  // Run 'npm install' on it
-  if (symbolicInstalls.length > 0) {
-    logging.debug(`Installing example dependencies: ${symbolicInstalls.join(' ')}`);
-    cp.execSync(`npm install ${symbolicInstalls.join(' ')}`, { cwd: tmpDir, encoding: 'utf-8' });
-  }
-
-  // Symlink the rest
-  if (Object.keys(linkedInstalls).length > 0) {
-    logging.debug(`Symlinking example dependencies: ${Object.values(linkedInstalls).join(' ')}`);
-    const modDir = path.join(tmpDir, 'node_modules');
-    await Promise.all(
-      Object.entries(linkedInstalls).map(async ([name, source]) => {
-        const target = path.join(modDir, name);
-
-        // Any packages that may have been put there already by `npm install` -- replace 'em
-        // with the symlinks if necessary.
-        if (await pathExists(target)) {
-          await fsPromises.rm(target, { recursive: true, force: true });
-        }
-        await fsPromises.mkdir(path.dirname(target), { recursive: true });
-        await fsPromises.symlink(source, target, 'dir');
-      }),
-    );
-  }
+  // Run NPM install on this package.json. We need to include --force for packages
+  // that have a symbolic version in the symlinked dev tree (like "0.0.0"), but have
+  // actual version range dependencies from externally installed packages (like "^2.0.0").
+  cp.execSync(`npm install --force --loglevel error`, { cwd: tmpDir, encoding: 'utf-8' });
 
   return tmpDir;
 }
@@ -249,10 +306,6 @@ async function findMonoRepoGlobs(startingDir: string): Promise<Set<string>> {
   }
 
   return ret;
-}
-
-function isSymbolic(x: CompilationDependency): x is Extract<CompilationDependency, { type: 'symbolic' }> {
-  return x.type === 'symbolic';
 }
 
 function isConcrete(x: CompilationDependency): x is Extract<CompilationDependency, { type: 'concrete' }> {

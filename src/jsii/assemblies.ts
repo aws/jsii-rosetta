@@ -3,8 +3,6 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { loadAssemblyFromFile, loadAssemblyFromPath, findAssemblyFile } from '@jsii/spec';
 import * as spec from '@jsii/spec';
-
-import { findDependencyDirectory, isBuiltinModule } from '../find-utils';
 import { fixturize } from '../fixtures';
 import { extractTypescriptSnippetsFromMarkdown } from '../markdown/extract-snippets';
 import {
@@ -17,6 +15,7 @@ import {
   CompilationDependency,
   INITIALIZER_METHOD_NAME,
 } from '../snippet';
+import { resolveDependenciesFromPackageJson } from '../snippet-dependencies';
 import { enforcesStrictMode } from '../strict';
 import { LanguageTablet, DEFAULT_TABLET_NAME, DEFAULT_TABLET_NAME_COMPRESSED } from '../tablets/tablets';
 import { fmap, mkDict, sortBy } from '../util';
@@ -353,30 +352,7 @@ async function withDependencies(asm: LoadedAssembly, snippet: TypeScriptSnippet)
     resolvedDirectory: await fsPromises.realpath(asm.directory),
   };
 
-  Object.assign(
-    compilationDependencies,
-    mkDict(
-      await Promise.all(
-        Object.keys({ ...asm.packageJson?.dependencies, ...asm.packageJson?.peerDependencies })
-          .filter((name) => !isBuiltinModule(name))
-          .filter(
-            (name) =>
-              !asm.packageJson?.bundledDependencies?.includes(name) &&
-              !asm.packageJson?.bundleDependencies?.includes(name),
-          )
-          .map(
-            async (name) =>
-              [
-                name,
-                {
-                  type: 'concrete',
-                  resolvedDirectory: await fsPromises.realpath(await findDependencyDirectory(name, asm.directory)),
-                },
-              ] as const,
-          ),
-      ),
-    ),
-  );
+  Object.assign(compilationDependencies, await resolveDependenciesFromPackageJson(asm.packageJson, asm.directory));
 
   Object.assign(
     compilationDependencies,
