@@ -47,7 +47,7 @@ function resolveConflict(
     // Intersect the ranges
     return {
       type: 'symbolic',
-      versionRange: intersect(a.versionRange, b.versionRange),
+      versionRange: myVersionIntersect(a.versionRange, b.versionRange),
     };
   }
 
@@ -79,6 +79,7 @@ function resolveConflict(
  * It's a warning if this is not true, not an error.
  */
 export async function validateAvailableDependencies(directory: string, deps: Record<string, CompilationDependency>) {
+  logging.info(`Validating dependencies at ${directory}`);
   const failures = await Promise.all(
     Object.entries(deps).flatMap(async ([name, _dep]) => {
       try {
@@ -98,6 +99,27 @@ export async function validateAvailableDependencies(directory: string, deps: Rec
 }
 
 /**
+ * Intersect two semver ranges
+ *
+ * The package we are using for this doesn't support all syntaxes yet.
+ * Do some work on top.
+ */
+function myVersionIntersect(a: string, b: string): string {
+  if (a === '*') {
+    return b;
+  }
+  if (b === '*') {
+    return a;
+  }
+
+  try {
+    return intersect(a, b);
+  } catch (e: any) {
+    throw new Error(`semver-intersect does not support either '${a}' or '${b}': ${e.message}`);
+  }
+}
+
+/**
  * Prepare a temporary directory with symlinks to all the dependencies we need.
  *
  * - Symlinks the concrete dependencies
@@ -112,7 +134,7 @@ export async function prepareDependencyDirectory(deps: Record<string, Compilatio
   const monorepoPackages = await scanMonoRepos(concreteDirs);
 
   const tmpDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'rosetta'));
-  logging.info(`Preparing dependency closure at ${tmpDir}`);
+  logging.info(`Preparing dependency closure at ${tmpDir} (-vv for more details)`);
 
   // Resolved symbolic packages against monorepo
   const resolvedDeps = mkDict(
@@ -151,11 +173,14 @@ export async function prepareDependencyDirectory(deps: Record<string, Compilatio
     await Promise.all(
       Object.entries(linkedInstalls).map(async ([name, source]) => {
         const target = path.join(modDir, name);
-        if (!(await pathExists(target))) {
-          // Package could be namespaced, so ensure the namespace dir exists
-          await fsPromises.mkdir(path.dirname(target), { recursive: true });
-          await fsPromises.symlink(source, target, 'dir');
+
+        // Any packages that may have been put there already by `npm install` -- replace 'em
+        // with the symlinks if necessary.
+        if (await pathExists(target)) {
+          await fsPromises.rm(target, { recursive: true, force: true });
         }
+        await fsPromises.mkdir(path.dirname(target), { recursive: true });
+        await fsPromises.symlink(source, target, 'dir');
       }),
     );
   }

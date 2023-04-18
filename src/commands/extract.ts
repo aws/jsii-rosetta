@@ -92,6 +92,13 @@ export interface ExtractOptions {
    * @default false
    */
   readonly compressCacheToFile?: boolean;
+
+  /**
+   * Cleanup temporary directories
+   *
+   * @default true
+   */
+  readonly cleanup?: boolean;
 }
 
 export async function extractAndInfuse(assemblyLocations: string[], options: ExtractOptions): Promise<ExtractResult> {
@@ -157,7 +164,9 @@ export async function extractSnippets(
     logging.info('Translating');
     const startTime = Date.now();
 
-    const result = await translator.translateAll(snippets);
+    const result = await translator.translateAll(snippets, {
+      cleanup: options.cleanup,
+    });
 
     const delta = (Date.now() - startTime) / 1000;
     logging.info(

@@ -190,7 +190,11 @@ export class RosettaTranslator {
     } finally {
       process.chdir(origDir);
       if (cleanCompilationDir) {
-        await fs.rm(compilationDirectory, { force: true, recursive: true });
+        if (options.cleanup ?? true) {
+          await fs.rm(compilationDirectory, { force: true, recursive: true });
+        } else {
+          logging.info(`Leaving directory uncleaned: ${compilationDirectory}`);
+        }
       }
     }
 
@@ -309,4 +313,9 @@ export interface TranslateAllOptions {
    * @default true
    */
   readonly addToTablet?: boolean;
+
+  /**
+   * @default true
+   */
+  readonly cleanup?: boolean;
 }

@@ -341,7 +341,8 @@ function withProjectDirectory(dir: string, snippet: TypeScriptSnippet) {
  * The dependencies will be taken from the package.json, and will consist of:
  *
  * - The package itself
- * - The package's dependencies and peerDependencies
+ * - The package's dependencies and peerDependencies (but NOT devDependencies). Will
+ *   symlink to the files on disk.
  * - Any additional dependencies declared in `jsiiRosetta.exampleDependencies`.
  */
 async function withDependencies(asm: LoadedAssembly, snippet: TypeScriptSnippet): Promise<TypeScriptSnippet> {
