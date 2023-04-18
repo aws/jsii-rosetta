@@ -149,7 +149,8 @@ export class ClassName implements IInterface {
           "markdown": "# README
 
       \`\`\`csharp
-      var object = new ClassName("this", 1337, new ClassNameProps { Foo = "bar" });
+      // Example automatically generated from non-compiling source. May contain errors.
+      var object = new ClassName("this", 1337, new Struct { Foo = "bar" });
       object.Property = EnumType.OPTION_A;
       object.MethodCall();
 
@@ -168,7 +169,8 @@ export class ClassName implements IInterface {
             "fqn": "testpkg.ClassName",
             "initializer": {
               "docs": {
-                "example": "new ClassName("this", 1337, new ClassNameProps { Property = EnumType.OPTION_B });",
+                "example": "// Example automatically generated from non-compiling source. May contain errors.
+      new ClassName("this", 1337, new Struct { Property = EnumType.OPTION_B });",
                 "summary": "Create a new instance of ClassName.",
               },
               "locationInModule": {
@@ -207,7 +209,8 @@ export class ClassName implements IInterface {
             "methods": [
               {
                 "docs": {
-                  "example": "ClassName.StaticMethod();",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      ClassName.StaticMethod();",
                   "remarks": "It can be invoked easily.",
                   "summary": "A static method.",
                 },
@@ -301,7 +304,8 @@ export class ClassName implements IInterface {
           "testpkg.EnumType": {
             "assembly": "testpkg",
             "docs": {
-              "example": "new ClassName("this", 1337, new ClassNameProps { Property = EnumType.OPTION_B });",
+              "example": "// Example automatically generated from non-compiling source. May contain errors.
+      new ClassName("this", 1337, new Struct { Property = EnumType.OPTION_B });",
             },
             "fqn": "testpkg.EnumType",
             "kind": "enum",
@@ -312,13 +316,15 @@ export class ClassName implements IInterface {
             "members": [
               {
                 "docs": {
-                  "example": "new ClassName("this", 1337, new ClassNameProps { Property = EnumType.OPTION_A });",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      new ClassName("this", 1337, new Struct { Property = EnumType.OPTION_A });",
                 },
                 "name": "OPTION_A",
               },
               {
                 "docs": {
-                  "example": "new ClassName("this", 1337, new ClassNameProps { Property = EnumType.OPTION_B });",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      new ClassName("this", 1337, new Struct { Property = EnumType.OPTION_B });",
                 },
                 "name": "OPTION_B",
               },
@@ -338,7 +344,8 @@ export class ClassName implements IInterface {
               {
                 "abstract": true,
                 "docs": {
-                  "example": "iface.MethodCall();",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      iface.MethodCall();",
                   "summary": "An instance method call.",
                 },
                 "locationInModule": {
@@ -353,7 +360,8 @@ export class ClassName implements IInterface {
               {
                 "abstract": true,
                 "docs": {
-                  "example": "iface.Property = EnumType.OPTION_B;",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      iface.Property = EnumType.OPTION_B;",
                   "summary": "A property value.",
                 },
                 "locationInModule": {
@@ -404,11 +412,12 @@ export class ClassName implements IInterface {
           "markdown": "# README
 
       \`\`\`java
-      IInterface object = new ClassName("this", 1337, new ClassNameProps().foo("bar"));
-      object.getProperty() = EnumType.OPTION_A;
+      // Example automatically generated from non-compiling source. May contain errors.
+      IInterface object = ClassName.Builder.create("this", 1337).foo("bar").build();
+      object.getProperty() = EnumType.getOPTION_A();
       object.methodCall();
 
-      ClassName.staticMethod(EnumType.OPTION_B);
+      ClassName.staticMethod(EnumType.getOPTION_B());
       \`\`\`",
         },
         "repository": {
@@ -423,7 +432,8 @@ export class ClassName implements IInterface {
             "fqn": "testpkg.ClassName",
             "initializer": {
               "docs": {
-                "example": "new ClassName("this", 1337, new ClassNameProps().property(EnumType.OPTION_B));",
+                "example": "// Example automatically generated from non-compiling source. May contain errors.
+      ClassName.Builder.create("this", 1337).property(EnumType.getOPTION_B()).build();",
                 "summary": "Create a new instance of ClassName.",
               },
               "locationInModule": {
@@ -462,7 +472,8 @@ export class ClassName implements IInterface {
             "methods": [
               {
                 "docs": {
-                  "example": "ClassName.staticMethod();",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      ClassName.staticMethod();",
                   "remarks": "It can be invoked easily.",
                   "summary": "A static method.",
                 },
@@ -556,7 +567,8 @@ export class ClassName implements IInterface {
           "testpkg.EnumType": {
             "assembly": "testpkg",
             "docs": {
-              "example": "new ClassName("this", 1337, new ClassNameProps().property(EnumType.OPTION_B));",
+              "example": "// Example automatically generated from non-compiling source. May contain errors.
+      ClassName.Builder.create("this", 1337).property(EnumType.getOPTION_B()).build();",
             },
             "fqn": "testpkg.EnumType",
             "kind": "enum",
@@ -567,13 +579,15 @@ export class ClassName implements IInterface {
             "members": [
               {
                 "docs": {
-                  "example": "new ClassName("this", 1337, new ClassNameProps().property(EnumType.OPTION_A));",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      ClassName.Builder.create("this", 1337).property(EnumType.getOPTION_A()).build();",
                 },
                 "name": "OPTION_A",
               },
               {
                 "docs": {
-                  "example": "new ClassName("this", 1337, new ClassNameProps().property(EnumType.OPTION_B));",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      ClassName.Builder.create("this", 1337).property(EnumType.getOPTION_B()).build();",
                 },
                 "name": "OPTION_B",
               },
@@ -593,7 +607,8 @@ export class ClassName implements IInterface {
               {
                 "abstract": true,
                 "docs": {
-                  "example": "iface.methodCall();",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      iface.methodCall();",
                   "summary": "An instance method call.",
                 },
                 "locationInModule": {
@@ -608,7 +623,8 @@ export class ClassName implements IInterface {
               {
                 "abstract": true,
                 "docs": {
-                  "example": "iface.getProperty() = EnumType.OPTION_B;",
+                  "example": "// Example automatically generated from non-compiling source. May contain errors.
+      iface.getProperty() = EnumType.getOPTION_B();",
                   "summary": "A property value.",
                 },
                 "locationInModule": {
@@ -659,6 +675,7 @@ export class ClassName implements IInterface {
           "markdown": "# README
 
       \`\`\`python
+      # Example automatically generated from non-compiling source. May contain errors.
       object = ClassName("this", 1337, foo="bar")
       object.property = EnumType.OPTION_A
       object.method_call()
@@ -678,7 +695,8 @@ export class ClassName implements IInterface {
             "fqn": "testpkg.ClassName",
             "initializer": {
               "docs": {
-                "example": "ClassName("this", 1337, property=EnumType.OPTION_B)",
+                "example": "# Example automatically generated from non-compiling source. May contain errors.
+      ClassName("this", 1337, property=EnumType.OPTION_B)",
                 "summary": "Create a new instance of ClassName.",
               },
               "locationInModule": {
@@ -717,7 +735,8 @@ export class ClassName implements IInterface {
             "methods": [
               {
                 "docs": {
-                  "example": "ClassName.static_method()",
+                  "example": "# Example automatically generated from non-compiling source. May contain errors.
+      ClassName.static_method()",
                   "remarks": "It can be invoked easily.",
                   "summary": "A static method.",
                 },
@@ -811,7 +830,8 @@ export class ClassName implements IInterface {
           "testpkg.EnumType": {
             "assembly": "testpkg",
             "docs": {
-              "example": "ClassName("this", 1337, property=EnumType.OPTION_B)",
+              "example": "# Example automatically generated from non-compiling source. May contain errors.
+      ClassName("this", 1337, property=EnumType.OPTION_B)",
             },
             "fqn": "testpkg.EnumType",
             "kind": "enum",
@@ -822,13 +842,15 @@ export class ClassName implements IInterface {
             "members": [
               {
                 "docs": {
-                  "example": "ClassName("this", 1337, property=EnumType.OPTION_A)",
+                  "example": "# Example automatically generated from non-compiling source. May contain errors.
+      ClassName("this", 1337, property=EnumType.OPTION_A)",
                 },
                 "name": "OPTION_A",
               },
               {
                 "docs": {
-                  "example": "ClassName("this", 1337, property=EnumType.OPTION_B)",
+                  "example": "# Example automatically generated from non-compiling source. May contain errors.
+      ClassName("this", 1337, property=EnumType.OPTION_B)",
                 },
                 "name": "OPTION_B",
               },
@@ -848,7 +870,8 @@ export class ClassName implements IInterface {
               {
                 "abstract": true,
                 "docs": {
-                  "example": "iface.method_call()",
+                  "example": "# Example automatically generated from non-compiling source. May contain errors.
+      iface.method_call()",
                   "summary": "An instance method call.",
                 },
                 "locationInModule": {
@@ -863,7 +886,8 @@ export class ClassName implements IInterface {
               {
                 "abstract": true,
                 "docs": {
-                  "example": "iface.property = EnumType.OPTION_B",
+                  "example": "# Example automatically generated from non-compiling source. May contain errors.
+      iface.property = EnumType.OPTION_B",
                   "summary": "A property value.",
                 },
                 "locationInModule": {
