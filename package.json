@@ -54,7 +54,7 @@
     "mock-fs": "^5.2.0",
     "npm-check-updates": "^16",
     "prettier": "^2.8.7",
-    "projen": "^0.71.11",
+    "projen": "^0.71.15",
     "tar": "^6.1.13",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1"
@@ -67,7 +67,7 @@
     "commonmark": "^0.30.0",
     "fast-glob": "^3.2.12",
     "jsii": "5.0.x",
-    "semver": "^7.4.0",
+    "semver": "^7.5.0",
     "semver-intersect": "^1.4.0",
     "stream-json": "^1.7.5",
     "typescript": "~5.0.4",
