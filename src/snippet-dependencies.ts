@@ -49,15 +49,21 @@ export async function expandWithTransitiveDependencies(deps: Record<string, Comp
       return;
     }
     pathsSeen.add(dir);
-    const pj: PackageJson = JSON.parse(
-      await fsPromises.readFile(path.join(dir, 'package.json'), { encoding: 'utf-8' }),
-    );
-
-    for (const [name, dep] of Object.entries(await resolveDependenciesFromPackageJson(pj, dir))) {
-      if (!deps[name]) {
-        deps[name] = dep;
-        queue.push(dep);
+    try {
+      const pj: PackageJson = JSON.parse(
+        await fsPromises.readFile(path.join(dir, 'package.json'), { encoding: 'utf-8' }),
+      );
+      for (const [name, dep] of Object.entries(await resolveDependenciesFromPackageJson(pj, dir))) {
+        if (!deps[name]) {
+          deps[name] = dep;
+          queue.push(dep);
+        }
       }
+    } catch (e: any) {
+      if (e.code === 'ENOENT') {
+        return;
+      }
+      throw e;
     }
   }
 }
