@@ -837,6 +837,10 @@ test('example can successfully use a jsii package from the interwebs', async () 
       jsiiRosetta: {
         exampleDependencies: {
           'construct-hub-probe': '*',
+          // These strictly speaking shouldn't need to be here, but guard against testing
+          // with an old NPM version
+          'aws-cdk-lib': '^2.75.0',
+          'constructs': '^10.2.0',
         },
       },
     },
