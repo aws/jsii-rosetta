@@ -807,6 +807,54 @@ test('infused examples have no diagnostics', async () => {
   }
 });
 
+test('example can successfully use a jsii package from the interwebs', async () => {
+  // GIVEN
+  const otherAssembly = TestJsiiModule.fromSource(
+    {
+      'index.ts': `
+      /**
+       * ClassA
+       *
+       * @example
+       * import { Construct } from 'constructs';
+       * import { SampleRepository } from 'construct-hub-probe';
+       *
+       * declare const stack: Construct;
+       *
+       * new SampleRepository(stack, 'Repo', { name: 'hiii' });
+       */
+      export class ClassA {
+        public someMethod() {
+        }
+      }
+      `,
+    },
+    {
+      name: 'my_assembly',
+      jsii: {
+        ...DUMMY_JSII_CONFIG,
+      },
+      jsiiRosetta: {
+        exampleDependencies: {
+          'construct-hub-probe': '*',
+        },
+      },
+    },
+  );
+  try {
+    // WHEN
+    const results = await extract.extractSnippets([otherAssembly.moduleDirectory], {
+      includeCompilerDiagnostics: true,
+      loose: false,
+    });
+
+    // THEN
+    expect(results.diagnostics).toEqual([]);
+  } finally {
+    otherAssembly.cleanup();
+  }
+});
+
 class MockTranslator extends RosettaTranslator {
   public constructor(opts: RosettaTranslatorOptions, translatorFn: jest.Mock) {
     super(opts);
