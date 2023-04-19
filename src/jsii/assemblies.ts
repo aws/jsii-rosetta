@@ -18,7 +18,7 @@ import {
 import { resolveDependenciesFromPackageJson } from '../snippet-dependencies';
 import { enforcesStrictMode } from '../strict';
 import { LanguageTablet, DEFAULT_TABLET_NAME, DEFAULT_TABLET_NAME_COMPRESSED } from '../tablets/tablets';
-import { fmap, mkDict, sortBy } from '../util';
+import { fmap, mkDict, pathExists, sortBy } from '../util';
 
 /**
  * The JSDoc tag users can use to associate non-visible metadata with an example
@@ -347,10 +347,12 @@ function withProjectDirectory(dir: string, snippet: TypeScriptSnippet) {
 async function withDependencies(asm: LoadedAssembly, snippet: TypeScriptSnippet): Promise<TypeScriptSnippet> {
   const compilationDependencies: Record<string, CompilationDependency> = {};
 
-  compilationDependencies[asm.assembly.name] = {
-    type: 'concrete',
-    resolvedDirectory: await fsPromises.realpath(asm.directory),
-  };
+  if (await pathExists(path.join(asm.directory, 'package.json'))) {
+    compilationDependencies[asm.assembly.name] = {
+      type: 'concrete',
+      resolvedDirectory: await fsPromises.realpath(asm.directory),
+    };
+  }
 
   Object.assign(compilationDependencies, await resolveDependenciesFromPackageJson(asm.packageJson, asm.directory));
 
