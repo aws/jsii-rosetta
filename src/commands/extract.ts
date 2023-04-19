@@ -165,6 +165,7 @@ export async function extractSnippets(
     const startTime = Date.now();
 
     const result = await translator.translateAll(snippets, {
+      compilationDirectory: options.compilationDirectory,
       cleanup: options.cleanup,
     });
 

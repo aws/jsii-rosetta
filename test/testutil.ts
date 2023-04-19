@@ -129,5 +129,5 @@ export const DUMMY_JSII_CONFIG = {
 
 export async function withTemporaryDirectory<T>(callback: (dir: string) => Promise<T>): Promise<T> {
   const tmpdir = fs.mkdtempSync(path.join(os.tmpdir(), path.basename(__filename)));
-  return callback(tmpdir).finally(() => fs.rmSync(tmpdir, { recursive: true }));
+  return callback(path.resolve(tmpdir)).finally(() => fs.rmSync(tmpdir, { recursive: true }));
 }
