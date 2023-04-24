@@ -19,7 +19,8 @@ import * as logging from '../../lib/logging';
 import { pathExists } from '../../lib/util';
 import { TestJsiiModule, DUMMY_JSII_CONFIG, testSnippetLocation } from '../testutil';
 
-jest.setTimeout(30_000);
+// One of these tests needs to download aws-cdk-lib from the internet
+jest.setTimeout(60_000);
 
 const DUMMY_README = `
   Here is an example of how to use ClassA:
