@@ -19,7 +19,8 @@ import * as logging from '../../lib/logging';
 import { pathExists } from '../../lib/util';
 import { TestJsiiModule, DUMMY_JSII_CONFIG, testSnippetLocation } from '../testutil';
 
-jest.setTimeout(30_000);
+// One of these tests needs to download aws-cdk-lib from the internet, ample time
+jest.setTimeout(120_000);
 
 const DUMMY_README = `
   Here is an example of how to use ClassA:
@@ -801,6 +802,58 @@ test('infused examples have no diagnostics', async () => {
       loose: false,
     });
 
+    expect(results.diagnostics).toEqual([]);
+  } finally {
+    otherAssembly.cleanup();
+  }
+});
+
+test('example can successfully use a jsii package from the interwebs', async () => {
+  // GIVEN
+  const otherAssembly = TestJsiiModule.fromSource(
+    {
+      'index.ts': `
+      /**
+       * ClassA
+       *
+       * @example
+       * import { Construct } from 'constructs';
+       * import { SampleRepository } from 'construct-hub-probe';
+       *
+       * declare const stack: Construct;
+       *
+       * new SampleRepository(stack, 'Repo', { name: 'hiii' });
+       */
+      export class ClassA {
+        public someMethod() {
+        }
+      }
+      `,
+    },
+    {
+      name: 'my_assembly',
+      jsii: {
+        ...DUMMY_JSII_CONFIG,
+      },
+      jsiiRosetta: {
+        exampleDependencies: {
+          'construct-hub-probe': '*',
+          // These strictly speaking shouldn't need to be here, but guard against testing
+          // with an old NPM version
+          'aws-cdk-lib': '^2.75.0',
+          'constructs': '^10.2.0',
+        },
+      },
+    },
+  );
+  try {
+    // WHEN
+    const results = await extract.extractSnippets([otherAssembly.moduleDirectory], {
+      includeCompilerDiagnostics: true,
+      loose: false,
+    });
+
+    // THEN
     expect(results.diagnostics).toEqual([]);
   } finally {
     otherAssembly.cleanup();

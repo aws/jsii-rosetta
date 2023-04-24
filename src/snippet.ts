@@ -310,7 +310,8 @@ export enum SnippetParameters {
   /**
    * What directory to resolve fixtures in for this snippet (system parameter)
    *
-   * Attached during processing, should not be used by authors.
+   * Attached during processing, should not be used by authors. Does NOT imply
+   * anything about the directory where we pretend to compile this file.
    */
   $PROJECT_DIRECTORY = '$directory',
 

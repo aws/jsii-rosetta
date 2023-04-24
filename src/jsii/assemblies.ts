@@ -3,8 +3,6 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { loadAssemblyFromFile, loadAssemblyFromPath, findAssemblyFile } from '@jsii/spec';
 import * as spec from '@jsii/spec';
-
-import { findDependencyDirectory, isBuiltinModule } from '../find-utils';
 import { fixturize } from '../fixtures';
 import { extractTypescriptSnippetsFromMarkdown } from '../markdown/extract-snippets';
 import {
@@ -17,9 +15,10 @@ import {
   CompilationDependency,
   INITIALIZER_METHOD_NAME,
 } from '../snippet';
+import { resolveDependenciesFromPackageJson } from '../snippet-dependencies';
 import { enforcesStrictMode } from '../strict';
 import { LanguageTablet, DEFAULT_TABLET_NAME, DEFAULT_TABLET_NAME_COMPRESSED } from '../tablets/tablets';
-import { fmap, mkDict, sortBy } from '../util';
+import { fmap, mkDict, pathExists, sortBy } from '../util';
 
 /**
  * The JSDoc tag users can use to associate non-visible metadata with an example
@@ -341,41 +340,21 @@ function withProjectDirectory(dir: string, snippet: TypeScriptSnippet) {
  * The dependencies will be taken from the package.json, and will consist of:
  *
  * - The package itself
- * - The package's dependencies and peerDependencies
+ * - The package's dependencies and peerDependencies (but NOT devDependencies). Will
+ *   symlink to the files on disk.
  * - Any additional dependencies declared in `jsiiRosetta.exampleDependencies`.
  */
 async function withDependencies(asm: LoadedAssembly, snippet: TypeScriptSnippet): Promise<TypeScriptSnippet> {
   const compilationDependencies: Record<string, CompilationDependency> = {};
 
-  compilationDependencies[asm.assembly.name] = {
-    type: 'concrete',
-    resolvedDirectory: await fsPromises.realpath(asm.directory),
-  };
+  if (await pathExists(path.join(asm.directory, 'package.json'))) {
+    compilationDependencies[asm.assembly.name] = {
+      type: 'concrete',
+      resolvedDirectory: await fsPromises.realpath(asm.directory),
+    };
+  }
 
-  Object.assign(
-    compilationDependencies,
-    mkDict(
-      await Promise.all(
-        Object.keys({ ...asm.packageJson?.dependencies, ...asm.packageJson?.peerDependencies })
-          .filter((name) => !isBuiltinModule(name))
-          .filter(
-            (name) =>
-              !asm.packageJson?.bundledDependencies?.includes(name) &&
-              !asm.packageJson?.bundleDependencies?.includes(name),
-          )
-          .map(
-            async (name) =>
-              [
-                name,
-                {
-                  type: 'concrete',
-                  resolvedDirectory: await fsPromises.realpath(await findDependencyDirectory(name, asm.directory)),
-                },
-              ] as const,
-          ),
-      ),
-    ),
-  );
+  Object.assign(compilationDependencies, await resolveDependenciesFromPackageJson(asm.packageJson, asm.directory));
 
   Object.assign(
     compilationDependencies,
