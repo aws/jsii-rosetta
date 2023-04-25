@@ -123,7 +123,7 @@ function resolveConflict(
       fs.readFileSync(path.join(a.resolvedDirectory, 'package.json'), 'utf-8'),
     ).version;
 
-    if (!semver.satisfies(concreteVersion, b.versionRange)) {
+    if (!semver.satisfies(concreteVersion, b.versionRange, { includePrerelease: true })) {
       throw new Error(
         `Dependency conflict: ${name} expected to match ${b.versionRange} but found ${concreteVersion} at ${a.resolvedDirectory}`,
       );
