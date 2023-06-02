@@ -243,6 +243,11 @@ async function main() {
             describe: 'Compress the cache-to file',
             default: false,
           })
+          .options('cleanup', {
+            type: 'boolean',
+            describe: 'Clean up temporary directories',
+            default: true,
+          })
           .conflicts('loose', 'strict')
           .conflicts('loose', 'fail'),
       wrapHandler(async (args) => {
@@ -269,6 +274,7 @@ async function main() {
           loose: args.loose,
           compressTablet: args['compress-tablet'],
           compressCacheToFile: args['compress-cache'],
+          cleanup: args.cleanup,
         };
 
         const result = args.infuse

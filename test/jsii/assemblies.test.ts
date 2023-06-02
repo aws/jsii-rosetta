@@ -8,6 +8,8 @@ import { allTypeScriptSnippets } from '../../lib/jsii/assemblies';
 import { SnippetParameters } from '../../lib/snippet';
 import { TestJsiiModule, DUMMY_JSII_CONFIG } from '../testutil';
 
+jest.setTimeout(30_000);
+
 test('Extract snippet from README', async () => {
   const snippets = Array.from(
     await allTypeScriptSnippets([

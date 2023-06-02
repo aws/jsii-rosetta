@@ -166,9 +166,7 @@ export class SnippetTranslator {
   public constructor(snippet: TypeScriptSnippet, private readonly options: SnippetTranslatorOptions = {}) {
     const compiler = options.compiler ?? new TypeScriptCompiler();
     const source = completeSource(snippet);
-    const fakeCurrentDirectory =
-      snippet.parameters?.[SnippetParameters.$COMPILATION_DIRECTORY] ??
-      snippet.parameters?.[SnippetParameters.$PROJECT_DIRECTORY];
+    const fakeCurrentDirectory = snippet.parameters?.[SnippetParameters.$COMPILATION_DIRECTORY] ?? process.cwd();
     this.compilation = compiler.compileInMemory(
       removeSlashes(formatLocation(snippet.location)),
       source,
