@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - maintenance/*
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -129,10 +130,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - 14.x
           - 16.x
           - 18.x
-          - 19.x
   package:
     name: package
     needs: build
