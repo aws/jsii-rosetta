@@ -162,6 +162,7 @@ export class UpgradeDependencies extends Component {
         this.project.deps.all
           .filter(
             (dep) =>
+              dep.name === 'jsii' ||
               dep.name === 'typescript' ||
               (dep.version && dep.version[0] !== '^' && dep.type !== DependencyType.OVERRIDE),
           )
@@ -169,7 +170,8 @@ export class UpgradeDependencies extends Component {
           .concat(exclude),
       ),
     ];
-    // TypeScript is minor-pinned in this project...
+    // TypeScript & jsii are minor-pinned in this project...
+    const hasJsii = ncuExcludes.includes('jsii');
     const hasTypescript = ncuExcludes.includes('typescript');
 
     const ncuIncludes = this.options.include?.filter((item) => !ncuExcludes.includes(item));
@@ -203,8 +205,16 @@ export class UpgradeDependencies extends Component {
 
       steps.push({ exec: ncuCommand.join(' ') });
     }
-    if (hasTypescript) {
-      const ncuCommand = ['npm-check-updates', '--upgrade', '--target=patch', '--filter=typescript'];
+    // Handle minor-pinned dependencies
+    if (hasJsii || hasTypescript) {
+      const names = [];
+      if (hasJsii) {
+        names.push('jsii');
+      }
+      if (hasTypescript) {
+        names.push('typescript');
+      }
+      const ncuCommand = ['npm-check-updates', '--upgrade', '--target=patch', `--filter='${names.join(',')}'`];
       steps.push({ exec: ncuCommand.join(' ') });
     }
 

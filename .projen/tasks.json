@@ -226,7 +226,7 @@
           "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='jsii,typescript'"
         },
         {
-          "exec": "npm-check-updates --upgrade --target=patch --filter=typescript"
+          "exec": "npm-check-updates --upgrade --target=patch --filter='jsii,typescript'"
         },
         {
           "exec": "yarn install --check-files"
