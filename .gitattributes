@@ -17,6 +17,7 @@
 /.github/workflows/upgrade-maintenance-v5.0.yml linguist-generated
 /.gitignore linguist-generated
 /.npmignore linguist-generated
+/.npmrc linguist-generated
 /.prettierrc.json linguist-generated
 /.projen/** linguist-generated
 /.projen/deps.json linguist-generated
