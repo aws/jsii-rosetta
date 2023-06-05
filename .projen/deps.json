@@ -136,7 +136,7 @@
     },
     {
       "name": "jsii",
-      "version": "5.1.x",
+      "version": "5.0.x",
       "type": "runtime"
     },
     {
