@@ -19,7 +19,7 @@ supports a limited set of TypeScript language features (which can be reliably re
 
 Head over to our [documentation website](https://aws.github.io/jsii)!
 
-The jsii toolchain is spread out on multiple repositories:
+The jsii toolchain spreads out on multiple repositories:
 - [aws/jsii-compiler](https://github.com/aws/jsii-compiler) is where the `jsii` compiler is maintained (except releases
   in the `1.x` line)
 - [aws/jsii-rosetta](https://github.com/aws/jsii-rosetta) is where the `jsii-rosetta` sample code transliteration tool
