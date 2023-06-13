@@ -1,4 +1,4 @@
-import { DependencyType, javascript, JsonFile, JsonPatch, typescript } from 'projen';
+import { DependencyType, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
 import { versionMajorMinor } from 'typescript';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
@@ -117,6 +117,11 @@ const project = new typescript.TypeScriptProject({
     'yargs',
   ],
 });
+
+// PR validation should run on merge group, too...
+(project.tryFindFile('.github/workflows/pull-request-lint.yml')! as YamlFile).patch(
+  JsonPatch.add('/on/merge_group', {}),
+);
 
 new UpgradeDependencies(project, {
   workflowOptions: {
