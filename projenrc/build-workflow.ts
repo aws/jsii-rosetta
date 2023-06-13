@@ -54,9 +54,6 @@ export class BuildWorkflow {
           {
             name: 'Checkout',
             uses: 'actions/checkout@v3',
-            with: {
-              ref: '${{ github.event.pull_request.head.ref }}',
-            },
           },
           {
             name: 'Setup Node.js',
