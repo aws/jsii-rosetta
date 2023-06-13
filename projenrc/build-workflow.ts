@@ -56,6 +56,7 @@ export class BuildWorkflow {
             uses: 'actions/checkout@v3',
             with: {
               ref: '${{ github.event.pull_request.head.ref }}',
+              repository: '${{ github.repository }}',
             },
           },
           {
