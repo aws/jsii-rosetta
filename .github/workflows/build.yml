@@ -130,6 +130,7 @@ jobs:
         node-version:
           - 16.x
           - 18.x
+          - 20.x
   matrix-clear:
     name: Unit Tests
     needs: matrix-test
