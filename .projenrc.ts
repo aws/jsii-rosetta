@@ -29,7 +29,7 @@ const project = new typescript.TypeScriptProject({
 
   autoDetectBin: true,
 
-  minNodeVersion: '14.18.0',
+  minNodeVersion: '16.0.0',
   tsconfig: {
     compilerOptions: {
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping

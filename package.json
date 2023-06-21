@@ -37,7 +37,7 @@
     "@types/commonmark": "^0.27.6",
     "@types/jest": "^29.5.2",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^14",
+    "@types/node": "^16",
     "@types/stream-json": "^1.7.3",
     "@types/tar": "^6.1.5",
     "@types/workerpool": "^6.4.0",
@@ -75,7 +75,7 @@
     "yargs": "^17.7.2"
   },
   "engines": {
-    "node": ">= 14.18.0"
+    "node": ">= 16.0.0"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
