@@ -37,7 +37,7 @@
     "@types/commonmark": "^0.27.6",
     "@types/jest": "^29.5.2",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^14",
+    "@types/node": "^16",
     "@types/stream-json": "^1.7.3",
     "@types/tar": "^6.1.5",
     "@types/workerpool": "^6.4.0",
@@ -54,7 +54,7 @@
     "mock-fs": "^5.2.0",
     "npm-check-updates": "^16",
     "prettier": "^2.8.8",
-    "projen": "^0.71.101",
+    "projen": "^0.71.106",
     "tar": "^6.1.15",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1"
@@ -67,7 +67,7 @@
     "commonmark": "^0.30.0",
     "fast-glob": "^3.2.12",
     "jsii": "5.0.x",
-    "semver": "^7.5.2",
+    "semver": "^7.5.3",
     "semver-intersect": "^1.4.0",
     "stream-json": "^1.8.0",
     "typescript": "~5.0.4",
@@ -75,7 +75,7 @@
     "yargs": "^17.7.2"
   },
   "engines": {
-    "node": ">= 14.18.0"
+    "node": ">= 16.14.0"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
