@@ -54,9 +54,9 @@
     "mock-fs": "^5.2.0",
     "npm-check-updates": "^16",
     "prettier": "^2.8.8",
-    "projen": "^0.71.117",
+    "projen": "^0.71.118",
     "tar": "^6.1.15",
-    "ts-jest": "^29.1.0",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
@@ -65,7 +65,7 @@
     "@xmldom/xmldom": "^0.8.8",
     "chalk": "^4",
     "commonmark": "^0.30.0",
-    "fast-glob": "^3.2.12",
+    "fast-glob": "^3.3.0",
     "jsii": "5.1.x",
     "semver": "^7.5.3",
     "semver-intersect": "^1.4.0",
