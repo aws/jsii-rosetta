@@ -1,5 +1,5 @@
 import * as spec from '@jsii/spec';
-import { symbolIdentifier } from 'jsii';
+import { symbolIdentifier } from 'jsii/common';
 import * as ts from 'typescript';
 
 import { findTypeLookupAssembly, TypeLookupAssembly } from './assemblies';
