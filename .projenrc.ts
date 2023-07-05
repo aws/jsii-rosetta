@@ -5,6 +5,10 @@ import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
 import { UpgradeDependencies } from './projenrc/upgrade-dependencies';
 
+// This should be '0' for new version lines
+// However it might be required to depend on a version with a specific feature or bug-fix
+const JSII_PATCH_VERSION = '14';
+
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
 
@@ -35,6 +39,7 @@ const project = new typescript.TypeScriptProject({
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
       lib: ['es2020', 'es2021.WeakRef'],
       target: 'ES2020',
+      moduleResolution: javascript.TypeScriptModuleResolution.NODE16,
 
       esModuleInterop: false,
       noImplicitOverride: true,
@@ -108,7 +113,7 @@ const project = new typescript.TypeScriptProject({
     'chalk@^4',
     'commonmark',
     'fast-glob',
-    `jsii@${versionMajorMinor}.x`,
+    `jsii@~${versionMajorMinor}.${JSII_PATCH_VERSION}`,
     'semver-intersect',
     'semver',
     'stream-json',
