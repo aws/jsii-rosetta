@@ -7,7 +7,7 @@ import { UpgradeDependencies } from './projenrc/upgrade-dependencies';
 
 // This should be '0' for new version lines
 // However it might be required to depend on a version with a specific feature or bug-fix
-const JSII_PATCH_VERSION = '14';
+const JSII_PATCH_VERSION = '5';
 
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
