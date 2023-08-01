@@ -190,8 +190,9 @@ export class UpgradeDependencies extends Component {
     // update npm-check-updates before everything else, in case there is a bug
     // in it or one of its dependencies. This will make upgrade workflows
     // slightly more stable and resilient to upstream changes.
+    const depTypes = this.project.deps.all.map((dep) => dep.type);
     steps.push({
-      exec: this._project.package.renderUpgradePackagesCommand([], ['npm-check-updates']),
+      exec: this._project.package.renderUpgradePackagesCommand(depTypes, [], ['npm-check-updates']),
     });
 
     for (const dep of ['dev', 'optional', 'peer', 'prod', 'bundle']) {
@@ -223,7 +224,7 @@ export class UpgradeDependencies extends Component {
 
     // run upgrade command to upgrade transitive deps as well
     steps.push({
-      exec: this._project.package.renderUpgradePackagesCommand(exclude, this.options.include),
+      exec: this._project.package.renderUpgradePackagesCommand(depTypes, exclude, this.options.include),
     });
 
     // run "projen" to give projen a chance to update dependencies (it will also run "yarn install")
