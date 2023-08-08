@@ -1,3 +1,3 @@
 type iThing interface {
-	thingArn() *string
+	ThingArn() *string
 }
