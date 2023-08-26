@@ -54,14 +54,14 @@
     "mock-fs": "^5.2.0",
     "npm-check-updates": "^16",
     "prettier": "^2.8.8",
-    "projen": "^0.72.23",
+    "projen": "^0.72.24",
     "tar": "^6.1.15",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@jsii/check-node": "1.87.0",
-    "@jsii/spec": "^1.87.0",
+    "@jsii/check-node": "1.88.0",
+    "@jsii/spec": "^1.88.0",
     "@xmldom/xmldom": "^0.8.10",
     "chalk": "^4",
     "commonmark": "^0.30.0",
