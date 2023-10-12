@@ -6,12 +6,13 @@ import * as path from 'node:path';
 import { PackageJson } from '@jsii/spec';
 import * as fastGlob from 'fast-glob';
 import * as semver from 'semver';
-import { intersect } from 'semver-intersect';
 
 import { findDependencyDirectory, findUp, isBuiltinModule } from './find-utils';
 import * as logging from './logging';
 import { TypeScriptSnippet, CompilationDependency } from './snippet';
 import { mkDict, formatList, pathExists } from './util';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { intersect } = require('semver-intersect');
 
 /**
  * Collect the dependencies of a bunch of snippets together in one declaration
