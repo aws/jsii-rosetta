@@ -66,12 +66,12 @@
     "chalk": "^4",
     "commonmark": "^0.30.0",
     "fast-glob": "^3.3.1",
-    "jsii": "~5.1.5",
+    "jsii": "~5.2.5",
     "semver": "^7.5.4",
     "semver-intersect": "^1.4.0",
     "stream-json": "^1.8.0",
-    "typescript": "~5.1.6",
-    "workerpool": "^6.5.1",
+    "typescript": "~5.2.2",
+    "workerpool": "^6.4.2",
     "yargs": "^17.7.2"
   },
   "engines": {
