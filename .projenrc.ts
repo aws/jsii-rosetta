@@ -3,7 +3,7 @@ import { versionMajorMinor } from 'typescript';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
-import { UpgradeDependencies } from './projenrc/upgrade-dependencies';
+import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
 
 // This should be '0' for new version lines
 // However it might be required to depend on a version with a specific feature or bug-fix
@@ -39,8 +39,8 @@ const project = new typescript.TypeScriptProject({
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
       lib: ['es2020', 'es2021.WeakRef'],
       target: 'ES2020',
-      moduleResolution: javascript.TypeScriptModuleResolution.NODE16,
-
+      moduleResolution: javascript.TypeScriptModuleResolution.NODE_NEXT,
+      module: 'nodenext',
       esModuleInterop: false,
       noImplicitOverride: true,
       skipLibCheck: true,
@@ -128,20 +128,7 @@ const project = new typescript.TypeScriptProject({
   JsonPatch.add('/on/merge_group', {}),
 );
 
-new UpgradeDependencies(project, {
-  workflowOptions: {
-    branches: [
-      'main',
-      ...Object.entries(SUPPORT_POLICY.maintenance).flatMap(([version, until]) => {
-        if (Date.now() > until.getTime()) {
-          return [];
-        }
-        return [`maintenance/v${version}`];
-      }),
-    ],
-    labels: ['auto-approve'],
-  },
-});
+new JsiiDependencyUpgrades(project);
 
 // VSCode will look at the "closest" file named "tsconfig.json" when deciding on which config to use
 // for a given TypeScript file with the TypeScript language server. In order to make this "seamless"
