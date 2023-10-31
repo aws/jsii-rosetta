@@ -39,8 +39,8 @@ const project = new typescript.TypeScriptProject({
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
       lib: ['es2020', 'es2021.WeakRef'],
       target: 'ES2020',
-      moduleResolution: javascript.TypeScriptModuleResolution.NODE16,
-
+      moduleResolution: javascript.TypeScriptModuleResolution.NODE_NEXT,
+      module: 'nodenext',
       esModuleInterop: false,
       noImplicitOverride: true,
       skipLibCheck: true,

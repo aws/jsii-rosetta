@@ -22,7 +22,7 @@ export class JsiiDependencyUpgrades extends Component {
         labels: ['auto-approve'],
       },
     });
-    
+
     for (const upgradeWorkflow of upgrades.workflows) {
       if (upgradeWorkflow.name.startsWith('upgrade-maintenance-')) {
         upgradeWorkflow.file?.patch(
@@ -45,6 +45,6 @@ export class JsiiDependencyUpgrades extends Component {
         branches,
         labels: ['auto-approve'],
       },
-    });    
+    });
   }
 }
