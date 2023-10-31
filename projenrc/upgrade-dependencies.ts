@@ -348,6 +348,7 @@ export class UpgradeDependencies extends Component {
     switch (packageManager) {
       case NodePackageManager.YARN:
       case NodePackageManager.YARN2:
+      case NodePackageManager.YARN_CLASSIC:
         lazy = upgradePackages('yarn upgrade');
         break;
       case NodePackageManager.NPM:
