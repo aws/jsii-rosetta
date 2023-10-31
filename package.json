@@ -23,6 +23,7 @@
     "test": "npx projen test",
     "test:watch": "npx projen test:watch",
     "upgrade": "npx projen upgrade",
+    "upgrade-jsii": "npx projen upgrade-jsii",
     "watch": "npx projen watch",
     "projen": "npx projen"
   },

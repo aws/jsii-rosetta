@@ -46,6 +46,9 @@ jspm_packages/
 !/.github/workflows/upgrade-main.yml
 !/.github/workflows/upgrade-maintenance-v5.1.yml
 !/.github/workflows/upgrade-maintenance-v5.0.yml
+!/.github/workflows/upgrade-jsii-main.yml
+!/.github/workflows/upgrade-jsii-maintenance-v5.1.yml
+!/.github/workflows/upgrade-jsii-maintenance-v5.0.yml
 /build-tools/tsconfig.json
 /projenrc/tsconfig.json
 /test/tsconfig.json

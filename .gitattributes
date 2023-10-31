@@ -15,6 +15,9 @@
 /.github/workflows/build.yml linguist-generated
 /.github/workflows/pull-request-lint.yml linguist-generated
 /.github/workflows/release.yml linguist-generated
+/.github/workflows/upgrade-jsii-main.yml linguist-generated
+/.github/workflows/upgrade-jsii-maintenance-v5.0.yml linguist-generated
+/.github/workflows/upgrade-jsii-maintenance-v5.1.yml linguist-generated
 /.github/workflows/upgrade-main.yml linguist-generated
 /.github/workflows/upgrade-maintenance-v5.0.yml linguist-generated
 /.github/workflows/upgrade-maintenance-v5.1.yml linguist-generated
