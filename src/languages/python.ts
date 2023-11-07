@@ -323,7 +323,6 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
         ')',
       ],
       [],
-      { canBreakLine: true },
     );
   }
 
@@ -518,7 +517,6 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
     return new OTree(
       [context.convert(node.expression), '(', this.convertFunctionCallArguments(node.arguments, context), ')'],
       [],
-      { canBreakLine: true },
     );
   }
 
