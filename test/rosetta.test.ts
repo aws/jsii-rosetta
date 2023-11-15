@@ -1,4 +1,5 @@
-import { Volume } from 'memfs';
+import * as mockfs from 'mock-fs';
+
 import { fakeAssembly } from './jsii/fake-assembly';
 import { testSnippetLocation } from './testutil';
 import {
@@ -11,8 +12,6 @@ import {
   UnknownSnippetMode,
 } from '../lib';
 import { TargetLanguage } from '../lib/languages';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { patchFs } = require('fs-monkey');
 
 const SAMPLE_CODE: TypeScriptSnippet = {
   visibleSource: 'callThisFunction();',
@@ -219,18 +218,11 @@ describe('Rosetta object with disclaimers', () => {
 });
 
 describe('with mocked filesystem', () => {
-  let unpatchFs: () => void;
-  let vol: any;
-
-  beforeAll(() => {
-    vol = Volume.fromJSON({});
-    unpatchFs = patchFs(vol);
+  beforeEach(() => {
+    mockfs();
   });
   afterEach(() => {
-    vol.reset();
-  });
-  afterAll(() => {
-    unpatchFs();
+    mockfs.restore();
   });
 
   const tablet = new LanguageTablet();
