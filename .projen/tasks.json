@@ -208,13 +208,24 @@
       },
       "steps": [
         {
+<<<<<<< HEAD
           "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/node,@types/stream-json,@types/tar,@types/workerpool,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,eslint,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@jsii/check-node,@jsii/spec,@xmldom/xmldom,chalk,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+=======
+          "exec": "yarn upgrade npm-check-updates"
+        },
+        {
+          "exec": "npm-check-updates --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/node,@types/stream-json,@types/tar,@types/workerpool,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,eslint,fs-monkey,jest,memfs,mock-fs,npm-check-updates,prettier,projen,tar,ts-jest,ts-node,@jsii/check-node,@jsii/spec,@xmldom/xmldom,chalk,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+>>>>>>> f25a394 (chore: replace mock-fs with memfs that works in node20 (#355))
         },
         {
           "exec": "yarn install --check-files"
         },
         {
+<<<<<<< HEAD
           "exec": "yarn upgrade @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs prettier projen tar ts-jest ts-node @jsii/check-node @jsii/spec @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
+=======
+          "exec": "yarn upgrade @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs npm-check-updates prettier projen tar ts-jest ts-node @jsii/check-node @jsii/spec @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
+>>>>>>> f25a394 (chore: replace mock-fs with memfs that works in node20 (#355))
         },
         {
           "exec": "npx projen"
