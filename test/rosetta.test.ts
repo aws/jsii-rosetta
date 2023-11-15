@@ -219,8 +219,13 @@ describe('Rosetta object with disclaimers', () => {
 });
 
 describe('with mocked filesystem', () => {
-  const vol = Volume.fromJSON({});
-  const unpatchFs = patchFs(vol);
+  let unpatchFs: () => void;
+  let vol: any;
+
+  beforeAll(() => {
+    vol = Volume.fromJSON({});
+    unpatchFs = patchFs(vol);
+  });
   afterEach(() => {
     vol.reset();
   });
