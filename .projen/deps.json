@@ -78,7 +78,15 @@
       "type": "build"
     },
     {
+      "name": "fs-monkey",
+      "type": "build"
+    },
+    {
       "name": "jest",
+      "type": "build"
+    },
+    {
+      "name": "memfs",
       "type": "build"
     },
     {
