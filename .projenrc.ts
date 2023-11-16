@@ -102,6 +102,8 @@ const project = new typescript.TypeScriptProject({
     '@types/stream-json',
     '@types/tar',
     '@types/workerpool',
+    'fs-monkey',
+    'memfs',
     'mock-fs',
     'tar',
     'ts-node',
