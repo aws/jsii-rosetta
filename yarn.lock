@@ -4106,9 +4106,9 @@ text-table@^0.2.0:
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
 thingies@^1.11.1:
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/thingies/-/thingies-1.14.1.tgz#2456b15db2a4113b434874381b5691dbc4ce2f0f"
-  integrity sha512-ktiTHLvVsS5Cifx8zbvg7x4clgf3AS+52gMSGlW+fvk8xYzog8f9qHvivjpQF56NHCKKpj4O1wI6tH92V4a0rQ==
+  version "1.14.2"
+  resolved "https://registry.yarnpkg.com/thingies/-/thingies-1.14.2.tgz#44787233f2b99aac84e398a40d74a5107125d96d"
+  integrity sha512-sbwAaWmbosdmuDJH3xfQXoUmgGOcrhC1YPAqN5kHEyylQpnm5DadUC2lgYb7fvLGgAf3RlwOp9f9qZ65Lh9iqA==
 
 tmpl@1.0.5:
   version "1.0.5"
