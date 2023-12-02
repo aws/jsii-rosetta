@@ -179,7 +179,7 @@ export class BuildWorkflow {
           matrix: {
             domain: {
               'node-version': NodeRelease.ALL_RELEASES.flatMap((release) => {
-                if (!release.supported) {
+                if (!release.supported || isOdd(release.majorVersion)) {
                   return [];
                 }
                 return [`${release.majorVersion}.x`];
@@ -300,3 +300,7 @@ export class BuildWorkflow {
     }
   }
 }
+
+const isOdd = function (x: number): boolean {
+  return Boolean(x & 1);
+};
