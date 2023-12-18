@@ -20,6 +20,7 @@ supports a limited set of TypeScript language features (which can be reliably re
 Head over to our [documentation website](https://aws.github.io/jsii)!
 
 The jsii toolchain spreads out on multiple repositories:
+
 - [aws/jsii-compiler](https://github.com/aws/jsii-compiler) is where the `jsii` compiler is maintained (except releases
   in the `1.x` line)
 - [aws/jsii-rosetta](https://github.com/aws/jsii-rosetta) is where the `jsii-rosetta` sample code transliteration tool
@@ -32,11 +33,25 @@ The jsii toolchain spreads out on multiple repositories:
   - The jsii runtime libraries for the supported jsii target languages
   - `1.x` release lines of `jsii` and `jsii-rosetta`
 
-# :gear: Contributing
+## :gear: Maintenance & Support
+
+The applicable *Maintenance & Support policy* can be reviewed in [SUPPORT.md](./SUPPORT.md).
+
+The current status of `jsii-rosetta` releases is:
+
+| Release | Status      | Comment                                                                                                 |
+| ------- | ----------- | ------------------------------------------------------------------------------------------------------- |
+| `5.3.x` | Current     | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.3-latest?label=jsii-rosetta%40v5.3-latest&logo=npm) |
+| `5.2.x` | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.2-latest?label=jsii-rosetta%40v5.2-latest&logo=npm) |
+| `5.1.x` | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.1-latest?label=jsii-rosetta%40v5.1-latest&logo=npm) |
+| `5.0.x` | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.0-latest?label=jsii-rosetta%40v5.0-latest&logo=npm) |
+| `1.x`   | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v1?label=jsii-rosetta%40v1&logo=npm)                   |
+
+## :gear: Contributing
 
 See [CONTRIBUTING](./CONTRIBUTING.md).
 
-# :school_satchel: Getting Started
+## :school_satchel: Getting Started
 
 ## Rosetta for example authors
 
@@ -182,10 +197,10 @@ home directory, and finally store all translations in something called a
 
 A couple of things to note here:
 
-* Snippets are always read from the jsii assembly. That means if you make
+- Snippets are always read from the jsii assembly. That means if you make
   changes to examples in source files, you must first re-run `jsii` to
   regenerate the assembly, before re-running `jsii-rosetta extract`.
-* The compilation directory will be used to resolve `import`s. Currently, you
+- The compilation directory will be used to resolve `import`s. Currently, you
   are responsible for building a directory with the correct `node_modules`
   directories in there so that a TypeScript compilation step will find all
   libraries referenced in the examples. This is especially revelant if your
@@ -195,7 +210,7 @@ A couple of things to note here:
   *cannot* be in the set of dependencies of `A`, you must build a directory with
   both `B` and `A` in it somewhere in your filesystem and run Rosetta in that
   directory.
-* "Extract" will compile samples in parallel. The more assemblies you give it
+- "Extract" will compile samples in parallel. The more assemblies you give it
   at the same time, the more efficient of a job it will be able to do.
 
 The extract command will write a file named `.jsii.tabl.json` next to every
@@ -285,11 +300,11 @@ tablet file.
 When a translation for a code sample cannot be found, `pacmak` can be configured
 to do one of the following:
 
-* Leave the sample untranslated (default)
-* Translate the sample in-place (this will slow down generation a lot, and you
+- Leave the sample untranslated (default)
+- Translate the sample in-place (this will slow down generation a lot, and you
   will not have the fine control over the compilation environment that you would
   have if you were to use the `extract` command)
-* Fail
+- Fail
 
 Example:
 
@@ -351,9 +366,9 @@ This package supports hiding parts of the original source after translation.
 
 To mark special locations in the source tree, we can use one of three mechanisms:
 
-* Use a `void` expression statement to mark statement locations in the AST.
-* Use the `comma` operator combined with a `void` expression to mark expression locations in the AST.
-* Use special directive comments (`/// !hide`, `/// !show`) to mark locations that span AST nodes. This is less reliable
+- Use a `void` expression statement to mark statement locations in the AST.
+- Use the `comma` operator combined with a `void` expression to mark expression locations in the AST.
+- Use special directive comments (`/// !hide`, `/// !show`) to mark locations that span AST nodes. This is less reliable
   (because the source location of translated syntax sometimes will have to be estimated) but the only option if you want
   to mark non-contiguous nodes (such as hide part of a class declaration but show statements inside the constructor).
 
@@ -644,18 +659,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
 Contributions of any kind welcome!
-
-## :gear: Maintenance & Support
-
-The applicable _Maintenance & Support policy_ can be reviewed in [SUPPORT.md](./SUPPORT.md).
-
-The current status of `jsii-rosetta` releases is:
-
-Release | Status      | Comment
---------|-------------|-----------------------------
-`1.x`   | Current     | https://github.com/aws/jsii
-`5.1.x` | Maintenance | ![](https://img.shields.io/npm/v/jsii-rosetta/v5.1-latest?label=jsii-rosetta%40v5.1-latest&logo=npm)
-`5.0.x` | Maintenance | ![](https://img.shields.io/npm/v/jsii-rosetta/v5.0-latest?label=jsii-rosetta%40v5.0-latest&logo=npm)
 
 ## :balance_scale: License
 
