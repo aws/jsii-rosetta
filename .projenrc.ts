@@ -1,13 +1,24 @@
 import { DependencyType, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
-import { versionMajorMinor } from 'typescript';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
 import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
 
-// This should be '0' for new version lines
-// However it might be required to depend on a version with a specific feature or bug-fix
-const JSII_PATCH_VERSION = '5';
+/**
+ * See 'projenrc/support.ts' for jsii-compiler/TypeScripts versions we are tracking.
+ * To add a new version:
+ *
+ * 1. Perform the new version release for jsii-compiler and make sure the version has been released
+ * 2. Fork the current `main` to a maintenance branch:
+ *    `git push origin main:maintenance/v5.3`
+ * 3. Add a branch protection rule for the new maintenance branch
+ * 4. Edit `support.ts`, maintenance EOL date for the current version is 6 months from
+ *    today, make the new version current. Also update `currentMinVersionNumber`.
+ * 5. Update `minNodeVersion` to the oldest LTS version of Node (i.e. dropping support for EOL versions of Node)
+ * 6. `npx projen`
+ * 7. Update the version list in the README.
+ * 8. Create a PR
+ */
 
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
@@ -33,7 +44,7 @@ const project = new typescript.TypeScriptProject({
 
   autoDetectBin: true,
 
-  minNodeVersion: '16.14.0',
+  minNodeVersion: '18.12.0',
   tsconfig: {
     compilerOptions: {
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
@@ -115,11 +126,11 @@ const project = new typescript.TypeScriptProject({
     'chalk@^4',
     'commonmark',
     'fast-glob',
-    `jsii@~${versionMajorMinor}.${JSII_PATCH_VERSION}`,
+    `jsii@~${SUPPORT_POLICY.currentMinVersionNumber}`,
     'semver-intersect',
     'semver',
     'stream-json',
-    'typescript',
+    `typescript@~${SUPPORT_POLICY.current}`,
     'workerpool',
     'yargs',
   ],
@@ -128,9 +139,20 @@ const project = new typescript.TypeScriptProject({
 // PR validation should run on merge group, too...
 (project.tryFindFile('.github/workflows/pull-request-lint.yml')! as YamlFile).patch(
   JsonPatch.add('/on/merge_group', {}),
+  JsonPatch.add(
+    '/jobs/validate/steps/0/if',
+    "github.event == 'pull_request' || github.event_name == 'pull_request_target'",
+  ),
 );
 
 new JsiiDependencyUpgrades(project);
+
+// contributors:update
+project.addDevDeps('all-contributors-cli');
+const contributors = project.addTask('contributors:update', {
+  exec: 'all-contributors check | grep "Missing contributors" -A 1 | tail -n1 | sed -e "s/,//g" | xargs -n1 | grep -v "\\[bot\\]" | grep -v "aws-cdk-automation" | xargs -n1 -I{} all-contributors add {} code',
+});
+contributors.exec('all-contributors generate');
 
 // VSCode will look at the "closest" file named "tsconfig.json" when deciding on which config to use
 // for a given TypeScript file with the TypeScript language server. In order to make this "seamless"

@@ -65,6 +65,17 @@
         }
       ]
     },
+    "contributors:update": {
+      "name": "contributors:update",
+      "steps": [
+        {
+          "exec": "all-contributors check | grep \"Missing contributors\" -A 1 | tail -n1 | sed -e \"s/,//g\" | xargs -n1 | grep -v \"\\[bot\\]\" | grep -v \"aws-cdk-automation\" | xargs -n1 -I{} all-contributors add {} code"
+        },
+        {
+          "exec": "all-contributors generate"
+        }
+      ]
+    },
     "default": {
       "name": "default",
       "description": "Synthesize project files",
@@ -208,13 +219,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/node,@types/stream-json,@types/tar,@types/workerpool,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,constructs,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,eslint,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@jsii/check-node,@jsii/spec,@xmldom/xmldom,chalk,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/node,@types/stream-json,@types/tar,@types/workerpool,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,all-contributors-cli,constructs,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,eslint,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@jsii/check-node,@jsii/spec,@xmldom/xmldom,chalk,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs prettier projen tar ts-jest ts-node @jsii/check-node @jsii/spec @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
+          "exec": "yarn upgrade @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser all-contributors-cli constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs prettier projen tar ts-jest ts-node @jsii/check-node @jsii/spec @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
         },
         {
           "exec": "npx projen"

@@ -28,3 +28,4 @@ jobs:
             chore
           requireScope: false
           githubBaseUrl: ${{ github.api_url }}
+        if: github.event == 'pull_request' || github.event_name == 'pull_request_target'
