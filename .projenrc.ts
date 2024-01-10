@@ -1,5 +1,6 @@
 import { DependencyType, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
 import { BuildWorkflow } from './projenrc/build-workflow';
+import { PullRequestBackport } from './projenrc/pull-request-backport';
 import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
 import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
@@ -238,7 +239,7 @@ project.eslint?.addRules({
 new BuildWorkflow(project);
 
 // Add support policy documents & release workflows
-new SupportPolicy(project);
+const supported = new SupportPolicy(project);
 const releases = new ReleaseWorkflow(project)
   .autoTag({
     preReleaseId: 'dev',
@@ -257,23 +258,28 @@ for (const [version, until] of Object.entries(SUPPORT_POLICY.maintenance)) {
     // Stagger schedules every 5 hours, rolling. 5 was selected because it's co-prime to 24.
     hour = (hour + 5) % 24;
 
-    const branch = `v${version}`;
+    const tag = `v${version}`;
 
     releases
       .autoTag({
         preReleaseId: 'dev',
-        runName: `Auto-Tag Prerelease (${branch})`,
+        runName: `Auto-Tag Prerelease (${tag})`,
         schedule: `0 ${hour} * * 0,2-6`, // Tuesday though sundays
-        branch: `maintenance/${branch}`,
-        nameSuffix: branch,
+        branch: supported.branches[version],
+        nameSuffix: tag,
       })
       .autoTag({
-        runName: `Auto-Tag Release (${branch})`,
+        runName: `Auto-Tag Release (${tag})`,
         schedule: `0 ${hour} * * 1`, // Mondays
-        branch: `maintenance/${branch}`,
-        nameSuffix: branch,
+        branch: supported.branches[version],
+        nameSuffix: tag,
       });
   }
 }
+
+// Allow PR backports to all maintained versions
+new PullRequestBackport(project, {
+  branches: Object.values(supported.branches),
+});
 
 project.synth();

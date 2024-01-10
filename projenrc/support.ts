@@ -18,6 +18,20 @@ if (!SUPPORT_POLICY.currentMinVersionNumber.startsWith(SUPPORT_POLICY.current)) 
 }
 
 export class SupportPolicy {
+  public get branches(): {
+    [version: string]: string;
+  } {
+    const branches = {
+      [SUPPORT_POLICY.current]: 'main',
+    };
+
+    for (const version of Object.keys(SUPPORT_POLICY.maintenance)) {
+      branches[version] = `maintenance/v${version}`;
+    }
+
+    return branches;
+  }
+
   public constructor(project: Project) {
     new JsonFile(project, 'releases.json', {
       allowComments: false,
