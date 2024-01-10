@@ -80,7 +80,7 @@ export class PullRequestBackport extends Component {
     this.file = new JsonFile(this, '.backportrc.json', {
       obj: {
         commitConflicts: options.createWithConflicts ?? true,
-        targetPRLabels: options.backportPRLabels ?? ['backport'],
+        targetPRLabels,
         backportBranchName: 'backport/{{targetBranch}}-{{refValues}}',
         prTitle: '{{sourcePullRequest.title}} (backport #{{sourcePullRequest.number}})',
         targetBranchChoices: branches,

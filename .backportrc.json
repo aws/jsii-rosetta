@@ -1,7 +1,8 @@
 {
   "commitConflicts": true,
   "targetPRLabels": [
-    "backport"
+    "backport",
+    "auto-approve"
   ],
   "backportBranchName": "backport/{{targetBranch}}-{{refValues}}",
   "prTitle": "{{sourcePullRequest.title}} (backport #{{sourcePullRequest.number}})",
