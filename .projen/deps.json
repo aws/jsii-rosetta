@@ -87,13 +87,6 @@
     },
     {
       "name": "memfs",
-<<<<<<< HEAD
-=======
-      "type": "build"
-    },
-    {
-      "name": "mock-fs",
->>>>>>> f25a394 (chore: replace mock-fs with memfs that works in node20 (#355))
       "type": "build"
     },
     {
