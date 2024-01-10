@@ -1,12 +1,14 @@
 import { promises as fs } from 'node:fs';
 import * as path from 'node:path';
 import * as spec from '@jsii/spec';
-import * as mockfs from 'mock-fs';
+import { Volume } from 'memfs';
 
 import { fakeAssembly } from './fake-assembly';
 import { allTypeScriptSnippets } from '../../lib/jsii/assemblies';
 import { SnippetParameters } from '../../lib/snippet';
 import { TestJsiiModule, DUMMY_JSII_CONFIG } from '../testutil';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { patchFs } = require('fs-monkey');
 
 jest.setTimeout(30_000);
 
@@ -201,9 +203,11 @@ test('Fixture allows use of import statements', async () => {
 });
 
 test('Backwards compatibility with literate integ tests', async () => {
-  mockfs({
-    '/package/test/integ.example.lit.ts': '# Some literate source file',
-  });
+  const unpatch = patchFs(
+    Volume.fromJSON({
+      '/package/test/integ.example.lit.ts': '# Some literate source file',
+    }),
+  );
 
   try {
     const snippets = Array.from(
@@ -231,7 +235,7 @@ test('Backwards compatibility with literate integ tests', async () => {
       path.normalize('/package/test'),
     );
   } finally {
-    mockfs.restore();
+    unpatch();
   }
 });
 
