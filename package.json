@@ -58,14 +58,14 @@
     "memfs": "^4.6.0",
     "mock-fs": "^5.2.0",
     "prettier": "^2.8.8",
-    "projen": "^0.78.11",
+    "projen": "^0.78.13",
     "tar": "^6.2.0",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@jsii/check-node": "1.93.0",
-    "@jsii/spec": "^1.93.0",
+    "@jsii/check-node": "1.94.0",
+    "@jsii/spec": "^1.94.0",
     "@xmldom/xmldom": "^0.8.10",
     "chalk": "^4",
     "commonmark": "^0.30.0",
