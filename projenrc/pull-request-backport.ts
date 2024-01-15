@@ -60,7 +60,7 @@ export class PullRequestBackport extends Component {
       );
     }
 
-    const branches = options.branches ?? release.Release.of(this.project)?.branches ?? [];
+    const branches = options.branches ?? release.Release.of(this.project as any)?.branches ?? [];
     if (branches.length === 0) {
       this.project.logger.warn(
         'PullRequestBackport could not find any target branches. Backports will not be available. Please add release branches or configure `branches` manually.',
