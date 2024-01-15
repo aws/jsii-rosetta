@@ -13,11 +13,6 @@ export interface ReleasesDocument {
    * The release line that occupies the 'Current' stage.
    */
   readonly current: ReleaseLine;
-
-  /**
-   * The release line that occupies the 'Current' stage.
-   */
-  readonly currentMinVersionNumber: VersionNumber;
   /**
    * Release lines currently in 'Maintenance' with the date at which they are
    * planned to go into the 'End-of-Support' stage. This date should always be
@@ -157,4 +152,3 @@ function veryVisibleMessage(formatter: chalk.Chalk, ...lines: readonly string[])
 }
 
 type ReleaseLine = `${number}.${number}`;
-type VersionNumber = `${number}.${number}.${number}`;

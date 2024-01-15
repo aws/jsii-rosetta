@@ -1,5 +1,13 @@
 import { JsonFile, Project } from 'projen';
-import type { ReleasesDocument } from '../src/support';
+
+type ReleaseLine = `${number}.${number}`;
+type VersionNumber = `${number}.${number}.${number}`;
+interface ReleasesDocument {
+  readonly current: ReleaseLine;
+  readonly currentMinVersionNumber: VersionNumber;
+  readonly maintenance: { readonly [release: ReleaseLine]: Date };
+  readonly endOfSupport?: readonly ReleaseLine[];
+}
 
 export const SUPPORT_POLICY: ReleasesDocument = {
   current: '5.3',
