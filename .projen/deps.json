@@ -22,7 +22,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^16",
+      "version": "^18",
       "type": "build"
     },
     {
@@ -45,6 +45,10 @@
     {
       "name": "@typescript-eslint/parser",
       "version": "^6",
+      "type": "build"
+    },
+    {
+      "name": "all-contributors-cli",
       "type": "build"
     },
     {
@@ -140,7 +144,7 @@
     },
     {
       "name": "jsii",
-      "version": "~5.1.5",
+      "version": "~5.3.0",
       "type": "runtime"
     },
     {
@@ -157,6 +161,7 @@
     },
     {
       "name": "typescript",
+      "version": "~5.3",
       "type": "runtime"
     },
     {
