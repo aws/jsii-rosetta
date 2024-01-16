@@ -4454,9 +4454,9 @@ typed-array-length@^1.0.4:
     is-typed-array "^1.1.9"
 
 typescript@next:
-  version "5.4.0-dev.20240114"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.0-dev.20240114.tgz#39bccc459b46379e443e82abc1604bc4605b1939"
-  integrity sha512-pd52BJdzc2yBS3VQme+n74BQCEFOi2Haj6TBvqn0cp81D3gCfM+sEctWUA+LcP2qfh/D/PfQ30NBLDCJfCAERw==
+  version "5.4.0-dev.20240115"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.0-dev.20240115.tgz#91db38a7786b84f8288c2bbf8115e1ca05608049"
+  integrity sha512-p3nYa7pku8FHvfLDyiDcplZbKXEQTcZqtvXN6JTBu/u5cNLinBzOiKA3cVfHcgudzCUMtU5ke94dpwFNr+U3qw==
 
 typescript@~5.3:
   version "5.3.3"
