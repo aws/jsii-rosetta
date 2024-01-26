@@ -41,7 +41,7 @@
     "@types/mock-fs": "^4.13.4",
     "@types/node": "^18",
     "@types/stream-json": "^1.7.7",
-    "@types/tar": "^6.1.10",
+    "@types/tar": "^6.1.11",
     "@types/workerpool": "^6.4.7",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
