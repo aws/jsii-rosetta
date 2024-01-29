@@ -58,7 +58,7 @@
     "memfs": "^4.6.0",
     "mock-fs": "^5.2.0",
     "prettier": "^2.8.8",
-    "projen": "^0.79.3",
+    "projen": "^0.79.6",
     "tar": "^6.2.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2"
@@ -68,7 +68,7 @@
     "@jsii/spec": "^1.94.0",
     "@xmldom/xmldom": "^0.8.10",
     "chalk": "^4",
-    "commonmark": "^0.30.0",
+    "commonmark": "^0.31.0",
     "fast-glob": "^3.3.2",
     "jsii": "~5.3.0",
     "semver": "^7.5.4",
