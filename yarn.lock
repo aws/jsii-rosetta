@@ -1777,9 +1777,9 @@ downlevel-dts@^0.11.0:
     typescript next
 
 electron-to-chromium@^1.4.668:
-  version "1.4.671"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.671.tgz#fa3094d6d2512a6c4d609a9bc4997154543febfe"
-  integrity sha512-UUlE+/rWbydmp+FW8xlnnTA5WNA0ZZd2XL8CuMS72rh+k4y1f8+z6yk3UQhEwqHQWj6IBdL78DwWOdGMvYfQyA==
+  version "1.4.673"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.673.tgz#1f077d9a095761804aec7ec6346c3f4b69b56534"
+  integrity sha512-zjqzx4N7xGdl5468G+vcgzDhaHkaYgVcf9MqgexcTqsl2UHSCmOj/Bi3HAprg4BZCpC7HyD8a6nZl6QAZf72gw==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -3388,10 +3388,10 @@ mdurl@~1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
 
-memfs@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.7.0.tgz#72dfa1807b554e22dde01e0f9ac76ca685b110ba"
-  integrity sha512-FGbf9Yz2gzXCUmpymkKnzAQOitriZQlIMtmnzb2LOcT0FTUdzL6AAwNGQrSOACx/UiW7XQsG65vrIA9+L01Edw==
+memfs@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.7.1.tgz#5c6fb9619061498bd2ecf118dc5ef1de86f14306"
+  integrity sha512-29/L94MxlTPkJOCvLwWG4OIAfBPoB921eOLU4wr6RR4yQ40y/et8mroRE5t4rIQrLtmOACtLhZvGVKJgPGPDxQ==
   dependencies:
     json-joy "^11.0.0"
     thingies "^1.11.1"
@@ -3762,10 +3762,10 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-projen@^0.79.22:
-  version "0.79.22"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.79.22.tgz#14225ccf9bbaeb14ca018cff6120aaa7b5ddbbe4"
-  integrity sha512-95m5kBcdTaGr1JR6i/6z5XpHjXhaKwfKANXDN0y3/SsTLSPtXDCz0o8HCrKnAMjpSrR86ZGBbENm5gxhvq2B2Q==
+projen@^0.79.23:
+  version "0.79.23"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.79.23.tgz#ae6c22777110f77fd1fb4179d9fcc906df8d4dd0"
+  integrity sha512-qGonzpqoO81W1TVio5zCAlfSIOLveg9UNZpUgnHfv7cYdV6tiZka2bTeboqrnTivok3vEooOV0I98VMJS+QeYQ==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
