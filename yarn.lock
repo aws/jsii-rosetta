@@ -3192,9 +3192,9 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.3.0:
-  version "5.3.20"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.20.tgz#7de79228c1d8f86336c33b47dc56d85b2d8b69f0"
-  integrity sha512-OPoEpEvD943+fx6ruoUTpmFJoY55wiuUl64ELeQ4CQ6mUfx31YczvacqDYrrbSwoEe8Ea9a7sQOUXo3b3Oi8PQ==
+  version "5.3.21"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.21.tgz#cd13aab1da64bbde4ba899975884079b0897005b"
+  integrity sha512-P8ko6yoT0MaAThUhZjV1ZNuJ0NmyIQAfj+Rld2WfD0q8M49bMtkd3RoqjRJWwYBLPLeQYqI4VkHwRv8T6psCJA==
   dependencies:
     "@jsii/check-node" "1.94.0"
     "@jsii/spec" "^1.94.0"
@@ -3206,7 +3206,7 @@ jsii@~5.3.0:
     semver "^7.6.0"
     semver-intersect "^1.5.0"
     sort-json "^2.0.1"
-    spdx-license-list "^6.8.0"
+    spdx-license-list "^6.9.0"
     typescript "~5.3"
     yargs "^17.7.2"
 
@@ -4134,7 +4134,7 @@ spdx-license-ids@^3.0.0:
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.17.tgz#887da8aa73218e51a1d917502d79863161a93f9c"
   integrity sha512-sh8PWc/ftMqAAdFiBu6Fy6JUOYjqDJBJvIhpfDMyHrr0Rbp5liZqd4TjtQ/RgfLjKFZb+LMx5hpml5qOWy0qvg==
 
-spdx-license-list@^6.8.0:
+spdx-license-list@^6.9.0:
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/spdx-license-list/-/spdx-license-list-6.9.0.tgz#5543abb3a15f985a12808f642a622d2721c372ad"
   integrity sha512-L2jl5vc2j6jxWcNCvcVj/BW9A8yGIG02Dw+IUw0ZxDM70f7Ylf5Hq39appV1BI9yxyWQRpq2TQ1qaXvf+yjkqA==
@@ -4489,9 +4489,9 @@ typed-array-length@^1.0.4:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.5.0-dev.20240224"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240224.tgz#3e20340f6b5faafbe28462d38a179c38aedcce0e"
-  integrity sha512-mOiRt5RHvvap+xlmjpkYjr22olnof2cj2TUc98uAAY2fmkxcQrsa5kjPIiT/PUoOYda3XhDvvnWL6h+z6Y4oqA==
+  version "5.5.0-dev.20240225"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240225.tgz#9923a147e92b22cde3636271acd24e880e38eb6a"
+  integrity sha512-0Zcu9sgcrxHNKb2BiBo0wbMquDvFR7QT7yySgRtb5DlkdgzuVS+xQUL5stK48NHLb7GhHNqqVhJ3zDHgoT8SbQ==
 
 typescript@~5.3:
   version "5.3.3"
