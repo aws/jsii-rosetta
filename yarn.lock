@@ -4522,9 +4522,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.5.0-dev.20240329"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240329.tgz#88f97713822c730cf2d281964536abfaba06afc0"
-  integrity sha512-T1vHxyzRt1MeCLzQdY8JYOM1K9XRs4YgTOzMjlw8m5K19P9264rc22CyvUB9lA0vBIcMSDjObfh+/GVHMOXhkg==
+  version "5.5.0-dev.20240330"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240330.tgz#46db634d9128b763b608376ddbc61626836cadd5"
+  integrity sha512-N8P34nHmNVcIbh3AsZ3W3rl9TCcvO3R5mHu4HzF1WtL4sUZPy+huGhENKMmwgYS1sxw2l2ts66hQdZmv+jHZxw==
 
 typescript@~5.3:
   version "5.3.3"
