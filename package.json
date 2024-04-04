@@ -41,7 +41,7 @@
     "@types/mock-fs": "^4.13.4",
     "@types/node": "^18",
     "@types/stream-json": "^1.7.7",
-    "@types/tar": "^6.1.11",
+    "@types/tar": "^6.1.12",
     "@types/workerpool": "^6.4.7",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
@@ -58,7 +58,7 @@
     "memfs": "^4.8.1",
     "mock-fs": "^5.2.0",
     "prettier": "^2.8.8",
-    "projen": "^0.80.16",
+    "projen": "^0.80.17",
     "tar": "^6.2.1",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2"
