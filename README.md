@@ -39,7 +39,7 @@ The applicable *Maintenance & Support policy* can be reviewed in [SUPPORT.md](./
 
 The current status of `jsii-rosetta` releases is:
 
-| Release | Status      | EOL        | Comment                                                                                                 |
+| Release | Status      | EOS        | Comment                                                                                                 |
 | ------- | ----------- | -----------| ------------------------------------------------------------------------------------------------------- |
 | `5.4.x` | Current     | TBD        | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.4-latest?label=jsii-rosetta%40v5.3-latest&logo=npm) |
 | `5.3.x` | Maintenance | 2024-10-07 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.3-latest?label=jsii-rosetta%40v5.3-latest&logo=npm) |
