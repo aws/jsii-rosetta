@@ -19,6 +19,8 @@ import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
  * 6. `npx projen`
  * 7. Update the version list in the README (remember to remove EOS versions)
  * 8. Create a PR
+ * 9. Note that merging the PR doesn't trigger a release. Release are perfoemd on a weekly schedule, you should manully create a release by trigeeting this workflow:
+ *    https://github.com/aws/jsii-rosetta/actions/workflows/auto-tag-releases.yml
  * 9. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
  */
 
