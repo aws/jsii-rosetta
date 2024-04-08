@@ -17,7 +17,7 @@ import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
  *    today, make the new version current. Also update `currentMinVersionNumber`.
  * 5. Update `minNodeVersion` to the oldest LTS version of Node (i.e. dropping support for EOL versions of Node)
  * 6. `npx projen`
- * 7. Update the version list in the README. (remember to remove EOL versions)
+ * 7. Update the version list in the README (remember to remove EOS versions)
  * 8. Create a PR
  */
 
