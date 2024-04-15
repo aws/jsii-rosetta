@@ -3412,10 +3412,10 @@ mdurl@~1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
 
-memfs@^4.8.1:
-  version "4.8.1"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.8.1.tgz#1e02c15c4397212a9a1b037fa4324c6f7dd45b47"
-  integrity sha512-7q/AdPzf2WpwPlPL4v1kE2KsJsHl7EF4+hAeVzlyanr2+YnR21NVn9mDqo+7DEaKDRsQy8nvxPlKH4WqMtiO0w==
+memfs@^4.8.2:
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.8.2.tgz#9bb7c3e43647348451082557f05fb170b7442949"
+  integrity sha512-j4WKth315edViMBGkHW6NTF0QBjsTrcRDmYNcGsPq+ozMEyCCCIlX2d2mJ5wuh6iHvJ3FevUrr48v58YRqVdYg==
   dependencies:
     tslib "^2.0.0"
 
