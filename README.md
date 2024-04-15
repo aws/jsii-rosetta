@@ -39,13 +39,13 @@ The applicable *Maintenance & Support policy* can be reviewed in [SUPPORT.md](./
 
 The current status of `jsii-rosetta` releases is:
 
-| Release | Status      | Comment                                                                                                 |
-| ------- | ----------- | ------------------------------------------------------------------------------------------------------- |
-| `5.3.x` | Current     | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.3-latest?label=jsii-rosetta%40v5.3-latest&logo=npm) |
-| `5.2.x` | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.2-latest?label=jsii-rosetta%40v5.2-latest&logo=npm) |
-| `5.1.x` | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.1-latest?label=jsii-rosetta%40v5.1-latest&logo=npm) |
-| `5.0.x` | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.0-latest?label=jsii-rosetta%40v5.0-latest&logo=npm) |
-| `1.x`   | Maintenance | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v1?label=jsii-rosetta%40v1&logo=npm)                   |
+| Release | Status      | EOS        | Comment                                                                                                 |
+| ------- | ----------- | -----------| ------------------------------------------------------------------------------------------------------- |
+| `5.4.x` | Current     | TBD        | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.4-latest?label=jsii-rosetta%40v5.4-latest&logo=npm) |
+| `5.3.x` | Maintenance | 2024-10-07 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.3-latest?label=jsii-rosetta%40v5.3-latest&logo=npm) |
+| `5.2.x` | Maintenance | 2024-06-30 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.2-latest?label=jsii-rosetta%40v5.2-latest&logo=npm) |
+| `5.1.x` | Maintenance | 2024-04-30 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.1-latest?label=jsii-rosetta%40v5.1-latest&logo=npm) |
+| `1.x`   | Maintenance | 2024-10-31 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v1?label=jsii-rosetta%40v1&logo=npm)                   |
 
 ## :gear: Contributing
 
