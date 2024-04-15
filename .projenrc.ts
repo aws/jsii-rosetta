@@ -11,14 +11,17 @@ import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
  *
  * 1. Perform the new version release for jsii-compiler and make sure the version has been released
  * 2. Fork the current `main` to a maintenance branch:
- *    `git push origin main:maintenance/v5.3`
+ *    `git push origin main:maintenance/vx.y` (x.y is the TS version that is about to be replaced by a new release)
  * 3. Add a branch protection rule for the new maintenance branch
  * 4. Edit `support.ts`, maintenance EOL date for the current version is 6 months from
  *    today, make the new version current. Also update `currentMinVersionNumber`.
  * 5. Update `minNodeVersion` to the oldest LTS version of Node (i.e. dropping support for EOL versions of Node)
  * 6. `npx projen`
- * 7. Update the version list in the README.
+ * 7. Update the version list in the README (remember to remove EOS versions)
  * 8. Create a PR
+ * 9. Note that merging the PR doesn't trigger a release. Release are perfoemd on a weekly schedule, you should manully create a release by trigeeting this workflow:
+ *    https://github.com/aws/jsii-rosetta/actions/workflows/auto-tag-releases.yml
+ * 9. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
  */
 
 const project = new typescript.TypeScriptProject({
