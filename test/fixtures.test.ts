@@ -49,4 +49,22 @@ const val = new Cls();
 // Code snippet ended before !hide marker above
 `);
   });
+
+  // https://github.com/aws/jsii-rosetta/issues/1161
+  test('regression: can parse source with jsdoc annotated export', () => {
+    const snippet = {
+      visibleSource: `
+        /**
+         * JSDoc
+         */
+        export const foo = "bar";
+      `,
+      location,
+      parameters: {
+        [SnippetParameters.$PROJECT_DIRECTORY]: 'test',
+      },
+    };
+
+    expect(fixturize(snippet)).toEqual(expect.objectContaining(snippet));
+  });
 });

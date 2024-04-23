@@ -186,7 +186,7 @@ function sidelineImports(source: string): {
       statement.kind === SyntaxKind.ImportDeclaration ||
       statement.kind === SyntaxKind.ImportEqualsDeclaration ||
       (statement.kind === SyntaxKind.VariableStatement &&
-        statement.getChildAt(0).getChildAt(0).kind === SyntaxKind.DeclareKeyword)
+        statement.getChildAt(0)?.getChildAt(0)?.kind === SyntaxKind.DeclareKeyword)
     ) {
       imports += statement.getFullText(sourceFile);
     } else {
