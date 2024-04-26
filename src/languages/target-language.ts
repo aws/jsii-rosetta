@@ -11,7 +11,9 @@ export enum TargetLanguage {
 
 const VALID_TARGET_LANGUAGES = new Set(Object.values(TargetLanguage));
 
-export function targetName(language: TargetLanguage.PYTHON | TargetLanguage.VISUALIZE): 'python';
+/** @internal an alias of PYTHON to make intent clear when language is irrelevant */
+export function targetName(language: TargetLanguage.VISUALIZE): 'python';
+export function targetName(language: TargetLanguage.PYTHON): 'python';
 export function targetName(language: TargetLanguage.CSHARP): 'dotnet';
 export function targetName(language: TargetLanguage.JAVA): 'java';
 export function targetName(language: TargetLanguage.GO): 'go';
