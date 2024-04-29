@@ -28,3 +28,4 @@ tsconfig.tsbuildinfo
 .backportrc.json
 /.gitattributes
 /.projenrc.ts
+/projenrc
