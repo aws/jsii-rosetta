@@ -43,11 +43,9 @@ jspm_packages/
 /dist/
 !/.eslintrc.json
 !/.github/workflows/upgrade-main.yml
-!/.github/workflows/upgrade-maintenance-v5.1.yml
 !/.github/workflows/upgrade-maintenance-v5.2.yml
 !/.github/workflows/upgrade-maintenance-v5.3.yml
 !/.github/workflows/upgrade-jsii-main.yml
-!/.github/workflows/upgrade-jsii-maintenance-v5.1.yml
 !/.github/workflows/upgrade-jsii-maintenance-v5.2.yml
 !/.github/workflows/upgrade-jsii-maintenance-v5.3.yml
 /build-tools/tsconfig.json
@@ -61,8 +59,6 @@ jspm_packages/
 !/.github/workflows/release.yml
 !/.github/workflows/auto-tag-dev.yml
 !/.github/workflows/auto-tag-releases.yml
-!/.github/workflows/auto-tag-dev-v5.1.yml
-!/.github/workflows/auto-tag-releases-v5.1.yml
 !/.github/workflows/auto-tag-dev-v5.2.yml
 !/.github/workflows/auto-tag-releases-v5.2.yml
 !/.github/workflows/auto-tag-dev-v5.3.yml
