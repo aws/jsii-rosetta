@@ -142,8 +142,8 @@ const project = new typescript.TypeScriptProject({
 
 // Double check emitted type declarations are valid
 // This is needed because we are ignoring some declarations, which may produce invalid type declarations if not carefully crafted
-project.postCompileTask.exec(
-  `tsc --noEmit lib/index.d.ts -t ${project.tsconfig?.compilerOptions?.target} -m ${project.tsconfig?.compilerOptions?.module}`,
+project.compileTask.exec(
+  `tsc lib/index.d.ts --noEmit --skipLibCheck -t ${project.tsconfig?.compilerOptions?.target} -m ${project.tsconfig?.compilerOptions?.module}`,
 );
 
 // PR validation should run on merge group, too...

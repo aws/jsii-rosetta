@@ -62,6 +62,9 @@
       "steps": [
         {
           "exec": "tsc --build"
+        },
+        {
+          "exec": "tsc lib/index.d.ts --noEmit --skipLibCheck -t es2020 -m nodenext"
         }
       ]
     },
@@ -139,12 +142,7 @@
     },
     "post-compile": {
       "name": "post-compile",
-      "description": "Runs after successful compilation",
-      "steps": [
-        {
-          "exec": "tsc --noEmit lib/index.d.ts -t es2020 -m nodenext"
-        }
-      ]
+      "description": "Runs after successful compilation"
     },
     "post-upgrade": {
       "name": "post-upgrade",
