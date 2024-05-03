@@ -53,7 +53,7 @@ const project = new typescript.TypeScriptProject({
     compilerOptions: {
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
       lib: ['es2020', 'es2021.WeakRef'],
-      target: 'ES2020',
+      target: 'es2020',
       moduleResolution: javascript.TypeScriptModuleResolution.NODE_NEXT,
       module: 'nodenext',
       esModuleInterop: false,
@@ -139,6 +139,12 @@ const project = new typescript.TypeScriptProject({
     'yargs',
   ],
 });
+
+// Double check emitted type declarations are valid
+// This is needed because we are ignoring some declarations, which may produce invalid type declarations if not carefully crafted
+project.postCompileTask.exec(
+  `tsc --noEmit lib/index.d.ts -t ${project.tsconfig?.compilerOptions?.target} -m ${project.tsconfig?.compilerOptions?.module}`,
+);
 
 // PR validation should run on merge group, too...
 (project.tryFindFile('.github/workflows/pull-request-lint.yml')! as YamlFile).patch(
