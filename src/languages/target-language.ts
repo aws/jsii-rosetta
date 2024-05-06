@@ -1,28 +1,30 @@
 import * as assert from 'node:assert';
 
 export enum TargetLanguage {
-  /** @internal an alias of PYTHON to make intent clear when language is irrelevant */
-  VISUALIZE = 'python',
   PYTHON = 'python',
   CSHARP = 'csharp',
   JAVA = 'java',
   GO = 'go',
+  /** @internal an alias of PYTHON to make intent clear when language is irrelevant, must be last */
+  VISUALIZE = 'python',
 }
 
 const VALID_TARGET_LANGUAGES = new Set(Object.values(TargetLanguage));
 
-/** @internal an alias of PYTHON to make intent clear when language is irrelevant */
-export function targetName(language: TargetLanguage.VISUALIZE): 'python';
+export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go';
 export function targetName(language: TargetLanguage.PYTHON): 'python';
 export function targetName(language: TargetLanguage.CSHARP): 'dotnet';
 export function targetName(language: TargetLanguage.JAVA): 'java';
 export function targetName(language: TargetLanguage.GO): 'go';
-export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go';
+/** @internal an alias of PYTHON to make intent clear when language is irrelevant, must be last override */
+export function targetName(language: TargetLanguage.VISUALIZE): 'python';
+
 /**
  * @param language a possible value for `TargetLanguage`.
  *
  * @returns the name of the target configuration block for the given language.
  */
+export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go';
 export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go' {
   // The TypeScript compiler should guarantee the below `switch` statement covers all possible
   // values of the TargetLanguage enum, but we add an assert here for clarity of intent.
