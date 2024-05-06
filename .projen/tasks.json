@@ -62,6 +62,9 @@
       "steps": [
         {
           "exec": "tsc --build"
+        },
+        {
+          "exec": "tsc lib/index.d.ts --noEmit --skipLibCheck -t es2020 -m nodenext"
         }
       ]
     },
