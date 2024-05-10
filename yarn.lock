@@ -4055,9 +4055,9 @@ semver@^6.3.0, semver@^6.3.1:
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
 semver@^7.3.2:
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.1.tgz#60bfe090bf907a25aa8119a72b9f90ef7ca281b2"
-  integrity sha512-f/vbBsu+fOiYt+lmwZV0rVwJScl46HppnOA1ZvIuBWKOTlllpyJ3bfVax76/OrhCH38dyxoDIA8K7uB963IYgA==
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
+  integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
 
 semver@^7.3.8, semver@^7.5.3, semver@^7.5.4, semver@^7.6.0:
   version "7.6.0"
@@ -4568,9 +4568,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.5.0-dev.20240508"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240508.tgz#9a245ceeac3d134b46503ea796a42aea5f78d113"
-  integrity sha512-5hkQ+5UaeQFyG4Z4UiupCIQo2pcUZ+e8OZlIxeiljeqei989RyA99QnF+hS0pxZpxvOt/yJCTN9zIdT2m/O1WA==
+  version "5.5.0-dev.20240509"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240509.tgz#7e0a60877a24b56800e3bf44c03f33b9315c87c5"
+  integrity sha512-r/zZRQGt3udzXP4ZaxPUs7r+NgrzW94LRfqa0XrFe0IXANWaewB/amTIL8O/zZ9qRv4QN34kr4td6HJsSbG9eA==
 
 typescript@~5.4:
   version "5.4.5"
