@@ -1808,9 +1808,9 @@ downlevel-dts@^0.11.0:
     typescript next
 
 electron-to-chromium@^1.4.668:
-  version "1.4.762"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.762.tgz#c29c9d47cf7cc128a9c364baa28adbadde95a47c"
-  integrity sha512-rrFvGweLxPwwSwJOjIopy3Vr+J3cIPtZzuc74bmlvmBIgQO3VYJDvVrlj94iKZ3ukXUH64Ex31hSfRTLqvjYJQ==
+  version "1.4.763"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.763.tgz#64f2041ed496fd6fc710b9be806fe91da9334f91"
+  integrity sha512-k4J8NrtJ9QrvHLRo8Q18OncqBCB7tIUyqxRcJnlonQ0ioHKYB988GcDFF3ZePmnb8eHEopDs/wPHR/iGAFgoUQ==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -3805,10 +3805,10 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-projen@^0.81.8:
-  version "0.81.8"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.81.8.tgz#eb8e289977267fa5fc73c46d38d387ad4479f558"
-  integrity sha512-Y3CtD+09qPhI+Res0r229CFWaXS0HlrWs8BbxG/NgoJJniRLLkfQG7W5hLOqMa3plBpwPJOyldTKbPOhHo5JrA==
+projen@^0.81.10:
+  version "0.81.10"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.81.10.tgz#e67384291b4b06b834782f04a4e37de6ec457de8"
+  integrity sha512-HTXYKBvXXO1JdvIqrgkY+7i1r5qrqsd+nYsTs/1iTmyGeeKYzuSIGqrb04yUm1LKjrgRfIq/kcN783AVWT67OA==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
@@ -3819,7 +3819,7 @@ projen@^0.81.8:
     fast-json-patch "^3.1.1"
     glob "^8"
     ini "^2.0.0"
-    semver "^7.6.1"
+    semver "^7.6.2"
     shx "^0.3.4"
     xmlbuilder2 "^3.1.1"
     yaml "^2.2.2"
@@ -4061,7 +4061,7 @@ semver@^7.3.2:
   dependencies:
     lru-cache "^6.0.0"
 
-semver@^7.3.8, semver@^7.5.3, semver@^7.5.4, semver@^7.6.1, semver@^7.6.2:
+semver@^7.3.8, semver@^7.5.3, semver@^7.5.4, semver@^7.6.2:
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
   integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
