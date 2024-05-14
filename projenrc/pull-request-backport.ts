@@ -27,6 +27,15 @@ export interface PullRequestBackportOptions {
   readonly backportPRLabels?: string[];
 
   /**
+   * The prefix used to name backport branches.
+   *
+   * Make sure to include a separator at the end like `/` or `_`.
+   *
+   * @default "backport/"
+   */
+  readonly backportBranchNamePrefix?: string;
+
+  /**
    * Should backport PRs be automatically approved.
    *
    * @default true
@@ -36,7 +45,7 @@ export interface PullRequestBackportOptions {
   /**
    * List of branches that can be a target for backports
    *
-   * @default - enable backports to all release branches
+   * @default - allow backports to all release branches
    */
   readonly branches?: string[];
 
@@ -68,20 +77,23 @@ export class PullRequestBackport extends Component {
     }
 
     const shouldAutoApprove = options.autoApproveBackport ?? true;
-    const targetPRLabels = options.backportPRLabels ?? ['backport'];
+    const targetPrLabelsRaw = options.backportPRLabels ?? ['backport'];
+    const targetPrLabels = [...targetPrLabelsRaw];
     if (shouldAutoApprove) {
       const autoApprove = this.project.components.find((c): c is github.AutoApprove => c instanceof github.AutoApprove);
       if (autoApprove?.label) {
-        targetPRLabels.push(autoApprove.label);
+        targetPrLabels.push(autoApprove.label);
       }
     }
+
+    const backportBranchNamePrefix = options.backportBranchNamePrefix ?? 'backport/';
 
     // Configuration
     this.file = new JsonFile(this, '.backportrc.json', {
       obj: {
         commitConflicts: options.createWithConflicts ?? true,
-        targetPRLabels,
-        backportBranchName: 'backport/{{targetBranch}}-{{refValues}}',
+        targetPRLabels: targetPrLabels,
+        backportBranchName: `${backportBranchNamePrefix}{{targetBranch}}-{{refValues}}`,
         prTitle: '{{sourcePullRequest.title}} (backport #{{sourcePullRequest.number}})',
         targetBranchChoices: branches,
       },
@@ -96,6 +108,14 @@ export class PullRequestBackport extends Component {
       },
     });
 
+    // condition to detect if the PR is a backport PR
+    // we prefer to match the PR using labels, but will fallback to matching the branch name prefix
+    const branchCondition = `startsWith(github.head_ref, '${backportBranchNamePrefix}')`;
+    const labelConditions: string[] = targetPrLabelsRaw.map(
+      (label) => `contains(github.event.pull_request.labels.*.name, '${label}')`,
+    );
+    const isBackportPr = labelConditions.length ? `(${labelConditions.join(' && ')})` : `${branchCondition})`;
+
     this.workflow.addJob('backport', {
       name: 'Backport PR',
       runsOn: ['ubuntu-latest'],
@@ -105,9 +125,9 @@ export class PullRequestBackport extends Component {
         {
           name: 'Backport Action',
           uses: 'sqren/backport-github-action@v9.5.1',
-          // only run when the PR is merged successfully
+          // only run when the PR is merged successfully and not on the backport branches itself
           // this is to prevent workflow failures when labeling a still open PR
-          if: 'github.event.pull_request.merged == true',
+          if: `github.event.pull_request.merged == true && !${isBackportPr}`,
           with: {
             github_token: workflowEngine.projenCredentials.tokenRef,
             auto_backport_label_prefix: options.labelPrefix ?? 'backport-to-',
