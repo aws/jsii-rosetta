@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Backport Action
         if: github.event.pull_request.merged == true
-        uses: sqren/backport-github-action@v9.3.0
+        uses: sqren/backport-github-action@v9.5.1
         with:
           github_token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
           auto_backport_label_prefix: backport-to-
