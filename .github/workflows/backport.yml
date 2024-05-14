@@ -13,6 +13,7 @@ jobs:
     permissions: {}
     steps:
       - name: Backport Action
+        if: github.event.pull_request.merged == true
         uses: sqren/backport-github-action@v9.3.0
         with:
           github_token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
