@@ -104,7 +104,7 @@ export class PullRequestBackport extends Component {
         ...workflowEngine.projenCredentials.setupSteps,
         {
           name: 'Backport Action',
-          uses: 'sqren/backport-github-action@v9.3.0',
+          uses: 'sqren/backport-github-action@v9.5.1',
           // only run when the PR is merged successfully
           // this is to prevent workflow failures when labeling a still open PR
           if: 'github.event.pull_request.merged == true',
