@@ -10,9 +10,9 @@ interface ReleasesDocument {
 }
 
 export const SUPPORT_POLICY: ReleasesDocument = {
-  current: '5.4',
-  // Define a different patch version here if a specific feature or bug-fix
-  currentMinVersionNumber: '5.4.0',
+  current: '5.3',
+  // Define a different patch version here if a specific feature or bug-fix is required
+  currentMinVersionNumber: '5.3.0',
   maintenance: {
     // version: End-of-support date
     '5.0': new Date('2024-01-31'),
@@ -48,5 +48,23 @@ export class SupportPolicy {
       obj: SUPPORT_POLICY,
       readonly: true,
     });
+  }
+
+  /**
+   * Get all actively maintained branches
+   */
+  public activeBranches(includeCurrent = true): {
+    [version: string]: string;
+  } {
+    return Object.fromEntries(
+      Object.entries(this.branches).filter(([version]) => {
+        if (includeCurrent && version === SUPPORT_POLICY.current) {
+          return true;
+        }
+
+        // check if branch is still maintained
+        return Date.now() <= SUPPORT_POLICY.maintenance[version as any]?.getTime();
+      }),
+    );
   }
 }
