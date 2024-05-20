@@ -251,44 +251,44 @@ new BuildWorkflow(project);
 const supported = new SupportPolicy(project);
 const releases = new ReleaseWorkflow(project)
   .autoTag({
+    releaseLine: SUPPORT_POLICY.current,
     preReleaseId: 'dev',
     runName: 'Auto-Tag Prerelease (default branch)',
     schedule: '0 0 * * 0,2-6', // Tuesday though sundays at midnight
   })
   .autoTag({
+    releaseLine: SUPPORT_POLICY.current,
     runName: 'Auto-Tag Release (default branch)',
     schedule: '0 0 * * 1', // Mondays at midnight
   });
 
 // We'll stagger release schedules so as to avoid everything going out at once.
 let hour = 0;
-for (const [version, until] of Object.entries(SUPPORT_POLICY.maintenance)) {
-  if (Date.now() <= until.getTime()) {
-    // Stagger schedules every 5 hours, rolling. 5 was selected because it's co-prime to 24.
-    hour = (hour + 5) % 24;
-
-    const tag = `v${version}`;
-
-    releases
-      .autoTag({
-        preReleaseId: 'dev',
-        runName: `Auto-Tag Prerelease (${tag})`,
-        schedule: `0 ${hour} * * 0,2-6`, // Tuesday though sundays
-        branch: supported.branches[version],
-        nameSuffix: tag,
-      })
-      .autoTag({
-        runName: `Auto-Tag Release (${tag})`,
-        schedule: `0 ${hour} * * 1`, // Mondays
-        branch: supported.branches[version],
-        nameSuffix: tag,
-      });
-  }
+for (const [version, branch] of Object.entries(supported.activeBranches(false))) {
+  // Stagger schedules every 5 hours, rolling. 5 was selected because it's co-prime to 24.
+  hour = (hour + 5) % 24;
+  const tag = `v${version}`;
+  releases
+    .autoTag({
+      releaseLine: version,
+      preReleaseId: 'dev',
+      runName: `Auto-Tag Prerelease (${tag})`,
+      schedule: `0 ${hour} * * 0,2-6`, // Tuesday though sundays
+      branch,
+      nameSuffix: tag,
+    })
+    .autoTag({
+      releaseLine: version,
+      runName: `Auto-Tag Release (${tag})`,
+      schedule: `0 ${hour} * * 1`, // Mondays
+      branch,
+      nameSuffix: tag,
+    });
 }
 
 // Allow PR backports to all maintained versions
 new PullRequestBackport(project, {
-  branches: Object.values(supported.branches),
+  branches: Object.values(supported.activeBranches()),
 });
 
 project.synth();

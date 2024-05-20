@@ -29,7 +29,7 @@ export class JsiiDependencyUpgrades extends Component {
           JsonPatch.add('/jobs/upgrade/steps/3', {
             name: 'Back-port projenrc changes from main',
             env: { CI: 'false' },
-            run: 'git fetch origin main && git checkout FETCH_HEAD -- .projenrc.ts projenrc README.md && yarn projen',
+            run: 'git fetch origin main && git checkout FETCH_HEAD -- README.md && yarn projen',
           }),
         );
       }
