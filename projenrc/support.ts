@@ -49,4 +49,22 @@ export class SupportPolicy {
       readonly: true,
     });
   }
+
+  /**
+   * Get all actively maintained branches
+   */
+  public activeBranches(includeCurrent = true): {
+    [version: string]: string;
+  } {
+    return Object.fromEntries(
+      Object.entries(this.branches).filter(([version]) => {
+        if (includeCurrent && version === SUPPORT_POLICY.current) {
+          return true;
+        }
+
+        // check if branch is still maintained
+        return Date.now() <= SUPPORT_POLICY.maintenance[version as any]?.getTime();
+      }),
+    );
+  }
 }
