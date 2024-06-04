@@ -3252,9 +3252,9 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.3.0:
-  version "5.3.36"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.36.tgz#f599ccb354bf74c3cc0141397c6d782ab371afa7"
-  integrity sha512-4Lt+lha53ODCU/NGOdmBbae+ASbP/xtiIOMPaG/NRZX3tDOD7g52ZXl2K7lSXE0mm/Yu+e6kq2pc0ls5E6OeQA==
+  version "5.3.37"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.37.tgz#0e98bfe9ebcab9a6bfec64c7dcc61c438e3e4e05"
+  integrity sha512-nGcBlK1nWv2MfCwyuKlz3UkDXize2b2FXjJ4k5pRdVB2l1LA704ly/7K6opjZfevCFUpYWFm7sQsCxJ05eteUA==
   dependencies:
     "@jsii/check-node" "1.98.0"
     "@jsii/spec" "^1.98.0"
@@ -4560,9 +4560,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.5.0-dev.20240602"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240602.tgz#7699e7a191be9fc8cd41b042f64cab45503e812a"
-  integrity sha512-R5PnpSfGGNylti0nmjM7R3zjr+9osr8M0tUItQDcc960/qa9gDTgA8F4f64IZeT9e7IoJklxXjyAdBjVpI909A==
+  version "5.5.0-dev.20240603"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.0-dev.20240603.tgz#a1b7311df5039a8abbaaa2213c21cac6ec547490"
+  integrity sha512-gdm3Sh1A+Pjj9ZlfBEJY3o2rs3tvpcSbu3vYqcCijMe09BePQBtZlsuShuPn+zCnP+qBLxdKjFiw5v1tkna3tA==
 
 typescript@~5.3:
   version "5.3.3"
