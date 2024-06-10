@@ -39,6 +39,8 @@ export class BuildWorkflow {
       });
     }
 
+    const nodeVersion = project.minNodeVersion?.split('.', 1).at(0) ?? 'lts/*';
+
     wf.addJobs({
       'build': {
         env: { CI: 'true' },
@@ -57,9 +59,9 @@ export class BuildWorkflow {
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v3',
+            uses: 'actions/setup-node@v4',
             with: {
-              'node-version': project.minNodeVersion,
+              'node-version': nodeVersion,
               'cache': 'yarn',
             },
           },
@@ -199,7 +201,7 @@ export class BuildWorkflow {
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v3',
+            uses: 'actions/setup-node@v4',
             with: {
               'node-version': '${{ matrix.node-version }}',
               'cache': 'yarn',
@@ -244,9 +246,9 @@ export class BuildWorkflow {
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v3',
+            uses: 'actions/setup-node@v4',
             with: {
-              'node-version': project.minNodeVersion,
+              'node-version': nodeVersion,
               'cache': 'yarn',
             },
           },
