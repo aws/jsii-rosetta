@@ -22,9 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.12.0
+          node-version: "18"
           cache: yarn
       - name: Cache build outputs
         if: github.event_name == 'pull_request'
@@ -112,7 +112,7 @@ jobs:
           name: build-output
           path: ${{ github.workspace }}
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
@@ -155,9 +155,9 @@ jobs:
           name: build-output
           path: ${{ github.workspace }}
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.12.0
+          node-version: "18"
           cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
