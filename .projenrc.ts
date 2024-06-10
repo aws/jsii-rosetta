@@ -115,6 +115,7 @@ const project = new typescript.TypeScriptProject({
     '@actions/github',
     '@types/commonmark',
     '@types/mock-fs',
+    '@types/semver',
     '@types/stream-json',
     '@types/tar',
     '@types/workerpool',
