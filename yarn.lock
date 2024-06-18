@@ -658,15 +658,7 @@
     chalk "^4.1.2"
     semver "^7.6.0"
 
-"@jsii/check-node@1.99.0":
-  version "1.99.0"
-  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.99.0.tgz#fdf1d030bc9c456727ebb2f53a60af1d7712641f"
-  integrity sha512-RJeVopU3U+/ZxGj//KKJgXmDM8N7uP5QIqypb0QFVJPtIcQMM9nuEQWp4hOB3ajhk4VNaXGrG6PwlqFtFsqbbQ==
-  dependencies:
-    chalk "^4.1.2"
-    semver "^7.6.0"
-
-"@jsii/spec@^1.100.0", "@jsii/spec@^1.99.0":
+"@jsii/spec@^1.100.0":
   version "1.100.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.100.0.tgz#44e5c6fb84299664f40479b2ebe11e2aee0b727e"
   integrity sha512-4LJCpSkmi3Hfcbmbchv+2JPIquV+cgrkhQcwglBAWqS4liLGbWPwgfHRL22sMXEKXiyXeHfitVwkP+IoGIyJ8g==
@@ -3249,12 +3241,12 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.2.0:
-  version "5.2.48"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.2.48.tgz#e78717ec4758d6d88d7021a8f74cd11d42317b69"
-  integrity sha512-mZsLXyw6hGW7jIBwBsqjTz/4yTGmk/l13OhxohvLePmWbb8enTCKsFf4fWSA0Byg7ej0tVAQ+VIVc0k2mGGXIA==
+  version "5.2.49"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.2.49.tgz#1381b115afd723198c455d93ab997242901f653f"
+  integrity sha512-USGrOqNJ6g1E03LjNFZ0n52apZSOKUFrW9c9zQXx7oDQ/W4pX2dcAOdRivfcdHBiEkm/i5PCLGbUwLOn+x1ylQ==
   dependencies:
-    "@jsii/check-node" "1.99.0"
-    "@jsii/spec" "^1.99.0"
+    "@jsii/check-node" "1.100.0"
+    "@jsii/spec" "^1.100.0"
     case "^1.6.3"
     chalk "^4"
     downlevel-dts "^0.11.0"
@@ -4550,9 +4542,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.6.0-dev.20240616"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.0-dev.20240616.tgz#f5ab90446a34cfeee5e1269704b9a051c9700b37"
-  integrity sha512-7CywZuTQgssUSgzYC+AhzI70soi4b8SnEzuKhJENRY+NPgGXd8HL6hZhduIE+b60/rcoBXyi/ghgKmpj0qtnCw==
+  version "5.6.0-dev.20240617"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.0-dev.20240617.tgz#3fd6f41c268821300256a1bf92a0cdfe05b3a5ae"
+  integrity sha512-B8Hf6pYt4Qj+kIFMRyIn/Eec0MTH3CN0jMMv1yNhzIs6iNS86cTRCnf1xgnjoY5mv2imyzAQA5e7DAY7B7PUCg==
 
 typescript@~5.2:
   version "5.2.2"
