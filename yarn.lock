@@ -658,10 +658,25 @@
     chalk "^4.1.2"
     semver "^7.6.0"
 
+"@jsii/check-node@1.101.0":
+  version "1.101.0"
+  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.101.0.tgz#175e5a2b9b31f232fd5df2942dacc4b20820aa93"
+  integrity sha512-io8u1GAF9XGp2crx0C/WGiJeUnHGw5X0du4fisbrNJHmVVFwcJbBMjbfXKWq+JSzl8fo/JV3F1LqtjsnawKA2A==
+  dependencies:
+    chalk "^4.1.2"
+    semver "^7.6.0"
+
 "@jsii/spec@^1.100.0":
   version "1.100.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.100.0.tgz#44e5c6fb84299664f40479b2ebe11e2aee0b727e"
   integrity sha512-4LJCpSkmi3Hfcbmbchv+2JPIquV+cgrkhQcwglBAWqS4liLGbWPwgfHRL22sMXEKXiyXeHfitVwkP+IoGIyJ8g==
+  dependencies:
+    ajv "^8.13.0"
+
+"@jsii/spec@^1.101.0":
+  version "1.101.0"
+  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.101.0.tgz#b1c3488d5df2ee0c355e0a3493e3de4add9d7452"
+  integrity sha512-855OnjKm4RTzRA78GGTNBG/GLe6X/vHJYD58zg7Rw8rWS7sU6iB65TM/7P7R3cufVew8umjjPjvW7ygS6ZqITQ==
   dependencies:
     ajv "^8.13.0"
 
@@ -3241,12 +3256,12 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.3.0:
-  version "5.3.40"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.40.tgz#d76746baf63ddff3d3227c9de6b5906de563545a"
-  integrity sha512-BBEZHZMtKcW29kgIH9duyX0Ik/1gHVWMwGiUY+B+g7XJiI1KyXCCUR/XULf5U45iWJa8r2+nvS3euuff2j6Iyw==
+  version "5.3.41"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.3.41.tgz#6d7c0457ee154664212811e58fa9a7cf2eb8a79f"
+  integrity sha512-eSNzlnEmBvfrzwPTkBMn/EYHyXsBieYVLIuTtUlaxNaprOE87DPXdAO0Nc7VOP9k0TfKeCeovyZQUC36PrLNmw==
   dependencies:
-    "@jsii/check-node" "1.100.0"
-    "@jsii/spec" "^1.100.0"
+    "@jsii/check-node" "1.101.0"
+    "@jsii/spec" "^1.101.0"
     case "^1.6.3"
     chalk "^4"
     downlevel-dts "^0.11.0"
@@ -4542,9 +4557,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.6.0-dev.20240625"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.0-dev.20240625.tgz#5af212a230bcb26df3d888afe08f5da271aa9f70"
-  integrity sha512-oFZTblDS6JxI4fqkiSKhm8uGXjZQ/aTqOiVTkNtttRoKySMDPdchADEl0+AclDFRJt92BGw6NQG5Q5PGs6dDxg==
+  version "5.6.0-dev.20240626"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.0-dev.20240626.tgz#1ec6397a6ca9b96d9c49d95bd22cde03166dca7e"
+  integrity sha512-OUmoaUrtJEMGnxr8luc4sBdJFMFl1rZHdG0h7lOT1J62RBkYiD/LfQJKaH7GcywgMA+oaONUb75kIHi3s8czkg==
 
 typescript@~5.3:
   version "5.3.3"
