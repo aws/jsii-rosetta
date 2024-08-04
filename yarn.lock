@@ -635,14 +635,7 @@
     chalk "^4.1.2"
     semver "^7.6.3"
 
-"@jsii/spec@^1.101.0":
-  version "1.101.0"
-  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.101.0.tgz#b1c3488d5df2ee0c355e0a3493e3de4add9d7452"
-  integrity sha512-855OnjKm4RTzRA78GGTNBG/GLe6X/vHJYD58zg7Rw8rWS7sU6iB65TM/7P7R3cufVew8umjjPjvW7ygS6ZqITQ==
-  dependencies:
-    ajv "^8.13.0"
-
-"@jsii/spec@^1.102.0":
+"@jsii/spec@^1.101.0", "@jsii/spec@^1.102.0":
   version "1.102.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.102.0.tgz#3f9cfcd44e4358ba7259730452e89b2111918524"
   integrity sha512-/VcmoEyp7HR0xoFz47/fiyZjAv+0gHG4ZwTbgB+umbB88bTbLZadnqBL7T9OIKQbK4w8HNOaRnHwjNBIYIPxWQ==
@@ -1117,7 +1110,7 @@ ajv@^6.12.4:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.13.0, ajv@^8.17.1:
+ajv@^8.17.1:
   version "8.17.1"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.17.1.tgz#37d9a5c776af6bc92d7f4f9510eba4c0a60d11a6"
   integrity sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==
@@ -4547,9 +4540,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.6.0-dev.20240802"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.0-dev.20240802.tgz#e1bc3608d960151ddfa7dafb22852dbebad1d101"
-  integrity sha512-aPQg1SL05JivtUdMmXq3BBa9NqhNbDvOlDPXvCf3K+kZ5jkxDdf2El6BLEkkzxkWOczoxma8l40ppGsC6pF40A==
+  version "5.6.0-dev.20240803"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.0-dev.20240803.tgz#c718c09cc9407547ce49edb735ecd18d4004dd98"
+  integrity sha512-iVzsoMLqRMA/IdjeRAOm3k0nGH/2oBPeDfWYazVPW+vL4MKyhGtQB8UyMc4lZqSNIBNcql41SS6m2As86qYJqw==
 
 typescript@~5.3:
   version "5.3.3"
