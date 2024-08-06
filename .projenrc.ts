@@ -1,6 +1,5 @@
-import { DependencyType, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
+import { DependencyType, github, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
 import { BuildWorkflow } from './projenrc/build-workflow';
-import { PullRequestBackport } from './projenrc/pull-request-backport';
 import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
 import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
@@ -289,7 +288,7 @@ for (const [version, branch] of Object.entries(supported.activeBranches(false)))
 }
 
 // Allow PR backports to all maintained versions
-new PullRequestBackport(project, {
+new github.PullRequestBackport(project, {
   branches: Object.values(supported.activeBranches()),
 });
 
