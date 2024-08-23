@@ -62,17 +62,14 @@ export function analyzeImportEquals(node: ts.ImportEqualsDeclaration, context: A
   };
 }
 
+export function analyzeImportDeclaration(node: ts.ImportDeclaration, context: AstRenderer<any>): ImportStatement;
 export function analyzeImportDeclaration(
-  node: ts.ImportDeclaration | ts.JSDocImportTag,
-  context: AstRenderer<any>,
-): ImportStatement;
-export function analyzeImportDeclaration(
-  node: ts.ImportDeclaration | ts.JSDocImportTag,
+  node: ts.ImportDeclaration,
   context: AstRenderer<any>,
   submoduleReferences: SubmoduleReferenceMap,
 ): ImportStatement[];
 export function analyzeImportDeclaration(
-  node: ts.ImportDeclaration | ts.JSDocImportTag,
+  node: ts.ImportDeclaration,
   context: AstRenderer<any>,
   submoduleReferences?: SubmoduleReferenceMap,
 ): ImportStatement | ImportStatement[] {
