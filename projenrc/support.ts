@@ -10,15 +10,9 @@ interface ReleasesDocument {
 }
 
 export const SUPPORT_POLICY: ReleasesDocument = {
-<<<<<<< HEAD
   current: '5.3',
   // Define a different patch version here if a specific feature or bug-fix is required
   currentMinVersionNumber: '5.3.0',
-=======
-  current: '5.5',
-  // Define a different patch version here if a specific feature or bug-fix
-  currentMinVersionNumber: '5.5.0',
->>>>>>> 510ae36 (feat: TypeScript 5.5  (#1778))
   maintenance: {
     // version: End-of-support date
     '5.0': new Date('2024-01-31'),
