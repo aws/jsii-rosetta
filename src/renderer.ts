@@ -346,6 +346,7 @@ export class AstRenderer<C> {
         return visitor.parenthesizedExpression(tree as ts.ParenthesizedExpression, this);
       case ts.SyntaxKind.VoidExpression:
         return visitor.maskingVoidExpression(tree as ts.VoidExpression, this);
+      case ts.SyntaxKind.JSDoc:
       case ts.SyntaxKind.JSDocComment:
         return visitor.jsDoc(tree as ts.JSDoc, this);
       default:
