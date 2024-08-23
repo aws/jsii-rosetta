@@ -148,7 +148,11 @@
     },
     {
       "name": "jsii",
+<<<<<<< HEAD
       "version": "~5.3.0",
+=======
+      "version": "~5.5.0",
+>>>>>>> 510ae36 (feat: TypeScript 5.5  (#1778))
       "type": "runtime"
     },
     {
@@ -165,7 +169,11 @@
     },
     {
       "name": "typescript",
+<<<<<<< HEAD
       "version": "~5.3",
+=======
+      "version": "~5.5",
+>>>>>>> 510ae36 (feat: TypeScript 5.5  (#1778))
       "type": "runtime"
     },
     {
