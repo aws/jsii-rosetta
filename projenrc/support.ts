@@ -10,15 +10,16 @@ interface ReleasesDocument {
 }
 
 export const SUPPORT_POLICY: ReleasesDocument = {
-  current: '5.4',
+  current: '5.5',
   // Define a different patch version here if a specific feature or bug-fix
-  currentMinVersionNumber: '5.4.0',
+  currentMinVersionNumber: '5.5.0',
   maintenance: {
     // version: End-of-support date
     '5.0': new Date('2024-01-31'),
     '5.1': new Date('2024-04-30'),
     '5.2': new Date('2024-06-30'),
     '5.3': new Date('2024-10-15'),
+    '5.4': new Date('2025-02-28'),
   },
 };
 
