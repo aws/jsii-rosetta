@@ -39,6 +39,8 @@ export class BuildWorkflow {
       });
     }
 
+    const nodeVersion = project.minNodeVersion?.split('.', 1).at(0) ?? 'lts/*';
+
     wf.addJobs({
       'build': {
         env: { CI: 'true' },
@@ -57,9 +59,9 @@ export class BuildWorkflow {
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v3',
+            uses: 'actions/setup-node@v4',
             with: {
-              'node-version': project.minNodeVersion,
+              'node-version': nodeVersion,
               'cache': 'yarn',
             },
           },
@@ -179,7 +181,7 @@ export class BuildWorkflow {
           matrix: {
             domain: {
               'node-version': NodeRelease.ALL_RELEASES.flatMap((release) => {
-                if (!release.supported) {
+                if (!release.supported || isOdd(release.majorVersion)) {
                   return [];
                 }
                 return [`${release.majorVersion}.x`];
@@ -199,7 +201,7 @@ export class BuildWorkflow {
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v3',
+            uses: 'actions/setup-node@v4',
             with: {
               'node-version': '${{ matrix.node-version }}',
               'cache': 'yarn',
@@ -228,7 +230,18 @@ export class BuildWorkflow {
         needs: ['matrix-test'],
         permissions: {},
         runsOn: ['ubuntu-latest'],
-        steps: [{ name: 'Done', run: 'echo OK' }],
+        if: 'always()',
+        steps: [
+          {
+            name: 'Build result',
+            run: 'echo ${{needs.matrix-test.result}}',
+          },
+          {
+            if: "${{ needs.matrix-test.result != 'success' }}",
+            name: 'Set status based on matrix build',
+            run: 'exit 1',
+          },
+        ],
       },
       'package': {
         env: { CI: 'true' },
@@ -244,9 +257,9 @@ export class BuildWorkflow {
           },
           {
             name: 'Setup Node.js',
-            uses: 'actions/setup-node@v3',
+            uses: 'actions/setup-node@v4',
             with: {
-              'node-version': project.minNodeVersion,
+              'node-version': nodeVersion,
               'cache': 'yarn',
             },
           },
@@ -300,3 +313,7 @@ export class BuildWorkflow {
     }
   }
 }
+
+const isOdd = function (x: number): boolean {
+  return Boolean(x & 1);
+};

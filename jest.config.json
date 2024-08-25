@@ -1,4 +1,5 @@
 {
+  "coverageProvider": "v8",
   "moduleFileExtensions": [
     "ts",
     "tsx",
@@ -13,8 +14,10 @@
     "<rootDir>/fixtures/.*\\.map"
   ],
   "testMatch": [
-    "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-    "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)"
+    "<rootDir>/@(src|test)/**/*(*.)@(spec|test).ts?(x)",
+    "<rootDir>/@(src|test)/**/__tests__/**/*.ts?(x)",
+    "<rootDir>/@(projenrc)/**/*(*.)@(spec|test).ts?(x)",
+    "<rootDir>/@(projenrc)/**/__tests__/**/*.ts?(x)"
   ],
   "clearMocks": true,
   "collectCoverage": true,
@@ -35,13 +38,10 @@
   "reporters": [
     "default"
   ],
-  "preset": "ts-jest",
-  "globals": {},
   "transform": {
-    "^.+\\.tsx?$": [
+    "^.+\\.[t]sx?$": [
       "ts-jest",
       {
-        "compiler": "typescript",
         "tsconfig": "tsconfig.dev.json"
       }
     ]

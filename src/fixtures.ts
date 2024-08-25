@@ -51,7 +51,7 @@ function loadLiterateSource(directory: string, literateFileName: string) {
     // This couldn't really happen in practice, but do the check anyway
     throw new Error(`Sample uses literate source ${literateFileName}, but not found: ${fullPath}`);
   }
-  return fs.readFileSync(fullPath, { encoding: 'utf-8' });
+  return fs.readFileSync(fullPath).toString('utf-8');
 }
 
 /**
@@ -186,7 +186,7 @@ function sidelineImports(source: string): {
       statement.kind === SyntaxKind.ImportDeclaration ||
       statement.kind === SyntaxKind.ImportEqualsDeclaration ||
       (statement.kind === SyntaxKind.VariableStatement &&
-        statement.getChildAt(0).getChildAt(0).kind === SyntaxKind.DeclareKeyword)
+        statement.getChildAt(0)?.getChildAt(0)?.kind === SyntaxKind.DeclareKeyword)
     ) {
       imports += statement.getFullText(sourceFile);
     } else {

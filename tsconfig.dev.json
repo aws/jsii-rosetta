@@ -11,7 +11,7 @@
       "es2020",
       "es2021.WeakRef"
     ],
-    "module": "CommonJS",
+    "module": "nodenext",
     "noEmitOnError": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -24,14 +24,13 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "stripInternal": true,
-    "target": "ES2020",
-    "moduleResolution": "node16",
+    "target": "es2020",
+    "moduleResolution": "nodenext",
     "noImplicitOverride": true,
     "skipLibCheck": true,
     "sourceMap": true
   },
   "include": [
-    ".projenrc.js",
     "src/**/*.ts",
     "test/**/*.ts",
     "build-tools/**/*.ts",

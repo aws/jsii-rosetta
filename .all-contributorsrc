@@ -90,16 +90,6 @@
       ]
     },
     {
-      "login": "aws-cdk-automation",
-      "name": "AWS CDK Automation",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/43080478?v=4",
-      "profile": "https://github.com/aws/aws-cdk",
-      "contributions": [
-        "maintenance",
-        "review"
-      ]
-    },
-    {
       "login": "BenWal",
       "name": "Ben Walters",
       "avatar_url": "https://avatars0.githubusercontent.com/u/2656067?v=4",
@@ -1575,6 +1565,33 @@
       "profile": "https://github.com/KhurramJalil",
       "contributions": [
         "doc"
+      ]
+    },
+    {
+      "login": "mrgrain",
+      "name": "Momo Kornher",
+      "avatar_url": "https://avatars.githubusercontent.com/u/379814?v=4",
+      "profile": "https://moritzkornher.de/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "TheRealAmazonKendra",
+      "name": "Kendra Neil",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53584728?v=4",
+      "profile": "https://github.com/aws/aws-cdk",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "amazon-auto",
+      "name": "Amazon GitHub Automation",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54958958?v=4",
+      "profile": "https://aws.amazon.com/",
+      "contributions": [
+        "code"
       ]
     }
   ],

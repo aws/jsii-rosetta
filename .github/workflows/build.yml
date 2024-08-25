@@ -22,9 +22,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.14.0
+          node-version: "18"
           cache: yarn
       - name: Cache build outputs
         if: github.event_name == 'pull_request'
@@ -112,7 +112,7 @@ jobs:
           name: build-output
           path: ${{ github.workspace }}
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: yarn
@@ -128,9 +128,9 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - 16.x
           - 18.x
           - 20.x
+          - 22.x
   matrix-clear:
     name: Unit Tests
     needs: matrix-test
@@ -138,9 +138,13 @@ jobs:
     permissions: {}
     env:
       CI: "true"
+    if: always()
     steps:
-      - name: Done
-        run: echo OK
+      - name: Build result
+        run: echo ${{needs.matrix-test.result}}
+      - name: Set status based on matrix build
+        if: ${{ needs.matrix-test.result != 'success' }}
+        run: exit 1
   package:
     name: package
     needs: build
@@ -155,9 +159,9 @@ jobs:
           name: build-output
           path: ${{ github.workspace }}
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.14.0
+          node-version: "18"
           cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile

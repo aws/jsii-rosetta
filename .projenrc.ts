@@ -1,13 +1,31 @@
-import { DependencyType, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
-import { versionMajorMinor } from 'typescript';
+import { DependencyType, github, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
-import { UpgradeDependencies } from './projenrc/upgrade-dependencies';
+import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
 
-// This should be '0' for new version lines
-// However it might be required to depend on a version with a specific feature or bug-fix
-const JSII_PATCH_VERSION = '5';
+/**
+ * See 'projenrc/support.ts' for jsii-compiler/TypeScripts versions we are tracking.
+ * To add a new version:
+ *
+ *  1. Perform the new version release for jsii-compiler and make sure the version has been released
+ *  2. Fork the current `main` to a maintenance branch:
+ *     `git switch main && git fetch --all && git pull`
+ *     `git push origin main:maintenance/vX.Y` (X.Y is the TS version that is about to be replaced by a new release)
+ *  3. Add a branch protection rule for the new maintenance branch
+ *     Copy the settings from the branch for the version that is about to be replaced.
+ *  4. Edit `support.ts`, maintenance EOL date for the current version is 6 months from
+ *     today (round up to the mid-point or end of month), make the new version current.
+ *     Also update `currentMinVersionNumber`.
+ *  5. Update `minNodeVersion` to the oldest LTS version of Node (i.e. dropping support for EOL versions of Node)
+ *  6. `npx projen`
+ *  7. Update the version list in the README (remember to remove EOS versions)
+ *  8. Create a PR, with title "feat: TypeScript X.Y"
+ *  9. Note that merging the PR doesn't trigger a release. Releases are performed on a weekly schedule.
+ *     You should manually create a release by triggering this workflow:
+ *     https://github.com/aws/jsii-rosetta/actions/workflows/auto-tag-releases.yml
+ * 10. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
+ */
 
 const project = new typescript.TypeScriptProject({
   projenrcTs: true,
@@ -33,14 +51,14 @@ const project = new typescript.TypeScriptProject({
 
   autoDetectBin: true,
 
-  minNodeVersion: '16.14.0',
+  minNodeVersion: '18.12.0',
   tsconfig: {
     compilerOptions: {
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
       lib: ['es2020', 'es2021.WeakRef'],
-      target: 'ES2020',
-      moduleResolution: javascript.TypeScriptModuleResolution.NODE16,
-
+      target: 'es2020',
+      moduleResolution: javascript.TypeScriptModuleResolution.NODE_NEXT,
+      module: 'nodenext',
       esModuleInterop: false,
       noImplicitOverride: true,
       skipLibCheck: true,
@@ -84,6 +102,7 @@ const project = new typescript.TypeScriptProject({
   buildWorkflow: false, // We have our own build workflow (need matrix test)
   release: false, // We have our own release workflow
   defaultReleaseBranch: 'main',
+  workflowNodeVersion: 'lts/*', // upgrade workflows should run on latest lts version
 
   autoApproveUpgrades: true,
   autoApproveOptions: {
@@ -99,9 +118,12 @@ const project = new typescript.TypeScriptProject({
     '@actions/github',
     '@types/commonmark',
     '@types/mock-fs',
+    '@types/semver',
     '@types/stream-json',
     '@types/tar',
     '@types/workerpool',
+    'fs-monkey',
+    'memfs',
     'mock-fs',
     'tar',
     'ts-node',
@@ -113,35 +135,39 @@ const project = new typescript.TypeScriptProject({
     'chalk@^4',
     'commonmark',
     'fast-glob',
-    `jsii@~${versionMajorMinor}.${JSII_PATCH_VERSION}`,
+    `jsii@~${SUPPORT_POLICY.currentMinVersionNumber}`,
     'semver-intersect',
     'semver',
     'stream-json',
-    'typescript',
+    `typescript@~${SUPPORT_POLICY.current}`,
     'workerpool',
     'yargs',
   ],
 });
 
+// Double check emitted type declarations are valid
+// This is needed because we are ignoring some declarations, which may produce invalid type declarations if not carefully crafted
+project.compileTask.exec(
+  `tsc lib/index.d.ts --noEmit --skipLibCheck -t ${project.tsconfig?.compilerOptions?.target} -m ${project.tsconfig?.compilerOptions?.module}`,
+);
+
 // PR validation should run on merge group, too...
 (project.tryFindFile('.github/workflows/pull-request-lint.yml')! as YamlFile).patch(
   JsonPatch.add('/on/merge_group', {}),
+  JsonPatch.add(
+    '/jobs/validate/steps/0/if',
+    "github.event == 'pull_request' || github.event_name == 'pull_request_target'",
+  ),
 );
 
-new UpgradeDependencies(project, {
-  workflowOptions: {
-    branches: [
-      'main',
-      ...Object.entries(SUPPORT_POLICY.maintenance).flatMap(([version, until]) => {
-        if (Date.now() > until.getTime()) {
-          return [];
-        }
-        return [`maintenance/v${version}`];
-      }),
-    ],
-    labels: ['auto-approve'],
-  },
+new JsiiDependencyUpgrades(project);
+
+// contributors:update
+project.addDevDeps('all-contributors-cli');
+const contributors = project.addTask('contributors:update', {
+  exec: 'all-contributors check | grep "Missing contributors" -A 1 | tail -n1 | sed -e "s/,//g" | xargs -n1 | grep -v "\\[bot\\]" | grep -v "aws-cdk-automation" | xargs -n1 -I{} all-contributors add {} code',
 });
+contributors.exec('all-contributors generate');
 
 // VSCode will look at the "closest" file named "tsconfig.json" when deciding on which config to use
 // for a given TypeScript file with the TypeScript language server. In order to make this "seamless"
@@ -227,42 +253,47 @@ project.eslint?.addRules({
 new BuildWorkflow(project);
 
 // Add support policy documents & release workflows
-new SupportPolicy(project);
+const supported = new SupportPolicy(project);
 const releases = new ReleaseWorkflow(project)
   .autoTag({
+    releaseLine: SUPPORT_POLICY.current,
     preReleaseId: 'dev',
     runName: 'Auto-Tag Prerelease (default branch)',
     schedule: '0 0 * * 0,2-6', // Tuesday though sundays at midnight
   })
   .autoTag({
+    releaseLine: SUPPORT_POLICY.current,
     runName: 'Auto-Tag Release (default branch)',
     schedule: '0 0 * * 1', // Mondays at midnight
   });
 
 // We'll stagger release schedules so as to avoid everything going out at once.
 let hour = 0;
-for (const [version, until] of Object.entries(SUPPORT_POLICY.maintenance)) {
-  if (Date.now() <= until.getTime()) {
-    // Stagger schedules every 5 hours, rolling. 5 was selected because it's co-prime to 24.
-    hour = (hour + 5) % 24;
-
-    const branch = `v${version}`;
-
-    releases
-      .autoTag({
-        preReleaseId: 'dev',
-        runName: `Auto-Tag Prerelease (${branch})`,
-        schedule: `0 ${hour} * * 0,2-6`, // Tuesday though sundays
-        branch: `maintenance/${branch}`,
-        nameSuffix: branch,
-      })
-      .autoTag({
-        runName: `Auto-Tag Release (${branch})`,
-        schedule: `0 ${hour} * * 1`, // Mondays
-        branch: `maintenance/${branch}`,
-        nameSuffix: branch,
-      });
-  }
+for (const [version, branch] of Object.entries(supported.activeBranches(false))) {
+  // Stagger schedules every 5 hours, rolling. 5 was selected because it's co-prime to 24.
+  hour = (hour + 5) % 24;
+  const tag = `v${version}`;
+  releases
+    .autoTag({
+      releaseLine: version,
+      preReleaseId: 'dev',
+      runName: `Auto-Tag Prerelease (${tag})`,
+      schedule: `0 ${hour} * * 0,2-6`, // Tuesday though sundays
+      branch,
+      nameSuffix: tag,
+    })
+    .autoTag({
+      releaseLine: version,
+      runName: `Auto-Tag Release (${tag})`,
+      schedule: `0 ${hour} * * 1`, // Mondays
+      branch,
+      nameSuffix: tag,
+    });
 }
+
+// Allow PR backports to all maintained versions
+new github.PullRequestBackport(project, {
+  branches: Object.values(supported.activeBranches()),
+});
 
 project.synth();
