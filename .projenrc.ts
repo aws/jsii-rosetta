@@ -24,7 +24,11 @@ import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
  *  9. Note that merging the PR doesn't trigger a release. Releases are performed on a weekly schedule.
  *     You should manually create a release by triggering this workflow:
  *     https://github.com/aws/jsii-rosetta/actions/workflows/auto-tag-releases.yml
- * 10. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
+ * 10. Add support for the new rosetta version line to `jsii-pacmak`.
+ *     See https://github.com/aws/jsii/blob/main/CONTRIBUTING.md#support-for-new-jsii-rosetta-versions
+ * 11. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
+ * 12. Once jsii-docgen is released, add support for the new jsii version line to projen.
+ *     Example: https://github.com/projen/projen/pull/3805
  */
 
 const project = new typescript.TypeScriptProject({
