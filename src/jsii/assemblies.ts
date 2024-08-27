@@ -7,13 +7,13 @@ import { fixturize } from '../fixtures';
 import { extractTypescriptSnippetsFromMarkdown } from '../markdown/extract-snippets';
 import {
   TypeScriptSnippet,
-  typeScriptSnippetFromSource,
   updateParameters,
   SnippetParameters,
   ApiLocation,
   parseMetadataLine,
   CompilationDependency,
   INITIALIZER_METHOD_NAME,
+  typeScriptSnippetFromVisibleSource,
 } from '../snippet';
 import { resolveDependenciesFromPackageJson } from '../snippet-dependencies';
 import { enforcesStrictMode } from '../strict';
@@ -194,46 +194,48 @@ export async function allTypeScriptSnippets(
   assemblies: readonly LoadedAssembly[],
   loose = false,
 ): Promise<TypeScriptSnippet[]> {
-  return Promise.all(
-    assemblies
-      .flatMap((loaded) => allSnippetSources(loaded.assembly).map((source) => ({ source, loaded })))
-      .flatMap(({ source, loaded }) => {
-        switch (source.type) {
-          case 'example':
-            return [
-              {
-                snippet: updateParameters(
-                  typeScriptSnippetFromSource(
-                    source.source,
-                    { api: source.location, field: { field: 'example' } },
-                    isStrict(loaded),
-                  ),
-                  source.metadata ?? {},
+  const sources = assemblies
+    .flatMap((loaded) => allSnippetSources(loaded.assembly).map((source) => ({ source, loaded })))
+    .flatMap(({ source, loaded }) => {
+      switch (source.type) {
+        case 'example':
+          return [
+            {
+              snippet: updateParameters(
+                typeScriptSnippetFromVisibleSource(
+                  source.source,
+                  { api: source.location, field: { field: 'example' } },
+                  isStrict(loaded),
                 ),
-                loaded,
-              },
-            ];
-          case 'markdown':
-            return extractTypescriptSnippetsFromMarkdown(source.markdown, source.location, isStrict(loaded)).map(
-              (snippet) => ({ snippet, loaded }),
-            );
-        }
-      })
-      .map(async ({ snippet, loaded }) => {
-        const isInfused = snippet.parameters?.infused != null;
+                source.metadata ?? {},
+              ),
+              loaded,
+            },
+          ];
+        case 'markdown':
+          return extractTypescriptSnippetsFromMarkdown(source.markdown, source.location, isStrict(loaded)).map(
+            (snippet) => ({ snippet, loaded }),
+          );
+      }
+    });
 
-        // Ignore fixturization errors if requested on this command, or if the snippet was infused
-        const ignoreFixtureErrors = loose || isInfused;
+  const fixtures = [];
+  for (let { snippet, loaded } of sources) {
+    const isInfused = snippet.parameters?.infused != null;
 
-        // Also if the snippet was infused: switch off 'strict' mode if it was set
-        if (isInfused) {
-          snippet = { ...snippet, strict: false };
-        }
+    // Ignore fixturization errors if requested on this command, or if the snippet was infused
+    const ignoreFixtureErrors = loose || isInfused;
 
-        snippet = await withDependencies(loaded, withProjectDirectory(loaded.directory, snippet));
-        return fixturize(snippet, ignoreFixtureErrors);
-      }),
-  );
+    // Also if the snippet was infused: switch off 'strict' mode if it was set
+    if (isInfused) {
+      snippet = { ...snippet, strict: false };
+    }
+
+    snippet = await withDependencies(loaded, withProjectDirectory(loaded.directory, snippet));
+    fixtures.push(fixturize(snippet, ignoreFixtureErrors));
+  }
+
+  return fixtures;
 }
 
 export interface TypeLookupAssembly {

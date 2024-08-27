@@ -51,7 +51,7 @@ export interface TransliterateAssemblyOptions {
 
 /**
  * Prepares transliterated versions of the designated assemblies into the
- * selected taregt languages.
+ * selected target languages.
  *
  * @param assemblyLocations the directories which contain assemblies to
  *                          transliterate.
