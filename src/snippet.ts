@@ -149,7 +149,7 @@ export function typeScriptSnippetFromVisibleSource(
   parameters: Record<string, string> = {},
 ): TypeScriptSnippet {
   const [source, sourceParameters] = parametersFromSourceDirectives(typeScriptSource);
-  const visibleSource = source.trimRight();
+  const visibleSource = source.trimEnd();
 
   return {
     visibleSource,
