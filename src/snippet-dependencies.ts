@@ -244,10 +244,31 @@ export async function prepareDependencyDirectory(deps: Record<string, Compilatio
     },
   );
 
-  // Run NPM install on this package.json. We need to include --force for packages
-  // that have a symbolic version in the symlinked dev tree (like "0.0.0"), but have
-  // actual version range dependencies from externally installed packages (like "^2.0.0").
-  cp.execSync(`npm install --force --loglevel error`, { cwd: tmpDir, encoding: 'utf-8' });
+  // Run NPM install on this package.json.
+  cp.execSync(
+    [
+      'npm install',
+      // We need to include --force for packages
+      // that have a symbolic version in the symlinked dev tree (like "0.0.0"), but have
+      // actual version range dependencies from externally installed packages (like "^2.0.0").
+      '--force',
+      // this is critical from a security perspective to prevent
+      // code execution as part of the install command using npm hooks. (e.g postInstall)
+      '--ignore-scripts',
+      // save time by not running audit
+      '--no-audit',
+      // ensures npm does not insert anything in $PATH
+      '--no-bin-links',
+      // don't write or update a package-lock.json file
+      '--no-package-lock',
+      // only print errors
+      `--loglevel error`,
+    ].join(' '),
+    {
+      cwd: tmpDir,
+      encoding: 'utf-8',
+    },
+  );
 
   return tmpDir;
 }
