@@ -12,8 +12,7 @@ import { readTablet } from './commands/read';
 import { transliterateAssembly } from './commands/transliterate';
 import { trimCache } from './commands/trim-cache';
 import { TranslateResult, translateTypeScript, RosettaDiagnostic } from './index';
-import { TARGET_LANGUAGES, TargetLanguage } from './languages';
-import { VisualizeAstVisitor } from './languages/visualize';
+import { getVisitorFromLanguage, TargetLanguage } from './languages';
 import * as logging from './logging';
 import { emitSupportPolicyInformation } from './support';
 import { File, fmap, printDiagnostics } from './util';
@@ -42,11 +41,13 @@ async function main() {
           .option('language', {
             type: 'string',
             describe: 'Language ID to transliterate to',
+            choices: Array.from(new Set(Object.values(TargetLanguage))),
           })
           .option('python', {
             alias: 'p',
             boolean: true,
-            description: 'Translate snippets to Python. This will override --language option.',
+            deprecated: true,
+            description: 'Translate snippets to Python. Use --language python instead.',
           }),
       wrapHandler(async (args) => {
         const result = translateTypeScript(await makeFileSource(args.FILE ?? '-', 'stdin.ts'), makeVisitor(args));
@@ -62,10 +63,16 @@ async function main() {
             type: 'string',
             describe: 'The file to translate (leave out for stdin)',
           })
+          .option('language', {
+            type: 'string',
+            describe: 'Language ID to transliterate to',
+            choices: Array.from(new Set(Object.values(TargetLanguage))),
+          })
           .option('python', {
             alias: 'p',
             boolean: true,
-            description: 'Translate snippets to Python',
+            deprecated: true,
+            description: 'Translate snippets to Python. Use --language python instead.',
           }),
       wrapHandler(async (args) => {
         const result = translateMarkdown(await makeFileSource(args.FILE ?? '-', 'stdin.md'), makeVisitor(args));
@@ -469,19 +476,10 @@ function wrapHandler<A extends { verbose?: number }, R>(handler: (x: A) => Promi
 }
 
 function makeVisitor(args: { python?: boolean; language?: string }) {
-  if (args.python) {
+  if (args.python != null && args.language == null) {
     args.language = 'python';
   }
-  if (args.language !== undefined) {
-    const lang = args.language.toUpperCase();
-    const language = Object.entries(TargetLanguage).find(([k]) => k === lang)?.[1];
-    if (language === undefined) {
-      throw new Error(`Unknown target language: ${lang}. Expected one of ${Object.keys(TargetLanguage).join(', ')}`);
-    }
-    return TARGET_LANGUAGES[language].createVisitor();
-  }
-  // Default to visualizing AST, including nodes we don't recognize yet
-  return new VisualizeAstVisitor();
+  return getVisitorFromLanguage(args.language);
 }
 
 async function makeFileSource(fileName: string, stdinName: string): Promise<File> {
