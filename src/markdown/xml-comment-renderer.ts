@@ -1,3 +1,4 @@
+import { DOMParser, MIME_TYPE, XMLSerializer } from '@xmldom/xmldom';
 import * as cm from 'commonmark';
 
 import { makeXmlEscaper } from './escapes';
@@ -5,10 +6,6 @@ import { prefixLines, RendererContext } from './markdown';
 import { MarkdownRenderer, para, stripPara } from './markdown-renderer';
 
 const ESCAPE = makeXmlEscaper();
-
-// The types for 'xmldom' are not complete.
-/* eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports */
-const { DOMParser, XMLSerializer } = require('@xmldom/xmldom');
 
 /**
  * A renderer that will render a CommonMark tree to .NET XML comments
@@ -70,14 +67,21 @@ export class CSharpXmlCommentRenderer extends MarkdownRenderer {
   /**
    * HTML needs to be converted to XML
    *
-   * If we don't do this, the parser will reject the whole XML block once it seens an unclosed
+   * If we don't do this, the parser will reject the whole XML block once it sees an unclosed
    * <img> tag.
    */
   public override html_inline(node: cm.Node, _context: RendererContext) {
     const html = node.literal ?? '';
     try {
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      return new XMLSerializer().serializeToString(doc);
+      // An html string fails to parse unless it is wrapped into a document root element
+      // We fake this, by wrapping the inline html into an artificial root element,
+      // and for rendering only selecting its children.
+      const dom = new DOMParser().parseFromString(`<jsii-root>${html}</jsii-root>`, MIME_TYPE.HTML);
+      const fragment = dom.createDocumentFragment();
+      for (const child of Array.from(dom.firstChild?.childNodes ?? [])) {
+        fragment.appendChild(child);
+      }
+      return new XMLSerializer().serializeToString(fragment);
     } catch {
       // Could not parse - we'll escape unsafe XML entities here...
       return html.replace(/[<>&]/g, (char: string) => {
@@ -98,7 +102,7 @@ export class CSharpXmlCommentRenderer extends MarkdownRenderer {
   /**
    * HTML needs to be converted to XML
    *
-   * If we don't do this, the parser will reject the whole XML block once it seens an unclosed
+   * If we don't do this, the parser will reject the whole XML block once it sees an unclosed
    * <img> tag.
    */
   public override html_block(node: cm.Node, context: RendererContext) {
