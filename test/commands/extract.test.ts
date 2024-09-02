@@ -675,7 +675,7 @@ describe('infused examples', () => {
 });
 
 test('can use additional dependencies from monorepo', async () => {
-  logging.configure({ level: logging.Level.VERBOSE });
+  logging.configure({ level: logging.Level.QUIET });
   const asm = TestJsiiModule.fromSource(
     {
       'index.ts': `
