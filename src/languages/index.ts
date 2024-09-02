@@ -3,6 +3,7 @@ import { GoVisitor } from './go';
 import { JavaVisitor } from './java';
 import { PythonVisitor } from './python';
 import { TargetLanguage } from './target-language';
+import { VisualizeAstVisitor } from './visualize';
 import { AstHandler } from '../renderer';
 
 export { TargetLanguage };
@@ -30,3 +31,17 @@ export const TARGET_LANGUAGES: { [key in TargetLanguage]: VisitorFactory } = {
     createVisitor: () => new GoVisitor(),
   },
 };
+
+export function getVisitorFromLanguage(language: string | undefined) {
+  if (language !== undefined) {
+    const target = Object.values(TargetLanguage).find((t) => t === language);
+    if (target === undefined) {
+      throw new Error(
+        `Unknown target language: ${language}. Expected one of ${Object.values(TargetLanguage).join(', ')}`,
+      );
+    }
+    return TARGET_LANGUAGES[target].createVisitor();
+  }
+  // Default to visualizing AST, including nodes we don't recognize yet
+  return new VisualizeAstVisitor();
+}
