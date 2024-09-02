@@ -203,7 +203,7 @@ project.vscode!.settings.addSetting('explorer.excludeGitIgnore', true);
 project.vscode!.settings.addSetting('typescript.tsdk', 'node_modules/typescript/lib');
 // Format-on-save using ESLint
 project.vscode!.extensions.addRecommendations('dbaeumer.vscode-eslint');
-project.vscode!.settings.addSetting('editor.codeActionsOnSave', { 'source.fixAll.eslint': true });
+project.vscode!.settings.addSetting('editor.codeActionsOnSave', { 'source.fixAll.eslint': 'explicit' });
 project.vscode!.settings.addSetting('eslint.validate', ['typescript']);
 
 // Exports map...
