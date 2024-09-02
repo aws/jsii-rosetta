@@ -1,4 +1,4 @@
-import { markDownToStructure, markDownToXmlDoc } from '../../lib';
+import { markDownToStructure, markDownToXmlDoc } from '../../src';
 
 const DEBUG = false;
 
