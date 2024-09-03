@@ -102,7 +102,7 @@ export class BuildWorkflow {
             with: {
               name: '.repo.patch',
               path: '.repo.patch',
-              overwrite: true
+              overwrite: true,
             },
           },
           {
@@ -126,7 +126,7 @@ export class BuildWorkflow {
                 '!${{ github.workspace }}/node_modules',
                 '!${{ github.workspace }}/fixtures/node_modules',
               ].join('\n'),
-              overwrite: true
+              overwrite: true,
             },
           },
         ],
@@ -279,7 +279,7 @@ export class BuildWorkflow {
             with: {
               name: 'release-package',
               path: '${{ github.workspace }}/dist',
-              overwrite: true
+              overwrite: true,
             },
           },
         ],

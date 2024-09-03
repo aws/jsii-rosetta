@@ -110,7 +110,7 @@ export class ReleaseWorkflow {
           with: {
             name: releasePackageName,
             path: '${{ github.workspace }}/dist',
-            overwrite: true
+            overwrite: true,
           },
         },
       ],
