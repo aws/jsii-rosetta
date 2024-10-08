@@ -957,16 +957,16 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "22.7.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.7.4.tgz#e35d6f48dca3255ce44256ddc05dee1c23353fcc"
-  integrity sha512-y+NPi1rFzDs1NdQHHToqeiX2TIS79SWEAw9GYhkkx8bD0ChpfqC+n2j5OXOCpzfojBEBt6DnEnnG9MY0zk1XLg==
+  version "22.7.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.7.5.tgz#cfde981727a7ab3611a481510b473ae54442b92b"
+  integrity sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==
   dependencies:
     undici-types "~6.19.2"
 
 "@types/node@^18":
-  version "18.19.54"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.54.tgz#f1048dc083f81b242640f04f18fb3e4ccf13fcdb"
-  integrity sha512-+BRgt0G5gYjTvdLac9sIeE0iZcJxi4Jc4PV5EUzqi+88jmQLr+fRZdv2tCTV7IHKSGxM6SaLoOXQWWUiLUItMw==
+  version "18.19.55"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.55.tgz#29c3f8e1485a92ec96636957ddec55aabc6e856e"
+  integrity sha512-zzw5Vw52205Zr/nmErSEkN5FLqXPuKX/k5d1D7RKHATGqU7y6YfX9QxZraUzUrFGqH6XzOzG196BC35ltJC4Cw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -1824,9 +1824,9 @@ ejs@^3.1.10:
     jake "^10.8.5"
 
 electron-to-chromium@^1.5.28:
-  version "1.5.32"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.32.tgz#4a05ee78e29e240aabaf73a67ce9fe73f52e1bc7"
-  integrity sha512-M+7ph0VGBQqqpTT2YrabjNKSQ2fEl9PVx6AK3N558gDH9NO8O6XN9SXXFWRo9u9PbEg/bWq+tjXQr+eXmxubCw==
+  version "1.5.33"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.33.tgz#8f64698661240e70fdbc4b032e6085e391f05e09"
+  integrity sha512-+cYTcFB1QqD4j4LegwLfpCNxifb6dDFUAwk6RsLusCwIaZI6or2f+q8rs5tTB2YC53HhOlIbEaqHMAAC8IOIwA==
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -3461,10 +3461,10 @@ mdurl@~1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
 
-memfs@^4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.12.0.tgz#76570478aee461695fb3336ca3356a7a8cfc26cc"
-  integrity sha512-74wDsex5tQDSClVkeK1vtxqYCAgCoXxx+K4NSHzgU/muYVYByFqa+0RnrPO9NM6naWm1+G9JmZ0p6QHhXmeYfA==
+memfs@^4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.13.0.tgz#a9244865bab044054307874dbd9ffa4827cbcfcf"
+  integrity sha512-dIs5KGy24fbdDhIAg0RxXpFqQp3RwL6wgSMRF9OSuphL/Uc9a4u2/SDJKPLj/zUgtOGKuHrRMrj563+IErj4Cg==
   dependencies:
     "@jsonjoy.com/json-pack" "^1.0.3"
     "@jsonjoy.com/util" "^1.3.0"
@@ -3836,10 +3836,10 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-projen@^0.88.0:
-  version "0.88.0"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.88.0.tgz#4e3664fddc7fc0614827981c221e65776dbda390"
-  integrity sha512-7A6OAgL7Gz6R2yWMUlqMqZw7r5jOeqfpNLg+BZbLg3UXbtPsdOjPDp0NroGXxFkqW7NcVPzs7/lF7DZ6H9pRSQ==
+projen@^0.88.1:
+  version "0.88.1"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.88.1.tgz#82319b5b47317ddabb1bfe3555bc2bb56aa88f3c"
+  integrity sha512-LAv/kUAcCSTXH7/E+eeAJln3NvVFvhHgx9ezGPudcEPUOhr98M+Uojt6lniGvKESmk6rDO8AcVvzIhFH3kcz1g==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
