@@ -660,10 +660,25 @@
     chalk "^4.1.2"
     semver "^7.6.3"
 
+"@jsii/check-node@1.104.0":
+  version "1.104.0"
+  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.104.0.tgz#093a616ab4a80abc9b932906c4f68c32362faa6c"
+  integrity sha512-5rAn4y11APxq69DmTKtAACmDuOymcTiz29CE7s0AeWA5jzpxBRhkaj8xwixiSQtkoBFk+Vpoi2eNctCvwLdFaw==
+  dependencies:
+    chalk "^4.1.2"
+    semver "^7.6.3"
+
 "@jsii/spec@^1.103.1":
   version "1.103.1"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.103.1.tgz#2f8e61c603238c56d30d26100eb7ee9f51aa35b8"
   integrity sha512-14OGYM3DjEBjUOUaih+bwPgkhFnR8L9TSNSM0oE0L0hjWscTapvClqOgMDJ1ID52qkROCAgKl1d71Vmm4v0Buw==
+  dependencies:
+    ajv "^8.17.1"
+
+"@jsii/spec@^1.104.0":
+  version "1.104.0"
+  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.104.0.tgz#9f1206b3712808ad7cbbdbf6cf333a77a8f3df8c"
+  integrity sha512-7jxU8iRowA3O7Dpn8XAsX8o4Y8Fy8plbEVg0CnjvIQsJh3puI3KFHspXur70OOccfGkoL1TWnXBZ+BwCcvhu1g==
   dependencies:
     ajv "^8.17.1"
 
@@ -1473,9 +1488,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001663:
-  version "1.0.30001667"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001667.tgz#99fc5ea0d9c6e96897a104a8352604378377f949"
-  integrity sha512-7LTwJjcRkzKFmtqGsibMeuXmvFDfZq/nzIjnmgCGzKKRVzjD72selLDK1oPF/Oxzmt4fNcPvTDvGqSDG4tCALw==
+  version "1.0.30001668"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001668.tgz#98e214455329f54bf7a4d70b49c9794f0fbedbed"
+  integrity sha512-nWLrdxqCdblixUO+27JtGJJE/txpJlyUy5YN1u53wLZkP0emYCo5zgS6QYft7VUYR42LGgi/S5hdLZTrnyIddw==
 
 case@^1.6.3:
   version "1.6.3"
@@ -1621,9 +1636,9 @@ concat-map@0.0.1:
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
 
 constructs@^10.0.0:
-  version "10.3.1"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.3.1.tgz#c694d46de6ab3f20423c9e79648ac76bd9d4d6c0"
-  integrity sha512-gTyTNR3iHOVnOk4cKPK6QHRrSZWT1nsnEMFnwLa094/w1L+CKToQel4v4oxnYHi4L07PBNm1p3Bt0WVZI4kgkg==
+  version "10.4.1"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.4.1.tgz#0567a981b723ec56f26986678dfc49410d29092a"
+  integrity sha512-eIZhGVl6SFI0T6eKtjDRlgInJn3X3uh6l4MMpRF+cQrCfm1SPkDUAMwwYEJ6bpj0Muv2quKE2E8HrijKGyNGaw==
 
 conventional-changelog-config-spec@^2.1.0:
   version "2.1.0"
@@ -3555,10 +3570,10 @@ mkdirp@^1.0.3:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-mock-fs@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.3.0.tgz#7dfc95ce5528aff8e10fa117161b91d8129e0e9e"
-  integrity sha512-IMvz1X+RF7vf+ur7qUenXMR7/FSKSIqS3HqFHXcyNI7G0FbpFO8L5lfsUJhl+bhK1AiulVHWKUSxebWauPA+xQ==
+mock-fs@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.4.0.tgz#c1d91d6d8dc19269a0fe86e8b777521d990c2ed7"
+  integrity sha512-3ROPnEMgBOkusBMYQUW2rnT3wZwsgfOKzJDLvx/TZ7FL1WmWvwSwn3j4aDR5fLDGtgcc1WF0Z1y0di7c9L4FKw==
 
 ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
