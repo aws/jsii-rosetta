@@ -37,7 +37,7 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^5.1.1",
     "@types/commonmark": "^0.27.9",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/mock-fs": "^4.13.4",
     "@types/node": "^18",
     "@types/semver": "^7.5.8",
@@ -74,7 +74,7 @@
     "jsii": "~5.5.0",
     "semver": "^7.6.3",
     "semver-intersect": "^1.5.0",
-    "stream-json": "^1.8.0",
+    "stream-json": "^1.9.0",
     "typescript": "~5.5",
     "workerpool": "^6.5.1",
     "yargs": "^17.7.2"
