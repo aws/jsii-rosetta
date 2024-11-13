@@ -47,9 +47,9 @@ test('does not fail on "Debug Failure"', () => {
 
 test('rejects ?? operator', () => {
   const snippet: TypeScriptSnippet = {
-    completeSource: 'const x = false ?? true;',
+    completeSource: 'const x = false; const y = x ?? true;',
     location,
-    visibleSource: 'const x = false ?? true;',
+    visibleSource: 'const x = false; const y = x ?? true;',
     parameters: { lit: 'test/integ.restapi-import.lit.ts' },
     strict: false,
   };
