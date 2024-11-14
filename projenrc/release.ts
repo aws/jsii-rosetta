@@ -28,7 +28,7 @@ export class ReleaseWorkflow {
     const publishTarget = 'publish-target';
     const federateToAwsStep: github.workflows.JobStep = {
       name: 'Federate to AWS',
-      uses: 'aws-actions/configure-aws-credentials@v1',
+      uses: 'aws-actions/configure-aws-credentials@v4',
       with: {
         'aws-region': 'us-east-1',
         'role-to-assume': '${{ secrets.AWS_ROLE_TO_ASSUME }}',
