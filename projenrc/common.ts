@@ -2,7 +2,7 @@ import { github } from 'projen';
 
 export const ACTIONS_CHECKOUT: github.workflows.JobStep = {
   name: 'Checkout',
-  uses: 'actions/checkout@v3',
+  uses: 'actions/checkout@v4',
   with: {
     ref: '${{ github.sha }}',
     repository: '${{ github.repository }}',
