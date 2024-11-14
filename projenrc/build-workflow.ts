@@ -55,7 +55,7 @@ export class BuildWorkflow {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v3',
+            uses: 'actions/checkout@v4',
           },
           {
             name: 'Setup Node.js',
@@ -140,7 +140,7 @@ export class BuildWorkflow {
         steps: [
           {
             name: 'Checkout',
-            uses: 'actions/checkout@v3',
+            uses: 'actions/checkout@v4',
             with: {
               ref: '${{ github.event.pull_request.head.ref }}',
               repository: '${{ github.event.pull_request.head.repo.full_name }}',
