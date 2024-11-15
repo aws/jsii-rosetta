@@ -4511,9 +4511,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typescript@next:
-  version "5.8.0-dev.20241113"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.8.0-dev.20241113.tgz#d940ddc2edf73029e7888439bc1b6b1efa31419b"
-  integrity sha512-UHZg5oh4kRf5PSlyJapVs80pWwb3qxK4MP07PxOz7KDYRf0vWBBepHbZI6Xmx1syYb9M+plmem9PUT2kM2YlzQ==
+  version "5.8.0-dev.20241114"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.8.0-dev.20241114.tgz#3765ad130591c423dec3a1c3b70705732738d839"
+  integrity sha512-FCT0wJBcmIXGSTij0CscfHzyI8aOtjnknnrKcSQZ8mzvQ9fQgvpqeIFToCyXkfaHmObw0Lom+J45w7NDh5WIAg==
 
 typescript@~5.4:
   version "5.4.5"
