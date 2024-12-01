@@ -4563,9 +4563,9 @@ typed-array-length@^1.0.6:
     reflect.getprototypeof "^1.0.6"
 
 typescript@next:
-  version "5.8.0-dev.20241129"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.8.0-dev.20241129.tgz#374d36360be2e1ed327b58061e5266f82f8ff9bb"
-  integrity sha512-IuSZV1kgkJ24wRAfBt7rJz2LwhflIrelUrLeQsrRkG1Ej51n04Diou318d9xewwfvkkRIsR+g/hph6P5+Fb5Tw==
+  version "5.8.0-dev.20241130"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.8.0-dev.20241130.tgz#b1037763f9e978bffe41bfc7e4382b51dc8b7e04"
+  integrity sha512-cJ/17qrj874di4GaOZOxdH7kzhC25jyGXrxBhjUUUCq2HiQAo9nl8R33PKOqIejOA1ljGASS6jyHwWsBOjRwow==
 
 typescript@~5.4:
   version "5.4.5"
