@@ -3330,9 +3330,9 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.6.0:
-  version "5.6.2"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.6.2.tgz#b18c156e8dc54e2d709b9c81555b25d2a457e1d8"
-  integrity sha512-En1ekdfm/cSdozWNIu+vqBhpBOJNJ6JFmdTHqN+tLgiyHNfhZczwfsMrKwxbUL2GTMPeBR+hFZRhBdHtL7ES+w==
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.6.3.tgz#ff12c99941796faa7e42a7964376c52f54216d52"
+  integrity sha512-O9TL4RT7Hb5T9EW6Y3KPR5s4PKcyLpsTt9I6ZEjOI/+FkGzjLm/NkU9i5WEAizYcaRem29br5psgTodZXjCP+Q==
   dependencies:
     "@jsii/check-node" "1.105.0"
     "@jsii/spec" "^1.105.0"
