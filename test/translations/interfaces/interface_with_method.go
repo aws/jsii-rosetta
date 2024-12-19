@@ -1,3 +1,3 @@
 type iThing interface {
-	doAThing()
+	DoAThing()
 }
