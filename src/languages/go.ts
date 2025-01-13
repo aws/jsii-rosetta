@@ -294,6 +294,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
           ? JSON.stringify(node.name.text)
           : this.goName(node.name.text, renderer, renderer.typeChecker.getSymbolAtLocation(node.name))
         : renderer.convert(node.name);
+
     return new OTree(
       [
         key,
@@ -543,11 +544,9 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
 
   public override methodSignature(node: ts.MethodSignature, renderer: AstRenderer<GoLanguageContext>): OTree {
     const type = this.renderTypeNode(node.type, true, renderer);
+
     return new OTree(
-      [
-        renderer.updateContext({ isExported: renderer.currentContext.isExported && isPublic(node) }).convert(node.name),
-        '(',
-      ],
+      [renderer.updateContext({ isExported: isPublic(node) }).convert(node.name), '('],
       renderer.convertAll(node.parameters),
       { suffix: `) ${type}`, canBreakLine: true },
     );
@@ -571,7 +570,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
     if (renderer.currentContext.isInterface) {
       const type = this.renderTypeNode(node.type, true, renderer);
       const getter = new OTree([
-        renderer.updateContext({ isExported: renderer.currentContext.isExported && isPublic(node) }).convert(node.name),
+        renderer.updateContext({ isExported: isPublic(node) }).convert(node.name),
         '() ',
         type,
       ]);
@@ -580,7 +579,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
       }
       const setter = new OTree([
         '\n',
-        renderer.currentContext.isExported && isPublic(node) ? 'Set' : 'set',
+        isPublic(node) ? 'Set' : 'set',
         renderer.updateContext({ isExported: true }).convert(node.name),
         '(value ',
         type,
