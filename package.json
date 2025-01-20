@@ -67,7 +67,7 @@
   "dependencies": {
     "@jsii/check-node": "1.106.0",
     "@jsii/spec": "^1.106.0",
-    "@xmldom/xmldom": "^0.9.6",
+    "@xmldom/xmldom": "^0.9.7",
     "chalk": "^4",
     "commonmark": "^0.31.2",
     "fast-glob": "^3.3.3",
