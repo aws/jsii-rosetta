@@ -3365,9 +3365,9 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.6.0:
-  version "5.6.9"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.6.9.tgz#caf1393a231169e8604bd79c4d4a280e4f0e90e8"
-  integrity sha512-SS6jTt627XZKXymuB/4EBlyyoiGR6l4mrDnlBQY35pXr9rbvtT/NS16W5cNRvEnosv3Wtm5kSM0JZt5oUfZypw==
+  version "5.6.10"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.6.10.tgz#4eeca0708a0a57e8f61d392f8df0bf14afa23ed3"
+  integrity sha512-3hKSzGP86wdKvEzmTSRHwxaGhFomx9TNN085HfoXdODtS9nvvdUWmXdTrnQghXsgzWRTWxRwBS5x0Xu+cRuqhQ==
   dependencies:
     "@jsii/check-node" "1.106.0"
     "@jsii/spec" "^1.106.0"
@@ -3375,7 +3375,7 @@ jsii@~5.6.0:
     chalk "^4"
     fast-deep-equal "^3.1.3"
     log4js "^6.9.1"
-    semver "^7.7.0"
+    semver "^7.7.1"
     semver-intersect "^1.5.0"
     sort-json "^2.0.1"
     spdx-license-list "^6.9.0"
@@ -4188,7 +4188,7 @@ semver@^6.3.0, semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-semver@^7.5.3, semver@^7.5.4, semver@^7.6.0, semver@^7.6.3, semver@^7.7.0, semver@^7.7.1:
+semver@^7.5.3, semver@^7.5.4, semver@^7.6.0, semver@^7.6.3, semver@^7.7.1:
   version "7.7.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.1.tgz#abd5098d82b18c6c81f6074ff2647fd3e7220c9f"
   integrity sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==
