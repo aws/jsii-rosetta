@@ -688,14 +688,7 @@
     chalk "^4.1.2"
     semver "^7.6.3"
 
-"@jsii/spec@^1.106.0":
-  version "1.106.0"
-  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.106.0.tgz#f40010ec8cde14b7a003dd5b6a46480d9d7e222f"
-  integrity sha512-pAIvqEGf0YLmtzFtUKWNEGkCmXMHENy7k+rzCD147wnM4jHhvEL1mEvxi99aA2VcmvLYaAYNOs/XozT+s+kLqQ==
-  dependencies:
-    ajv "^8.17.1"
-
-"@jsii/spec@^1.107.0":
+"@jsii/spec@^1.106.0", "@jsii/spec@^1.107.0":
   version "1.107.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.107.0.tgz#b5f71fdd408c1449bdbe6ac193ce24bc8a8d12e9"
   integrity sha512-m3qN+uGudQ9N36kNXJ5SUaqUh7G2Dm61JgmfswnkiCxlRr2fmRYL5mRD0DA+cJX/XG/S9iDjf6NlB/fLmblFHA==
@@ -2347,12 +2340,7 @@ flat-cache@^4.0.0:
     flatted "^3.2.9"
     keyv "^4.5.4"
 
-flatted@^3.2.7:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.2.tgz#adba1448a9841bec72b42c532ea23dbbedef1a27"
-  integrity sha512-AiwGJM8YcNOaobumgtng+6NHuOqC3A7MixFeDafM3X9cIUM+xUXoS5Vfgf+OihAYe20fxqNM9yPBXJzRtZ/4eA==
-
-flatted@^3.2.9:
+flatted@^3.2.7, flatted@^3.2.9:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.3.3.tgz#67c8fad95454a7c7abebf74bb78ee74a44023358"
   integrity sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==
@@ -4739,9 +4727,9 @@ typed-array-length@^1.0.7:
     reflect.getprototypeof "^1.0.6"
 
 typescript@next:
-  version "5.8.0-dev.20250217"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.8.0-dev.20250217.tgz#b4d18fe18243d6c39f549ecefe922d3b5997e6e7"
-  integrity sha512-ucr3Nf7Fmd3nbF7qo+D+SqAqfdSOJCm1AneFjVsjgomUXY3zaCofP5DpY8kJGzynaGRdz5XECeh3ksZOvgJKoA==
+  version "5.9.0-dev.20250223"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.0-dev.20250223.tgz#87bf3cc665a7d328c9367ff2144bb1217fc3a200"
+  integrity sha512-mdP8dkgq76KJ81vS10YslgLEIi+ik8ywthW57KpHl8YRGp3VkFQ3iQDN/Wm3v34XLBgLzi36jAGPUscIm9ZWeA==
 
 typescript@~5.4:
   version "5.4.5"
