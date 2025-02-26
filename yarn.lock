@@ -688,14 +688,7 @@
     chalk "^4.1.2"
     semver "^7.6.3"
 
-"@jsii/spec@^1.107.0":
-  version "1.107.0"
-  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.107.0.tgz#b5f71fdd408c1449bdbe6ac193ce24bc8a8d12e9"
-  integrity sha512-m3qN+uGudQ9N36kNXJ5SUaqUh7G2Dm61JgmfswnkiCxlRr2fmRYL5mRD0DA+cJX/XG/S9iDjf6NlB/fLmblFHA==
-  dependencies:
-    ajv "^8.17.1"
-
-"@jsii/spec@^1.108.0":
+"@jsii/spec@^1.107.0", "@jsii/spec@^1.108.0":
   version "1.108.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.108.0.tgz#fbcf6785ac7dc62f79aca535a18ecdfa2a8198aa"
   integrity sha512-YtebmBRy19UT1pKmxqlTqfW1OcFFjuU2zxxi+QFfM8KG1ahBlpcuz+3DE9gG1qTASIJJJI0fd8PaAiZ5gE40sQ==
@@ -4734,9 +4727,9 @@ typed-array-length@^1.0.7:
     reflect.getprototypeof "^1.0.6"
 
 typescript@next:
-  version "5.9.0-dev.20250224"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.0-dev.20250224.tgz#b9586092e006e0e754f07f5f7f234046922f6efb"
-  integrity sha512-hE9YCxxyOJDBJhEo6w3veHldQw5ry0nhuTzaPU2UZe37YsBIC5kaOVdzeA+IUh4cgYWKe60B1vuC4GN8Q4a0SA==
+  version "5.9.0-dev.20250225"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.0-dev.20250225.tgz#36b7e9c80d8f07da33bae83794cb12e8a3b12573"
+  integrity sha512-rOzayxhA6eEpXSqW3kiHMgNC7G3a/bqw2k6ls23L4abPMqrUlGiRB3q0haKfI1Le+8eXjzhP3GwsZCMpEKDDLw==
 
 typescript@~5.5:
   version "5.5.4"
