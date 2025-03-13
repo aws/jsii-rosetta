@@ -148,7 +148,7 @@
     },
     {
       "name": "jsii",
-      "version": "~5.7.0",
+      "version": "~5.8.0",
       "type": "runtime"
     },
     {
@@ -165,7 +165,7 @@
     },
     {
       "name": "typescript",
-      "version": "~5.7",
+      "version": "~5.8",
       "type": "runtime"
     },
     {

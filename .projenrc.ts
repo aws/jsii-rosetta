@@ -19,17 +19,18 @@ import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
  *     Also update `currentMinVersionNumber`.
  *  6. Update `minNodeVersion` to the oldest LTS version of Node (i.e. dropping support for EOL versions of Node)
  *  7. Update the version list in the README (remember to remove EOS versions)
- *  8. If any versions dropped into EOS, add the respective branch as a target to the "end-of-support" ruleset.
+ *  8. If any versions dropped into EOS, add the respective branch as a target to the "end-of-support" ruleset
+ *     and remove them from the "current" ruleset.
  *  9. `npx projen`
- *  10. `npx build` and fix any issues that come up
- * 11. Create a PR, with title "feat: TypeScript X.Y"
- * 12. Note that merging the PR doesn't trigger a release. Releases are performed on a weekly schedule.
+ *  10. `npx projen build` and fix any issues that come up
+ *  11. Create a PR, with title "feat: TypeScript X.Y"
+ *  12. Note that merging the PR doesn't trigger a release. Releases are performed on a weekly schedule.
  *     You should manually create a release by triggering this workflow:
  *     https://github.com/aws/jsii-rosetta/actions/workflows/auto-tag-releases.yml
- * 13. Add support for the new rosetta version line to `jsii-pacmak`.
+ *  13. Add support for the new rosetta version line to `jsii-pacmak`.
  *     See https://github.com/aws/jsii/blob/main/CONTRIBUTING.md#support-for-new-jsii-rosetta-versions
- * 14. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
- * 15. Once jsii-docgen is released, add support for the new jsii version line to projen.
+ *  14. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
+ *  15. Once jsii-docgen is released, add support for the new jsii version line to projen.
  *     Example: https://github.com/projen/projen/pull/3805
  */
 
