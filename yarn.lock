@@ -699,14 +699,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsii/check-node@1.108.0":
-  version "1.108.0"
-  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.108.0.tgz#d223d97178c84ed470195d532364e59bd66be17b"
-  integrity sha512-wa8AGH31Cl0x1jU/KtM6JB32IurBmK1YiX5ZnCndifRCehLnS8DmJCPYrzJbKD4xqmHigaq6696fAnM/L7qIsw==
-  dependencies:
-    chalk "^4.1.2"
-    semver "^7.6.3"
-
 "@jsii/check-node@1.109.0":
   version "1.109.0"
   resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.109.0.tgz#d6d988f50f0d11591f6ac7476e6fa1ed9ff43c2e"
@@ -715,7 +707,7 @@
     chalk "^4.1.2"
     semver "^7.7.1"
 
-"@jsii/spec@^1.108.0", "@jsii/spec@^1.109.0":
+"@jsii/spec@^1.109.0":
   version "1.109.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.109.0.tgz#dd5b80014726fc4dce5982ab9c3f2ea4521015f5"
   integrity sha512-+IQT4DN7/ZjaheFuwKgfpVdDIF+Reb8Hq4nO43Lu0hjeVugelOL0P22cXL229BjQ5yDRr44Fr64FuI/WUNGRKA==
@@ -3460,12 +3452,12 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.7.0:
-  version "5.7.8"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.7.8.tgz#b4000bfd1b0681ab17a1e410ce3c9b0f9ac7ea0f"
-  integrity sha512-ctDfPIFGdrmClySlHZpurqNENr7exe/XjRVej8sVl9ctyQhInjYn5NaIVZ+il/q8G8/MQvfcFB6LmIAGSdmxGQ==
+  version "5.7.9"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.7.9.tgz#cc9a28aba8e58b2a30ef5c37fc7b65b0fa0ef2ac"
+  integrity sha512-LNyKNzp/gmnoxjOhBkZ+aaIl4U9JD2Ui/rU/YLV4pn+nBhS0/aGMAgkC5lj/Fu+3rS/C4LIrFb97tv+YkD+gZw==
   dependencies:
-    "@jsii/check-node" "1.108.0"
-    "@jsii/spec" "^1.108.0"
+    "@jsii/check-node" "1.109.0"
+    "@jsii/spec" "^1.109.0"
     case "^1.6.3"
     chalk "^4"
     fast-deep-equal "^3.1.3"
