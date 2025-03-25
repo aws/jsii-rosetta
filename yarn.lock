@@ -699,14 +699,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsii/check-node@1.109.0":
-  version "1.109.0"
-  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.109.0.tgz#d6d988f50f0d11591f6ac7476e6fa1ed9ff43c2e"
-  integrity sha512-KUdmXNeCpOgjwK3QtEnxwMjIbGsPG4YkSwYsU1dmYftOz8x/oTC/D4Bz9uS7f4ARBBVkCWJWtS01l8nQgAZ2jQ==
-  dependencies:
-    chalk "^4.1.2"
-    semver "^7.7.1"
-
 "@jsii/check-node@1.110.0":
   version "1.110.0"
   resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.110.0.tgz#668188d5a7dd46faedbea45a67064a810c7f1cd4"
@@ -715,7 +707,7 @@
     chalk "^4.1.2"
     semver "^7.7.1"
 
-"@jsii/spec@^1.109.0", "@jsii/spec@^1.110.0":
+"@jsii/spec@^1.110.0":
   version "1.110.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.110.0.tgz#0d8af08fdc57e79514291c909a23d0437124f107"
   integrity sha512-qJBcIf5VJL+xDloImTkIfJIdXkhSnM46gqF73pwLahCwJQit0TwC8a659+aseCoAxF2+b0cnM0nzmoM+BWh2VA==
@@ -3512,12 +3504,12 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.5.0:
-  version "5.5.25"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.5.25.tgz#6a09fae73a7f0c43d939e4ed404bd1f4d8326024"
-  integrity sha512-ro9NkQORVBd6j88GyvRuIAnYelQIZXSVulMOsqM6YK5XG6P9ptr+KiuIPBXPwD/7Mnu/UFBuncXg9ZG6IkjUxQ==
+  version "5.5.26"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.5.26.tgz#0dd0773dc22b557ea18262a7f42ad76298527a57"
+  integrity sha512-pFlFEeYyV4UK6A6jrrMvlEQ2BhMCOymPMUJWh0hvmf1/JjRqCDF/dDG4hZahhsYh6doacZD6DW2hJLcMblkkzw==
   dependencies:
-    "@jsii/check-node" "1.109.0"
-    "@jsii/spec" "^1.109.0"
+    "@jsii/check-node" "1.110.0"
+    "@jsii/spec" "^1.110.0"
     case "^1.6.3"
     chalk "^4"
     downlevel-dts "^0.11.0"
@@ -4933,9 +4925,9 @@ typed-array-length@^1.0.7:
     reflect.getprototypeof "^1.0.6"
 
 typescript@next:
-  version "5.9.0-dev.20250323"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.0-dev.20250323.tgz#ae658d97a573d723516ffbeb30fc2126dd0dc234"
-  integrity sha512-ILv2CmC3W7Ts7k3T2cfR2qat2er1aguk3rTwr+3X0EE3WUQ2ZX6KggAzr6JFSAasdLSQ7/KKn1skhpuwlm0USQ==
+  version "5.9.0-dev.20250324"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.9.0-dev.20250324.tgz#9a11779686b159676329e6be641d5914c2ae36c6"
+  integrity sha512-qehVULhODb1IphPefX/jq0wAXpk6ifAt2lF3mxTsyR3yPDoPkiQdvxw9cURaDjJw6vCijSER6dU8kWmHdWaQnA==
 
 typescript@~5.5:
   version "5.5.4"
