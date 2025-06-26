@@ -4,8 +4,8 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { PackageJson } from '@jsii/spec';
-import * as fastGlob from 'fast-glob';
 import * as semver from 'semver';
+import * as tinyglobby from 'tinyglobby';
 
 import { findDependencyDirectory, findUp, isBuiltinModule } from './find-utils';
 import * as logging from './logging';
@@ -289,7 +289,7 @@ async function scanMonoRepos(startingDirs: readonly string[]): Promise<Record<st
 
   logging.debug(`Monorepo package sources: ${Array.from(globs).join(', ')}`);
 
-  const packageDirectories = await fastGlob(Array.from(globs).map(windowsToUnix), { onlyDirectories: true });
+  const packageDirectories = await tinyglobby.glob(Array.from(globs).map(windowsToUnix), { onlyDirectories: true, expandDirectories: false });
   const results = mkDict(
     (
       await Promise.all(

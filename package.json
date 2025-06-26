@@ -70,11 +70,11 @@
     "@xmldom/xmldom": "^0.9.8",
     "chalk": "^4",
     "commonmark": "^0.31.2",
-    "fast-glob": "^3.3.3",
     "jsii": "~5.8.0",
     "semver": "^7.7.2",
     "semver-intersect": "^1.5.0",
     "stream-json": "^1.9.1",
+    "tinyglobby": "^0.2.14",
     "typescript": "~5.8",
     "workerpool": "^6.5.1",
     "yargs": "^17.7.2"
