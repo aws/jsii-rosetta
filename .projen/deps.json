@@ -143,10 +143,6 @@
       "type": "runtime"
     },
     {
-      "name": "fast-glob",
-      "type": "runtime"
-    },
-    {
       "name": "jsii",
       "version": "~5.8.0",
       "type": "runtime"
@@ -161,6 +157,10 @@
     },
     {
       "name": "stream-json",
+      "type": "runtime"
+    },
+    {
+      "name": "tinyglobby",
       "type": "runtime"
     },
     {
