@@ -712,14 +712,7 @@
     chalk "^4.1.2"
     semver "^7.7.2"
 
-"@jsii/spec@^1.112.0":
-  version "1.112.0"
-  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.112.0.tgz#9a70db6bbe3c78ede1095686a7cacda8b2d91f26"
-  integrity sha512-O6peIhjjGkIQpbKUMHTNJHMuyqd6EXqWlxnBKpoBoUwDz18HXxt/SwUvnovYCELjgxOUMCdO5Y4/YjeABvatUw==
-  dependencies:
-    ajv "^8.17.1"
-
-"@jsii/spec@^1.113.0":
+"@jsii/spec@^1.112.0", "@jsii/spec@^1.113.0":
   version "1.113.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.113.0.tgz#cc9960a69c285466088c370f8e47d07c5ae73fb4"
   integrity sha512-OAQNfJHzMmE42ySJpelOFFKCgnh6hxcKLnmgtaYEzsFW9UxH9gc945FFOXff52GbhUcigGElCqJ3MclrbgXoGw==
