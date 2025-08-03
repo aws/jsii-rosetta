@@ -729,10 +729,15 @@
   resolved "https://registry.yarnpkg.com/@jsonjoy.com/buffers/-/buffers-1.0.0.tgz#ade6895b7d3883d70f87b5743efaa12c71dfef7a"
   integrity sha512-NDigYR3PHqCnQLXYyoLbnEdzMMvzeiCWo1KOut7Q0CoIqg9tUAPKJ1iq/2nFhc5kZtexzutNY0LFjdwWL3Dw3Q==
 
+"@jsonjoy.com/codegen@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@jsonjoy.com/codegen/-/codegen-1.0.0.tgz#5c23f796c47675f166d23b948cdb889184b93207"
+  integrity sha512-E8Oy+08cmCf0EK/NMxpaJZmOxPqM+6iSe2S4nlSBrPZOORoDJILxtbSUEDKQyTamm/BVAhIGllOBNU79/dwf0g==
+
 "@jsonjoy.com/json-pack@^1.0.3":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@jsonjoy.com/json-pack/-/json-pack-1.7.0.tgz#43b86091fcdf4b53e32ef5309fc203396dffa40a"
-  integrity sha512-XHjFn3QhP8uMak/Mm+0W+f7XPBk1f10LWe1Ba/IoOtd+tRJtNU4m9g5UJpJESVQMousq9BdBNNDNqOFiRnyj5g==
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@jsonjoy.com/json-pack/-/json-pack-1.8.0.tgz#08dbac656f14fbc7a53861242c2a553075fa310a"
+  integrity sha512-paJGjyBTRzfgkqhIyer992g21aSKuu9h//zGS7aqm795roD6VYFf6iU9NYua1Bndmh/NRPkjtm9+hEPkK0yZSw==
   dependencies:
     "@jsonjoy.com/base64" "^1.1.1"
     "@jsonjoy.com/json-pointer" "^1.0.1"
@@ -748,11 +753,12 @@
     "@jsonjoy.com/util" "^1.3.0"
 
 "@jsonjoy.com/util@^1.1.2", "@jsonjoy.com/util@^1.3.0":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@jsonjoy.com/util/-/util-1.8.1.tgz#62387224001e59ded1ca3744b88b44cdb808e7f9"
-  integrity sha512-26hOMkQx15sYBpt/bCK3/S7Bep8vMy+VKGBhWQax7GXYd+mwP5mc0HNX5oqLws/JQZ9GRjn9rvXoDbcq1OC2xA==
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@jsonjoy.com/util/-/util-1.9.0.tgz#7ee95586aed0a766b746cd8d8363e336c3c47c46"
+  integrity sha512-pLuQo+VPRnN8hfPqUTLTHk126wuYdXVxE6aDmjSeV4NCAgyxWbiOIeNJVtID3h1Vzpoi9m4jXezf73I6LgabgQ==
   dependencies:
     "@jsonjoy.com/buffers" "^1.0.0"
+    "@jsonjoy.com/codegen" "^1.0.0"
 
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
@@ -3762,10 +3768,10 @@ mdurl@~1.0.1:
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
   integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
 
-memfs@^4.34.0:
-  version "4.34.0"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.34.0.tgz#02c420db08a802b5bf9a8e41df0ca281e0d5107d"
-  integrity sha512-grcxk6xaTzKOJggz8H+rjN7IMPvMZkH3VbRzjOqfGUUqCrdKStCvD77pvpArqZQzyiNB1HWRmyijzmLQlyQyfw==
+memfs@^4.35.0:
+  version "4.35.0"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.35.0.tgz#9b1c11db861f78d9ef0eb9f4c36bd2b8c88b5da3"
+  integrity sha512-Jso9wm2YC3uIee9vhbwMpLla4BNH0oQoOOnL4Ej7v6idah8dRSiuGyP4blmosXfbAbngJkWx+8BbqknWpMYSxg==
   dependencies:
     "@jsonjoy.com/json-pack" "^1.0.3"
     "@jsonjoy.com/util" "^1.3.0"
