@@ -186,6 +186,11 @@ export class BuildWorkflow {
                 if (!release.supported || isOdd(release.majorVersion)) {
                   return [];
                 }
+                // Filter out versions below the project's minimum Node.js version
+                const minMajorVersion = parseInt(project.minNodeVersion?.split('.')[0] ?? '18', 10);
+                if (release.majorVersion < minMajorVersion) {
+                  return [];
+                }
                 return [`${release.majorVersion}.x`];
               }),
             },
