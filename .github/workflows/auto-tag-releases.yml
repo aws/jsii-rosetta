@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          node-version: "18"
+          node-version: "20"
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
@@ -47,7 +47,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: yarn
-          node-version: "18"
+          node-version: "20"
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Set git identity
@@ -55,4 +55,4 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
       - name: Tag Release
-        run: yarn tag-release --idempotent --no-sign --push --release-line=5.8
+        run: yarn tag-release --idempotent --no-sign --push --release-line=5.9
