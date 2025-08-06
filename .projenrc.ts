@@ -5,33 +5,10 @@ import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
 import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
 
 /**
- * See 'projenrc/support.ts' for jsii-compiler/TypeScripts versions we are tracking.
- * To add a new version:
- *
- *  1. Perform the new version release for jsii-compiler and make sure the version has been released
- *  2. Fork the current `main` to a maintenance branch:
- *     `git switch main && git fetch --all && git pull`
- *     `git push origin main:maintenance/vX.Y` (X.Y is the TS version that is about to be replaced by a new release)
- *  3. Add the just created branch as a target to the "current" ruleset.
- *  4. Create a new branch for the new version: `git switch --create feat/tsX.Y`
- *  5. Edit `projenrc/support.ts`, maintenance EOL date for the current version is 6 months from
- *     today (round up to the mid-point or end of month), make the new version current.
- *     Also update `currentMinVersionNumber`.
- *  6. Update `minNodeVersion` to the oldest LTS version of Node (i.e. dropping support for EOL versions of Node)
- *  7. Update the version list in the README (remember to remove EOS versions)
- *  8. If any versions dropped into EOS, add the respective branch as a target to the "end-of-support" ruleset
- *     and remove them from the "current" ruleset.
- *  9. `npx projen`
- *  10. `npx projen build` and fix any issues that come up
- *  11. Create a PR, with title "feat: TypeScript X.Y"
- *  12. Note that merging the PR doesn't trigger a release. Releases are performed on a weekly schedule.
- *     You should manually create a release by triggering this workflow:
- *     https://github.com/aws/jsii-rosetta/actions/workflows/auto-tag-releases.yml
- *  13. Add support for the new rosetta version line to `jsii-pacmak`.
- *     See https://github.com/aws/jsii/blob/main/CONTRIBUTING.md#support-for-new-jsii-rosetta-versions
- *  14. Add support for the new rosetta version line in `jsii-docgen` (have a look at RosettaPeerDependency in projenrc.ts).
- *  15. Once jsii-docgen is released, add support for the new jsii version line to projen.
- *     Example: https://github.com/projen/projen/pull/3805
+ * See 'projenrc/support.ts' for jsii-compiler/TypeScript versions we are tracking.
+ * 
+ * For the complete process of adding a new TypeScript version, see:
+ * .kiro/steering/new-jsii-compiler-version.md
  */
 
 const project = new typescript.TypeScriptProject({
