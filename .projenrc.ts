@@ -6,7 +6,7 @@ import { JsiiDependencyUpgrades } from './projenrc/upgrade-dependencies';
 
 /**
  * See 'projenrc/support.ts' for jsii-compiler/TypeScript versions we are tracking.
- * 
+ *
  * For the complete process of adding a new TypeScript version, see:
  * .kiro/steering/new-jsii-compiler-version.md
  */
