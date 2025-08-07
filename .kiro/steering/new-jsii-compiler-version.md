@@ -65,9 +65,13 @@ Edit `projenrc/support.ts`:
 
 ### 5. Update Minimum Node.js Version
 
-In `.projenrc.ts`, update `minNodeVersion` to the oldest LTS version of Node.js, dropping support for EOL versions.
+In `.projenrc.ts`, update `minNodeVersion` following the AWS CDK extended support policy. The CDK supports Node.js versions for 6 months beyond their official End-of-Life (EOL) dates.
 
-Check current Node.js LTS versions:
+Check the current CDK Node.js support timeline: https://docs.aws.amazon.com/cdk/v2/guide/node-versions.html#node-version-timeline
+
+Update `minNodeVersion` to the oldest Node.js version that is still supported by CDK (including the 6-month extension period), not just the official Node.js LTS versions.
+
+Check current Node.js LTS versions for reference:
 
 ```bash
 curl -s https://raw.githubusercontent.com/nodejs/Release/main/schedule.json | jq -r 'to_entries[] | select(.value.lts != null) | "\(.key): LTS \(.value.lts) - End: \(.value.end)"'
