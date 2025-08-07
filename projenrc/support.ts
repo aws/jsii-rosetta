@@ -12,7 +12,7 @@ interface ReleasesDocument {
 export const SUPPORT_POLICY: ReleasesDocument = {
   current: '5.9',
   // Define a different patch version here if a specific feature or bug-fix
-  currentMinVersionNumber: '5.9.0',
+  currentMinVersionNumber: '5.9.1',
   maintenance: {
     // version: End-of-support date
     '5.0': new Date('2024-01-31'),
