@@ -22,7 +22,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^20",
+      "version": "^18",
       "type": "build"
     },
     {
@@ -148,7 +148,7 @@
     },
     {
       "name": "jsii",
-      "version": "~5.9.0",
+      "version": "~5.9.1",
       "type": "runtime"
     },
     {

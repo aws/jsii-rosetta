@@ -39,7 +39,7 @@
     "@types/commonmark": "^0.27.10",
     "@types/jest": "^29.5.14",
     "@types/mock-fs": "^4.13.4",
-    "@types/node": "^20",
+    "@types/node": "^18",
     "@types/semver": "^7.7.0",
     "@types/stream-json": "^1.7.8",
     "@types/tar": "^6.1.13",
@@ -71,7 +71,7 @@
     "chalk": "^4",
     "commonmark": "^0.31.2",
     "fast-glob": "^3.3.3",
-    "jsii": "~5.9.0",
+    "jsii": "~5.9.1",
     "semver": "^7.7.2",
     "semver-intersect": "^1.5.0",
     "stream-json": "^1.9.1",
@@ -80,7 +80,7 @@
     "yargs": "^17.7.2"
   },
   "engines": {
-    "node": ">= 20.9.0"
+    "node": ">= 18.12.0"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
