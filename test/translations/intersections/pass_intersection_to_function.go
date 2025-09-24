@@ -1,0 +1,1 @@
+takingClass_Takes(NewProvidedClass())

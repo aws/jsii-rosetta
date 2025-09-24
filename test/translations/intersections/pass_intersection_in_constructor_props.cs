@@ -1,0 +1,1 @@
+new TakingClass3(new TakingClass3Props { Input = new ProvidedClass() });

@@ -1,0 +1,1 @@
+TakingClass2.Takes(new InputProps { Input = new ProvidedClass() });

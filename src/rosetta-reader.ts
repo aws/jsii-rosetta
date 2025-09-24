@@ -1,6 +1,6 @@
 import * as spec from '@jsii/spec';
 
-import { allTypeScriptSnippets, guessTabletLocation } from './jsii/assemblies';
+import { allTypeScriptSnippets, guessTabletLocation, SUPPORTED_ASSEMBLY_FEATURES } from './jsii/assemblies';
 import { TargetLanguage } from './languages';
 import * as logging from './logging';
 import { transformMarkdown } from './markdown/markdown';
@@ -85,6 +85,13 @@ export interface RosettaOptions {
  * when the second one is not necessary.
  */
 export class RosettaTabletReader {
+  /**
+   * The assembly features that the current version of `jsii-rosetta` supports.
+   */
+  public static get supportedAssemblyFeatures(): spec.JsiiFeature[] {
+    return SUPPORTED_ASSEMBLY_FEATURES;
+  }
+
   /**
    * Newly translated samples
    *

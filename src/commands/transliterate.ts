@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { Assembly, Docs, SPEC_FILE_NAME, Type, TypeKind, loadAssemblyFromPath } from '@jsii/spec';
 
 import { extractSnippets } from './extract';
+import { SUPPORTED_ASSEMBLY_FEATURES } from '../jsii/assemblies';
 import { TargetLanguage } from '../languages';
 import { targetName } from '../languages/target-language';
 import { debug } from '../logging';
@@ -151,7 +152,7 @@ async function loadAssemblies(
   const result = new Map<string, AssemblyLoader>();
 
   for (const directory of directories) {
-    const loader = () => loadAssemblyFromPath(directory);
+    const loader = () => loadAssemblyFromPath(directory, false, SUPPORTED_ASSEMBLY_FEATURES);
     // eslint-disable-next-line no-await-in-loop
     await rosetta.addAssembly(loader(), directory);
     result.set(directory, loader);

@@ -1,0 +1,1 @@
+TakingClass3.Builder.create().input(new ProvidedClass()).build();

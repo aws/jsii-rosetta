@@ -1,0 +1,1 @@
+TakingClass2.takes(InputProps.builder().input(new ProvidedClass()).build());

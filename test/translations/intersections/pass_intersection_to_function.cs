@@ -1,0 +1,1 @@
+TakingClass.Takes(new ProvidedClass());
