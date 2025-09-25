@@ -21,6 +21,16 @@ import { LanguageTablet, DEFAULT_TABLET_NAME, DEFAULT_TABLET_NAME_COMPRESSED } f
 import { fmap, mkDict, pathExists, sortBy } from '../util';
 
 /**
+ * The Assembly features jsii-rosetta supports
+ *
+ * In actual fact, Rosetta doesn't do much with the Assembly, just crawl all
+ * API documentations, so basically most new features would be supported... but
+ * we technically should advertise a known list here anyway since we don't
+ * know what future extension are going to be.
+ */
+export const SUPPORTED_ASSEMBLY_FEATURES: spec.JsiiFeature[] = ['intersection-types'];
+
+/**
  * The JSDoc tag users can use to associate non-visible metadata with an example
  *
  * In a Markdown section, metadata goes after the code block fence, where it will
@@ -67,7 +77,7 @@ export function loadAssemblies(
     const directory = path.dirname(location);
     const pjLocation = path.join(directory, 'package.json');
 
-    const assembly = loadAssemblyFromFile(location, validateAssemblies);
+    const assembly = loadAssemblyFromFile(location, validateAssemblies, SUPPORTED_ASSEMBLY_FEATURES);
     const packageJson = fs.existsSync(pjLocation) ? JSON.parse(fs.readFileSync(pjLocation, 'utf-8')) : undefined;
 
     return { assembly, directory, packageJson };
@@ -281,7 +291,7 @@ export function findTypeLookupAssembly(startingDirectory: string): TypeLookupAss
 function loadLookupAssembly(directory: string): TypeLookupAssembly | undefined {
   try {
     const packageJson = JSON.parse(fs.readFileSync(path.join(directory, 'package.json'), 'utf-8'));
-    const assembly: spec.Assembly = loadAssemblyFromPath(directory);
+    const assembly: spec.Assembly = loadAssemblyFromPath(directory, false, SUPPORTED_ASSEMBLY_FEATURES);
     const symbolIdMap = mkDict([
       ...Object.values(assembly.types ?? {}).map((type) => [type.symbolId ?? '', type.fqn] as const),
       ...Object.entries(assembly.submodules ?? {}).map(([fqn, mod]) => [mod.symbolId ?? '', fqn] as const),
