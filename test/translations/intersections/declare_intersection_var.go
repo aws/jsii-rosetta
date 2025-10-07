@@ -1,0 +1,1 @@
+var someObject interface { IFoo; IBar }

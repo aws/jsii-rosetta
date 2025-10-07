@@ -743,6 +743,9 @@ export class JavaVisitor extends DefaultVisitor<JavaContext> {
           return `Map<String, ${doRender(jsiiType.elementType, true)}>`;
         case 'list':
           return `${doRender(jsiiType.elementType, true)}[]`;
+        case 'intersection':
+          const renderedBranches = jsiiType.branches.map((t) => doRender(t, false));
+          return `${renderedBranches[0]} /* & ${renderedBranches.slice(1).join(' & ')} */`;
         case 'namedType':
           return jsiiType.name;
         case 'builtIn':

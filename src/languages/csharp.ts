@@ -663,6 +663,9 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
           return `IDictionary<string, ${doRender(jsiiType.elementType)}>`;
         case 'list':
           return `${doRender(jsiiType.elementType)}[]`;
+        case 'intersection':
+          const renderedBranches = jsiiType.branches.map(doRender);
+          return `${renderedBranches[0]} /* & ${renderedBranches.slice(1).join(' & ')} */`;
         case 'namedType':
           return jsiiType.name;
         case 'builtIn':

@@ -766,9 +766,11 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
           return `Dict[str, ${doRender(jsiiType.elementType)}]`;
         case 'list':
           return `List[${doRender(jsiiType.elementType)}]`;
+        case 'intersection':
+          const renderedBranches = jsiiType.branches.map(doRender);
+          return renderedBranches.join(' & ');
         case 'namedType':
-          // in this case, the fallback will hold more information than jsiiType.name
-          return fallback;
+          return jsiiType.name;
         case 'builtIn':
           switch (jsiiType.builtIn) {
             case 'boolean':
