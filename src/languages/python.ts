@@ -767,10 +767,14 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
         case 'list':
           return `List[${doRender(jsiiType.elementType)}]`;
         case 'intersection':
-          const renderedBranches = jsiiType.branches.map(doRender);
-          return renderedBranches.join(' & ');
+          // The fallback already contains the type names separated by &.
+          // We know that for intersections the branches must be interfaces whose names will be the
+          // same in TS and Python, and there's no other way to get the fallback strings for the
+          // individual branches => so we'll return the full fallback string.
+          return fallback;
         case 'namedType':
-          return jsiiType.name;
+          // The symbol potentially includes a namespace name, while the `.name` property doesn't
+          return fallback;
         case 'builtIn':
           switch (jsiiType.builtIn) {
             case 'boolean':
