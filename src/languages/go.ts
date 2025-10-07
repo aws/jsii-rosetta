@@ -984,6 +984,9 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
           return `[]${doRender(jType.elementType, true, jType.elementTypeSymbol)}`;
         case 'namedType':
           return this.goName(jType.name, renderer, typeSym);
+        case 'intersection':
+          const renderedBranches = jType.branches.map((t, i) => doRender(t, false, jType.branchSymbols[i]));
+          return `interface { ${renderedBranches.join('; ')} }`;
         case 'builtIn':
           switch (jType.builtIn) {
             case 'boolean':
@@ -1017,10 +1020,19 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
 
     const prev = this.idMap.get(cacheKey) ?? this.idMap.get(input);
 
+    const symbolExported =
+      symbol?.declarations?.[0] && ts.getCombinedModifierFlags(symbol?.declarations?.[0]) & ts.ModifierFlags.Export;
+
+    // For some reason we are considering a global flag here; that solves cases
+    // where the type is being declared, but it doesn't solve cases where the
+    // type is being referenced. Also consider a potential `export` keyword on
+    // the type declaration.
+    const isExp = renderer.currentContext.isExported || symbolExported;
+
     if (prev) {
       // If an identifier has been renamed go get it
       text = prev.formatted;
-    } else if (renderer.currentContext.isExported && !renderer.currentContext.inMapLiteral) {
+    } else if (isExp && !renderer.currentContext.inMapLiteral) {
       // Uppercase exported and public symbols/members
       text = ucFirst(text);
     } else if (!renderer.currentContext.inMapLiteral) {

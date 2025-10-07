@@ -1,0 +1,1 @@
+TakingClass2.takes(input=ProvidedClass())

@@ -1,0 +1,1 @@
+TakingClass.takes(ProvidedClass())

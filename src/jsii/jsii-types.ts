@@ -9,7 +9,8 @@ export type JsiiType =
   | { kind: 'error'; message: string }
   | { kind: 'map' | 'list'; elementType: JsiiType; elementTypeSymbol: ts.Symbol | undefined }
   | { kind: 'namedType'; name: string }
-  | { kind: 'builtIn'; builtIn: BuiltInType };
+  | { kind: 'builtIn'; builtIn: BuiltInType }
+  | { kind: 'intersection'; branches: JsiiType[]; branchSymbols: (ts.Symbol | undefined)[] };
 
 export function determineJsiiType(typeChecker: ts.TypeChecker, type: ts.Type): JsiiType {
   // this means the snippet didn't have enough info for the TypeScript compiler to figure out the type -
@@ -71,10 +72,18 @@ export function determineJsiiType(typeChecker: ts.TypeChecker, type: ts.Type): J
     return { kind: 'builtIn', builtIn: typeScriptBuiltInType };
   }
 
-  if (type.isUnion() || type.isIntersection()) {
+  if (type.isIntersection()) {
+    return {
+      kind: 'intersection',
+      branches: type.types.map((t) => determineJsiiType(typeChecker, t)),
+      branchSymbols: type.types.map((t) => t.symbol),
+    };
+  }
+
+  if (type.isUnion()) {
     return {
       kind: 'error',
-      message: `Type unions or intersections are not supported in examples, got: ${typeChecker.typeToString(type)}`,
+      message: `Type unions are not supported in examples, got: ${typeChecker.typeToString(type)}`,
     };
   }
 
