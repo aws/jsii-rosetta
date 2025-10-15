@@ -76,6 +76,7 @@ export const STANDARD_COMPILER_OPTIONS: ts.CompilerOptions = {
   inlineSources: true,
   lib: ['lib.es2020.d.ts'],
   module: ts.ModuleKind.CommonJS,
+  moduleResolution: ts.ModuleResolutionKind.Node16,
   noEmitOnError: true,
   noFallthroughCasesInSwitch: true,
   noImplicitAny: true,
