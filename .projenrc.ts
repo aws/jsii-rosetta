@@ -66,6 +66,7 @@ const project = new typescript.TypeScriptProject({
       target: 'es2020',
       moduleResolution: javascript.TypeScriptModuleResolution.NODE_NEXT,
       module: 'nodenext',
+      isolatedModules: true,
       esModuleInterop: false,
       noImplicitOverride: true,
       skipLibCheck: true,
