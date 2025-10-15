@@ -26,6 +26,7 @@
     "stripInternal": true,
     "target": "es2020",
     "moduleResolution": "nodenext",
+    "isolatedModules": true,
     "noImplicitOverride": true,
     "skipLibCheck": true,
     "sourceMap": true

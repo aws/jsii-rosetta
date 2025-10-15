@@ -15,8 +15,10 @@ export class JsiiDependencyUpgrades extends Component {
       }),
     ];
 
+    const jsiiDeps = ['jsii', 'typescript', '@jsii/check-node', '@jsii/spec'];
+
     const upgrades = new javascript.UpgradeDependencies(project, {
-      exclude: ['jsii', 'typescript'],
+      exclude: jsiiDeps,
       workflowOptions: {
         branches,
         labels: ['auto-approve'],
@@ -38,8 +40,8 @@ export class JsiiDependencyUpgrades extends Component {
     // Upgrade jsii & typescript as patch only
     new javascript.UpgradeDependencies(project, {
       taskName: 'upgrade-jsii',
-      include: ['jsii', 'typescript'],
-      target: 'patch',
+      include: jsiiDeps,
+      target: 'semver',
       pullRequestTitle: 'upgrade jsii & typescript',
       workflowOptions: {
         branches,
