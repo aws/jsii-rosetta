@@ -21,6 +21,19 @@ import { LanguageTablet, DEFAULT_TABLET_NAME, DEFAULT_TABLET_NAME_COMPRESSED } f
 import { fmap, mkDict, pathExists, sortBy } from '../util';
 
 /**
+<<<<<<< HEAD
+=======
+ * The Assembly features jsii-rosetta supports
+ *
+ * In actual fact, Rosetta doesn't do much with the Assembly, just crawl all
+ * API documentations, so basically most new features would be supported... but
+ * we technically should advertise a known list here anyway since we don't
+ * know what future extension are going to be.
+ */
+export const SUPPORTED_ASSEMBLY_FEATURES: spec.JsiiFeature[] = ['intersection-types', 'class-covariant-overrides'];
+
+/**
+>>>>>>> cf3bbc5 (feat: add support for class-covariant-overrides feature (#3350))
  * The JSDoc tag users can use to associate non-visible metadata with an example
  *
  * In a Markdown section, metadata goes after the code block fence, where it will
