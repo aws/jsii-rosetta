@@ -227,7 +227,7 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/stream-json,@types/tar,@types/workerpool,all-contributors-cli,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+          "exec": "npx npm-check-updates@18 --upgrade --target=minor --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/stream-json,@types/tar,@types/workerpool,all-contributors-cli,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
         },
         {
           "exec": "yarn install --check-files"
@@ -251,7 +251,7 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=semver --peer --no-deprecated --dep=dev,peer,prod,optional --filter=jsii,typescript,@jsii/check-node,@jsii/spec"
+          "exec": "npx npm-check-updates@18 --upgrade --target=semver --peer --no-deprecated --dep=dev,peer,prod,optional --filter=jsii,typescript,@jsii/check-node,@jsii/spec"
         },
         {
           "exec": "yarn install --check-files"
