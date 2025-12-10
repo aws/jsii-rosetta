@@ -1,3 +1,4 @@
+import * as path from 'node:path';
 import { inspect } from 'node:util';
 import * as ts from 'typescript';
 
@@ -13,9 +14,14 @@ import { snippetKey } from './tablets/key';
 import { ORIGINAL_SNIPPET_KEY } from './tablets/schema';
 import { TranslatedSnippet } from './tablets/tablets';
 import { SyntaxKindCounter } from './typescript/syntax-kind-counter';
-import { TypeScriptCompiler, CompilationResult } from './typescript/ts-compiler';
+import { TypeScriptCompiler, CompilationResult, BatchCompilationResult } from './typescript/ts-compiler';
 import { Spans } from './typescript/visible-spans';
 import { annotateStrictDiagnostic, File, hasStrictBranding, mkDict } from './util';
+
+export interface TranslateResult {
+  translation: string;
+  diagnostics: readonly RosettaDiagnostic[];
+}
 
 export function translateTypeScript(
   source: File,
@@ -42,55 +48,13 @@ export function translateTypeScript(
  */
 export class Translator {
   private readonly compiler = new TypeScriptCompiler();
-  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   #diagnostics: ts.Diagnostic[] = [];
-
-  public constructor(private readonly includeCompilerDiagnostics: boolean) {}
-
-  public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
-    const start = performance.now();
-    logging.debug(`Translating ${snippetKey(snip)} ${inspect(snip.parameters ?? {})}`);
-    const translator = this.translatorFor(snip);
-
-    const translations = mkDict(
-      languages.flatMap((lang, idx, array) => {
-        if (array.slice(0, idx).includes(lang)) {
-          // This language was duplicated in the request... we'll skip that here...
-          return [];
-        }
-        const languageConverterFactory = TARGET_LANGUAGES[lang];
-        const translated = translator.renderUsing(languageConverterFactory.createVisitor());
-        return [[lang, { source: translated, version: languageConverterFactory.version }] as const];
-      }),
-    );
-
-    if (snip.parameters?.infused === undefined) {
-      this.#diagnostics.push(...translator.diagnostics);
-    }
-
-    const duration = performance.now() - start;
-    logging.debug(
-      `Completed ${snippetKey(snip)} ${inspect({
-        duration: `${(duration / 1000).toFixed(2)}s`,
-      })}`,
-    );
-
-    return TranslatedSnippet.fromSchema({
-      translations: {
-        ...translations,
-        [ORIGINAL_SNIPPET_KEY]: { source: snip.visibleSource, version: '0' },
-      },
-      location: snip.location,
-      didCompile: translator.didSuccessfullyCompile,
-      fqnsReferenced: translator.fqnsReferenced(),
-      fullSource: completeSource(snip),
-      syntaxKindCounter: translator.syntaxKindCounter(),
-    });
-  }
 
   public get diagnostics(): readonly RosettaDiagnostic[] {
     return ts.sortAndDeduplicateDiagnostics(this.#diagnostics).map(rosettaDiagFromTypescript);
   }
+
+  public constructor(private readonly includeCompilerDiagnostics: boolean) {}
 
   /**
    * Return the snippet translator for the given snippet
@@ -105,6 +69,108 @@ export class Translator {
     });
     return translator;
   }
+
+  /**
+   * Translates a single snippet in its own TS context.
+   */
+  public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
+    const start = performance.now();
+    logging.debug(`Translating ${snippetKey(snip)} ${inspect(snip.parameters ?? {})}`);
+
+    const translator = this.translatorFor(snip);
+    const translated = this.translateSnippet(snip, translator, languages);
+
+    const duration = performance.now() - start;
+    logging.debug(
+      `Completed ${snippetKey(snip)} ${inspect({
+        duration: `${(duration / 1000).toFixed(2)}s`,
+      })}`,
+    );
+
+    return translated;
+  }
+
+  /**
+   * Translates a batch of snippets, using a shared TS context.
+   */
+  public translateSnippets(
+    snippets: TypeScriptSnippet[],
+    languages: readonly TargetLanguage[] = Object.values(TargetLanguage),
+  ): TranslatedSnippet[] {
+    const start = performance.now();
+    logging.debug(`Translating batch of ${snippets.length} snippets`);
+
+    const res = this.translateBatch(snippets, languages);
+
+    const duration = performance.now() - start;
+    logging.debug(
+      `Completed batch ${inspect({
+        duration: `${(duration / 1000).toFixed(2)}s`,
+      })}`,
+    );
+
+    return res;
+  }
+
+  private translateBatch(
+    snippets: TypeScriptSnippet[],
+    languages: readonly TargetLanguage[] = Object.values(TargetLanguage),
+  ): TranslatedSnippet[] {
+    const translatedSnippets: TranslatedSnippet[] = [];
+
+    const batchTranslator = new BatchSnippetTranslator(snippets, {
+      compiler: this.compiler,
+      includeCompilerDiagnostics: this.includeCompilerDiagnostics,
+    });
+
+    for (const [snippet, translator] of batchTranslator) {
+      translatedSnippets.push(this.translateSnippet(snippet, translator, languages));
+    }
+
+    return translatedSnippets;
+  }
+
+  private translateSnippet(
+    snippet: TypeScriptSnippet,
+    translator: ISnippetTranslator,
+    languages: readonly TargetLanguage[],
+  ): TranslatedSnippet {
+    const translations = mkDict(
+      languages.flatMap((lang, idx, array) => {
+        if (array.slice(0, idx).includes(lang)) {
+          return [];
+        }
+        const languageConverterFactory = TARGET_LANGUAGES[lang];
+        const translated = translator.renderUsing(languageConverterFactory.createVisitor());
+        return [[lang, { source: translated, version: languageConverterFactory.version }] as const];
+      }),
+    );
+
+    if (snippet.parameters?.infused === undefined) {
+      this.#diagnostics.push(...translator.diagnostics);
+    }
+
+    return TranslatedSnippet.fromSchema({
+      translations: {
+        ...translations,
+        [ORIGINAL_SNIPPET_KEY]: { source: snippet.visibleSource, version: '0' },
+      },
+      location: snippet.location,
+      didCompile: translator.didSuccessfullyCompile,
+      fqnsReferenced: translator.fqnsReferenced(),
+      fullSource: completeSource(snippet),
+      syntaxKindCounter: translator.syntaxKindCounter(),
+    });
+  }
+}
+
+export interface ISnippetTranslator {
+  readonly diagnostics: readonly ts.Diagnostic[];
+  readonly didSuccessfullyCompile: boolean | undefined;
+
+  renderUsing(visitor: AstHandler<any>): string;
+  syntaxKindCounter(): Partial<Record<ts.SyntaxKind, number>>;
+  fqnsReferenced(): string[];
 }
 
 export interface SnippetTranslatorOptions extends AstRendererOptions {
@@ -123,76 +189,37 @@ export interface SnippetTranslatorOptions extends AstRendererOptions {
   readonly includeCompilerDiagnostics?: boolean;
 }
 
-export interface TranslateResult {
-  translation: string;
-  diagnostics: readonly RosettaDiagnostic[];
-}
-
 /**
- * A translation of a TypeScript diagnostic into a data-only representation for Rosetta
+ * Internal implementation of a single TypeScript snippet translator.
  *
- * We cannot use the original `ts.Diagnostic` since it holds on to way too much
- * state (the source file and by extension the entire parse tree), which grows
- * too big to be properly serialized by a worker and also takes too much memory.
- *
- * Reduce it down to only the information we need.
+ * Consumers should either use `SnippetTranslator` or `BatchSnippetTranslator`.
  */
-export interface RosettaDiagnostic {
-  /**
-   * If this is an error diagnostic or not
-   */
-  readonly isError: boolean;
-
-  /**
-   * If the diagnostic was emitted from an assembly that has its 'strict' flag set
-   */
-  readonly isFromStrictAssembly: boolean;
-
-  /**
-   * The formatted message, ready to be printed (will have colors and newlines in it)
-   *
-   * Ends in a newline.
-   */
-  readonly formattedMessage: string;
-}
-
-export function makeRosettaDiagnostic(isError: boolean, formattedMessage: string): RosettaDiagnostic {
-  return { isError, formattedMessage, isFromStrictAssembly: false };
-}
-
-/**
- * Translate a single TypeScript snippet
- */
-export class SnippetTranslator {
+class InternalSnippetTranslator implements ISnippetTranslator {
   public readonly translateDiagnostics: ts.Diagnostic[] = [];
   public readonly compileDiagnostics: ts.Diagnostic[] = [];
+
   private readonly visibleSpans: Spans;
-  private readonly compilation!: CompilationResult;
   private readonly tryCompile: boolean;
   private readonly submoduleReferences: SubmoduleReferenceMap;
 
-  public constructor(snippet: TypeScriptSnippet, private readonly options: SnippetTranslatorOptions = {}) {
-    const compiler = options.compiler ?? new TypeScriptCompiler();
-    const source = completeSource(snippet);
-    const fakeCurrentDirectory = snippet.parameters?.[SnippetParameters.$COMPILATION_DIRECTORY] ?? process.cwd();
-    this.compilation = compiler.compileInMemory(
-      removeSlashes(formatLocation(snippet.location)),
-      source,
-      fakeCurrentDirectory,
-    );
-
+  public constructor(
+    snippet: TypeScriptSnippet,
+    private readonly compilation: CompilationResult,
+    private readonly options: SnippetTranslatorOptions,
+  ) {
     // Respect '/// !hide' and '/// !show' directives
-    this.visibleSpans = Spans.visibleSpansFromSource(source);
+    // Use the actual compiled source text to ensure spans match the AST
+    this.visibleSpans = Spans.visibleSpansFromSource(compilation.rootFile.text);
 
     // Find submodule references on explicit imports
     this.submoduleReferences = SubmoduleReference.inSourceFile(
-      this.compilation.rootFile,
+      compilation.rootFile,
       this.compilation.program.getTypeChecker(),
     );
 
     // This makes it about 5x slower, so only do it on demand
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    this.tryCompile = (options.includeCompilerDiagnostics || snippet.strict) ?? false;
+    this.tryCompile = (this.options.includeCompilerDiagnostics || snippet.strict) ?? false;
     if (this.tryCompile) {
       const program = this.compilation.program;
       const diagnostics = [
@@ -201,6 +228,7 @@ export class SnippetTranslator {
         ...neverThrowing(program.getDeclarationDiagnostics)(this.compilation.rootFile),
         ...neverThrowing(program.getSemanticDiagnostics)(this.compilation.rootFile),
       ];
+
       if (snippet.strict) {
         // In a strict assembly, so we'll need to brand all diagnostics here...
         for (const diag of diagnostics) {
@@ -208,28 +236,6 @@ export class SnippetTranslator {
         }
       }
       this.compileDiagnostics.push(...diagnostics);
-    }
-
-    /**
-     * Intercepts all exceptions thrown by the wrapped call, and logs them to
-     * console.error instead of re-throwing, then returns an empty array. This
-     * is here to avoid compiler crashes due to broken code examples that cause
-     * the TypeScript compiler to hit a "Debug Failure".
-     */
-    function neverThrowing<A extends unknown[], R>(call: (...args: A) => readonly R[]): (...args: A) => readonly R[] {
-      return (...args: A) => {
-        try {
-          return call(...args);
-        } catch (err: any) {
-          const isExpectedTypescriptError = err.message.includes('Debug Failure');
-
-          if (!isExpectedTypescriptError) {
-            console.error(`Failed to execute ${call.name}: ${err}`);
-          }
-
-          return [];
-        }
-      };
     }
   }
 
@@ -278,10 +284,148 @@ export class SnippetTranslator {
 }
 
 /**
+ * Translate a single TypeScript snippet
+ */
+export class SnippetTranslator extends InternalSnippetTranslator {
+  public constructor(snippet: TypeScriptSnippet, options: SnippetTranslatorOptions = {}) {
+    const compiler = options.compiler ?? new TypeScriptCompiler();
+    const source = completeSource(snippet);
+    const fakeCurrentDirectory = snippet.parameters?.[SnippetParameters.$COMPILATION_DIRECTORY] ?? process.cwd();
+    const compilation = compiler.compileBatchInMemory(
+      [
+        {
+          filename: removeSlashes(formatLocation(snippet.location)),
+          contents: source,
+        },
+      ],
+      fakeCurrentDirectory,
+    );
+
+    super(
+      snippet,
+      {
+        program: compilation.program,
+        rootFile: compilation.rootFiles[0],
+      },
+      options,
+    );
+  }
+}
+
+export interface BatchSnippetTranslatorOptions extends SnippetTranslatorOptions {
+  /**
+   * What directory to pretend the file is in (system parameter)
+   *
+   * Attached when compiling a literate file, as they compile in
+   * the location where they are stored.
+   *
+   * @default - current working directory
+   */
+  readonly compilationDirectory?: string;
+}
+
+/**
+ * Translate a single TypeScript snippet
+ */
+export class BatchSnippetTranslator {
+  private readonly compilation: BatchCompilationResult;
+
+  public constructor(
+    private readonly snippets: TypeScriptSnippet[],
+    private readonly options: BatchSnippetTranslatorOptions = {},
+  ) {
+    const compiler = options.compiler ?? new TypeScriptCompiler();
+    const workingDir = options.compilationDirectory ?? process.cwd();
+
+    const sources = snippets.map((snippet) => {
+      const snippetLoc = snippet.parameters?.[SnippetParameters.$COMPILATION_DIRECTORY];
+      const filename = removeSlashes(formatLocation(snippet.location));
+
+      return {
+        filename: snippetLoc ? path.relative(workingDir, path.join(snippetLoc, filename)) : filename,
+        contents: completeSource(snippet),
+      };
+    });
+    this.compilation = compiler.compileBatchInMemory(sources, workingDir);
+  }
+
+  *[Symbol.iterator](): Generator<[TypeScriptSnippet, ISnippetTranslator], void, unknown> {
+    for (const [idx, snippet] of this.snippets.entries()) {
+      const rootFile = this.compilation.rootFiles[idx];
+
+      const translator: ISnippetTranslator = new InternalSnippetTranslator(
+        snippet,
+        {
+          program: this.compilation.program,
+          rootFile,
+        },
+        this.options,
+      );
+
+      yield [snippet, translator];
+    }
+  }
+}
+
+/**
+ * Intercepts all exceptions thrown by the wrapped call, and logs them to
+ * console.error instead of re-throwing, then returns an empty array. This
+ * is here to avoid compiler crashes due to broken code examples that cause
+ * the TypeScript compiler to hit a "Debug Failure".
+ */
+function neverThrowing<A extends unknown[], R>(call: (...args: A) => readonly R[]): (...args: A) => readonly R[] {
+  return (...args: A) => {
+    try {
+      return call(...args);
+    } catch (err: any) {
+      const isExpectedTypescriptError = err.message.includes('Debug Failure');
+
+      if (!isExpectedTypescriptError) {
+        console.error(`Failed to execute ${call.name}: ${err}`);
+      }
+
+      return [];
+    }
+  };
+}
+
+/**
  * Hide diagnostics that are rosetta-sourced if they are reported against a non-visible span
  */
 function filterVisibleDiagnostics(diags: readonly ts.Diagnostic[], visibleSpans: Spans): ts.Diagnostic[] {
   return diags.filter((d) => d.source !== 'rosetta' || d.start === undefined || visibleSpans.containsPosition(d.start));
+}
+
+/**
+ * A translation of a TypeScript diagnostic into a data-only representation for Rosetta
+ *
+ * We cannot use the original `ts.Diagnostic` since it holds on to way too much
+ * state (the source file and by extension the entire parse tree), which grows
+ * too big to be properly serialized by a worker and also takes too much memory.
+ *
+ * Reduce it down to only the information we need.
+ */
+export interface RosettaDiagnostic {
+  /**
+   * If this is an error diagnostic or not
+   */
+  readonly isError: boolean;
+
+  /**
+   * If the diagnostic was emitted from an assembly that has its 'strict' flag set
+   */
+  readonly isFromStrictAssembly: boolean;
+
+  /**
+   * The formatted message, ready to be printed (will have colors and newlines in it)
+   *
+   * Ends in a newline.
+   */
+  readonly formattedMessage: string;
+}
+
+export function makeRosettaDiagnostic(isError: boolean, formattedMessage: string): RosettaDiagnostic {
+  return { isError, formattedMessage, isFromStrictAssembly: false };
 }
 
 /**
