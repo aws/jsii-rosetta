@@ -3,6 +3,7 @@
  */
 import * as workerpool from 'workerpool';
 
+import * as logging from './logging';
 import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippetSchema } from './tablets/schema';
 import { TranslatedSnippet } from './tablets/tablets';
@@ -10,8 +11,10 @@ import { RosettaDiagnostic, Translator, makeRosettaDiagnostic } from './translat
 import { TranslateAllResult } from './translate_all';
 
 export interface TranslateBatchRequest {
+  readonly workerName: string;
   readonly snippets: TypeScriptSnippet[];
   readonly includeCompilerDiagnostics: boolean;
+  readonly logLevel?: logging.Level;
 }
 
 export interface TranslateBatchResponse {
@@ -21,6 +24,8 @@ export interface TranslateBatchResponse {
 }
 
 function translateBatch(request: TranslateBatchRequest): TranslateBatchResponse {
+  // because we are in a worker process we need to explicitly configure the log level again
+  logging.configure({ level: request.logLevel ?? logging.Level.QUIET, prefix: request.workerName });
   const result = singleThreadedTranslateAll(request.snippets, request.includeCompilerDiagnostics);
 
   return {

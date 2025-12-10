@@ -263,6 +263,20 @@ growing endlessly over time (an equivalent `jsii-rosetta trim-cache` command is
 available if your workflow involves running `extract` in multiple distinct
 invocations and want to retain the cache between them).
 
+##### Dirty Translations
+
+When reusing translations from cache, Rosetta checks if cached translations are still valid.
+A translation becomes "dirty" (and is dropped from cache) when:
+
+- **Changed sources**: The TypeScript source code has been modified since the translation was cached.
+- **Changed translator version**: The translator for one or more target languages has been updated to a new version.
+  This is a rare occurrence that may happen when upgrading from an older version of Rosetta.
+- **Changed types**: The types referenced by the snippet have changed and consequently any translation might have to be updated.
+  This is detected using type fingerprinting.
+- **Non-compiling**: The cached translation didn't compile, but `--compile` mode is enabled.
+
+Dirty translations are dropped and re-translated.
+
 ### Infuse
 
 The `jsii-rosetta infuse` command increases the coverage of examples for classes

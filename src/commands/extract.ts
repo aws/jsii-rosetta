@@ -154,9 +154,24 @@ export async function extractSnippets(
   translator.addTabletsToCache(...Object.values(await loadAllDefaultTablets(assemblies)));
 
   if (translator.hasCache()) {
-    const { translations, remaining } = translator.readFromCache(snippets, true, options.includeCompilerDiagnostics);
-    logging.info(`Reused ${translations.length} translations from cache`);
-    snippets = remaining;
+    const cache = translator.readFromCache(snippets, true, options.includeCompilerDiagnostics);
+    logging.info(`Reused ${cache.dirtyCount === 0 ? 'all ' : ''}${cache.translations.length} translations from cache`);
+    if (cache.dirtyCount) {
+      const dirt = {
+        'non-compiling': cache.dirtyDidntCompile,
+        'changed sources': cache.dirtySourceCount,
+        'changed translator version': cache.dirtyTranslatorCount,
+        'changed types': cache.dirtyTypesCount,
+      };
+      logging.info(
+        `Dropped ${cache.dirtyCount} translations (${Object.entries(dirt)
+          .filter(([_, count]) => !!count)
+          .map(([desc, count]) => `${count} ${desc}`)
+          .join(', ')})`,
+      );
+    }
+
+    snippets = cache.remaining;
   }
 
   const diagnostics = [];

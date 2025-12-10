@@ -12,10 +12,18 @@ export const LEVEL_INFO: number = Level.INFO;
 export const LEVEL_VERBOSE: number = Level.VERBOSE;
 
 /** The minimal logging level for messages to be emitted. */
-export let level = Level.QUIET;
+let level = Level.QUIET;
 
-export function configure({ level: newLevel }: { level: Level }) {
+/** Optionally emit messages with a prefix */
+let prefix: string | null = null;
+
+export function current(): Level {
+  return level;
+}
+
+export function configure({ level: newLevel, prefix: newPrefix }: { level: Level; prefix?: string }) {
   level = newLevel;
+  prefix = newPrefix ?? null;
 }
 
 export function warn(fmt: string, ...args: any[]) {
@@ -37,8 +45,9 @@ export function debug(fmt: string, ...args: any[]) {
 function log(messageLevel: Level, fmt: string, ...args: any[]) {
   if (level >= messageLevel) {
     const levelName = Level[messageLevel];
+    const pref = prefix ? ` [${prefix}] ` : '';
     // `console.error` will automatically be transported from worker child to worker parent,
     // process.stderr.write() won't.
-    console.error(`[jsii-rosetta] [${levelName}] ${util.format(fmt, ...args)}`);
+    console.error(`[jsii-rosetta] [${levelName}]${pref} ${util.format(fmt, ...args)}`);
   }
 }

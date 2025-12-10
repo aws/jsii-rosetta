@@ -48,6 +48,7 @@ export class Translator {
   public constructor(private readonly includeCompilerDiagnostics: boolean) {}
 
   public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
+    const start = performance.now();
     logging.debug(`Translating ${snippetKey(snip)} ${inspect(snip.parameters ?? {})}`);
     const translator = this.translatorFor(snip);
 
@@ -66,6 +67,13 @@ export class Translator {
     if (snip.parameters?.infused === undefined) {
       this.#diagnostics.push(...translator.diagnostics);
     }
+
+    const duration = performance.now() - start;
+    logging.debug(
+      `Completed ${snippetKey(snip)} ${inspect({
+        duration: `${(duration / 1000).toFixed(2)}s`,
+      })}`,
+    );
 
     return TranslatedSnippet.fromSchema({
       translations: {
