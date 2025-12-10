@@ -45,15 +45,18 @@ export class TypeFingerprinter {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
-    const existing = this.cache.get(fqn);
+    // remove any # references from the fqn
+    const baseFqn = this.dereferenceFqn(fqn);
+
+    const existing = this.cache.get(baseFqn);
     if (existing) {
       return existing;
     }
 
     const hash = crypto.createHash('sha256');
-    hash.update(fqn);
+    hash.update(baseFqn);
 
-    const type = this.findType(fqn);
+    const type = this.findType(baseFqn);
     if (type) {
       hash.update(type.kind);
       switch (type.kind) {
@@ -89,7 +92,7 @@ export class TypeFingerprinter {
     }
 
     const ret = hash.digest('hex');
-    this.cache.set(fqn, ret);
+    this.cache.set(baseFqn, ret);
     return ret;
 
     function visitType(fqnStr?: string) {
@@ -149,6 +152,15 @@ export class TypeFingerprinter {
   private findType(fqn: string) {
     const assemblyName = fqn.split('.')[0];
     return this.assemblies.get(assemblyName)?.types?.[fqn];
+  }
+
+  /**
+   * Handle method and enum references in FQN like 'Class#method' or 'Enum#VALUE'
+   * @see JsiiSymbol.fqn
+   * @returns the base fqn for the reference
+   */
+  private dereferenceFqn(fqn: string) {
+    return fqn.includes('#') ? fqn.substring(0, fqn.lastIndexOf('#')) : fqn;
   }
 }
 

@@ -133,7 +133,7 @@ export interface JsiiSymbol {
   /**
    * FQN of the symbol
    *
-   * Is either the FQN of a type (for a type). For a membr, the FQN looks like:
+   * Is either the FQN of a type (for a type). For a member, the FQN looks like:
    * 'type.fqn#memberName'.
    */
   readonly fqn: string;
