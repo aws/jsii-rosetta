@@ -63,12 +63,15 @@ function batchSnippets(
   includeCompilerDiagnostics: boolean,
   batchSize = 10,
 ): TranslateBatchRequest[] {
-  const ret = [];
+  const logLevel = logging.current();
+  const ret: TranslateBatchRequest[] = [];
 
   for (let i = 0; i < snippets.length; i += batchSize) {
     ret.push({
+      workerName: `Worker${i.toString().padStart(4, '0')}`,
       snippets: snippets.slice(i, i + batchSize),
       includeCompilerDiagnostics,
+      logLevel,
     });
   }
 
