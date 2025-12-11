@@ -122,7 +122,7 @@ export class RosettaTranslator {
       switch (fromCache.type) {
         case 'hit':
           if (addToTablet) {
-            this.tablet.addSnippet(fromCache.snippet);
+            this.tablet.addSnippets(fromCache.snippet);
           }
           translations.push(fromCache.snippet);
 
@@ -209,9 +209,7 @@ export class RosettaTranslator {
     );
 
     if (options?.addToTablet ?? true) {
-      for (const translation of fingerprinted) {
-        this.tablet.addSnippet(translation);
-      }
+      this.tablet.addSnippets(...fingerprinted);
     }
 
     return {

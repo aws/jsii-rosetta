@@ -234,13 +234,13 @@ export class RosettaTabletReader {
     const extracted = this.extractedSnippets.get(snippetKey(source));
     if (extracted !== undefined) {
       const snippet = this.translator.translate(extracted, this.options.targetLanguages);
-      this.liveTablet.addSnippet(snippet);
+      this.liveTablet.addSnippets(snippet);
       return this.prefixDisclaimer(snippet.get(targetLang), this._prefixDisclaimer);
     }
 
     // Try to live-convert it as-is.
     const snippet = this.translator.translate(source, this.options.targetLanguages);
-    this.liveTablet.addSnippet(snippet);
+    this.liveTablet.addSnippets(snippet);
     return this.prefixDisclaimer(snippet.get(targetLang), this._prefixDisclaimer);
   }
 

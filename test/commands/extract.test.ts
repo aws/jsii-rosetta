@@ -324,7 +324,7 @@ describe('with cache file', () => {
       cacheToFile = path.join(assembly.moduleDirectory, 'dummy.tabl.json');
 
       const tbl = new LanguageTablet();
-      tbl.addSnippet(bogusTranslatedSnippet());
+      tbl.addSnippets(bogusTranslatedSnippet());
       await tbl.save(cacheToFile);
     });
 
@@ -361,7 +361,7 @@ describe('with cache file', () => {
 
     // GIVEN - the '.jsii.tabl.json' file contains something already
     const tbl = new LanguageTablet();
-    tbl.addSnippet(bogusTranslatedSnippet());
+    tbl.addSnippets(bogusTranslatedSnippet());
     await tbl.save(defaultTabletFile);
 
     // WHEN - we run extract
