@@ -21,6 +21,7 @@ import type { TranslateBatchRequest, TranslateBatchResponse } from './translate_
 export async function translateAll(
   snippets: TypeScriptSnippet[],
   includeCompilerDiagnostics: boolean,
+  batchSize?: number,
 ): Promise<TranslateAllResult> {
   // Use about half the advertised cores because hyperthreading doesn't seem to
   // help that much, or we become I/O-bound at some point. On my machine, using
@@ -30,14 +31,16 @@ export async function translateAll(
     ? parseInt(process.env.JSII_ROSETTA_MAX_WORKER_COUNT)
     : Math.min(16, Math.max(1, Math.ceil(os.cpus().length / 2)));
   const snippetArr = Array.from(snippets);
-  logging.info(`Translating ${snippetArr.length} snippets using ${N} workers`);
+  const batchesOf = batchSize ? ` (in batches of ${batchSize})` : '';
+  logging.info(`Translating ${snippetArr.length} snippets using ${N} workers${batchesOf}`);
 
   const pool = workerpool.pool(path.join(__dirname, 'translate_all_worker.js'), {
     maxWorkers: N,
   });
 
   try {
-    const requests = batchSnippets(snippetArr, includeCompilerDiagnostics);
+    const shouldBatchCompilation = batchSize != null;
+    const requests = batchSnippets(snippetArr, includeCompilerDiagnostics, batchSize, shouldBatchCompilation);
 
     const responses: TranslateBatchResponse[] = await Promise.all(
       requests.map((request) => pool.exec('translateBatch', [request])),
@@ -62,16 +65,20 @@ function batchSnippets(
   snippets: TypeScriptSnippet[],
   includeCompilerDiagnostics: boolean,
   batchSize = 10,
+  shouldBatchCompilation: boolean = false,
 ): TranslateBatchRequest[] {
   const logLevel = logging.current();
   const ret: TranslateBatchRequest[] = [];
 
   for (let i = 0; i < snippets.length; i += batchSize) {
+    // create a unique worker name, purely for logging so can be pseudo random
+    const workerId = Math.random().toString(16).slice(2, 6).toUpperCase();
     ret.push({
-      workerName: `Worker${i.toString().padStart(4, '0')}`,
+      workerName: `Worker#${workerId}`,
       snippets: snippets.slice(i, i + batchSize),
       includeCompilerDiagnostics,
       logLevel,
+      batchSize: shouldBatchCompilation ? batchSize : undefined,
     });
   }
 

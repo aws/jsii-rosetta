@@ -48,6 +48,13 @@ export interface TransliterateAssemblyOptions {
    * @default UnknownSnippetMode.FAIL
    */
   readonly unknownSnippets?: UnknownSnippetMode;
+
+  /**
+   * Batch size for compiling snippets together
+   *
+   * @default undefined (no batching)
+   */
+  readonly batchSize?: number;
 }
 
 /**
@@ -78,6 +85,7 @@ export async function transliterateAssembly(
     cacheFromFile: options.tablet,
     writeToImplicitTablets: false,
     allowDirtyTranslations: true,
+    batchSize: options.batchSize,
   });
 
   // Now do a regular "tablet reader" cycle, expecting everything to be translated already,

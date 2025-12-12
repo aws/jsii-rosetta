@@ -192,7 +192,7 @@ export class RosettaTranslator {
 
     let result;
     try {
-      result = await translateAll(snippets, this.includeCompilerDiagnostics);
+      result = await translateAll(snippets, this.includeCompilerDiagnostics, options?.batchSize);
     } finally {
       process.chdir(origDir);
       if (cleanCompilationDir) {
@@ -322,4 +322,11 @@ export interface TranslateAllOptions {
    * @default true
    */
   readonly cleanup?: boolean;
+
+  /**
+   * Batch size for compiling snippets together
+   *
+   * @default undefined (no batching)
+   */
+  readonly batchSize?: number;
 }
