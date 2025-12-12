@@ -410,6 +410,22 @@ describe('with cache file', () => {
       },
     });
   });
+
+  test('batch size is passed to translator', async () => {
+    const translationFunction = jest.fn().mockResolvedValue({ diagnostics: [], translatedSnippets: [] });
+
+    // GIVEN - remove default tablet so translation actually happens
+    await givenThatDefaultTabletDoesNotExist();
+
+    await extract.extractSnippets([assembly.moduleDirectory], {
+      cacheToFile: path.join(assembly.moduleDirectory, 'dummy.tabl.json'),
+      validateAssemblies: false,
+      batchSize: 500,
+      translatorFactory: (o) => new MockTranslator(o, translationFunction),
+    });
+
+    expect(translationFunction).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ batchSize: 500 }));
+  });
 });
 
 describe('non-compiling cached examples', () => {
@@ -808,6 +824,89 @@ test('infused examples have no diagnostics', async () => {
   }
 });
 
+test('batch compilation works with multiple snippets', async () => {
+  const batchAssembly = TestJsiiModule.fromSource(
+    {
+      'index.ts': `
+      /**
+       * ClassA with example
+       *
+       * @example
+       * import * as ass from 'my_assembly';
+       * new ass.ClassA().methodA();
+       */
+      export class ClassA {
+        public methodA() {}
+      }
+      
+      /**
+       * ClassB with example
+       *
+       * @example
+       * import * as ass from 'my_assembly';
+       * new ass.ClassB().methodB();
+       */
+      export class ClassB {
+        public methodB() {}
+      }
+      
+      /**
+       * ClassC with example
+       *
+       * @example
+       * import * as ass from 'my_assembly';
+       * new ass.ClassC().methodC();
+       */
+      export class ClassC {
+        public methodC() {}
+      }
+      `,
+      'README.md': `
+  Here is an example of how to use ClassA:
+
+  \`\`\`ts
+  import * as ass from 'my_assembly';
+  const aClass = new ass.ClassA();
+  aClass.methodA();
+  \`\`\`
+`,
+    },
+    {
+      name: 'my_assembly',
+      jsii: DUMMY_JSII_CONFIG,
+    },
+  );
+
+  try {
+    const cacheToFile = path.join(batchAssembly.moduleDirectory, 'batch.tabl.json');
+
+    // Extract with batch size of 2
+    const results = await extract.extractSnippets([batchAssembly.moduleDirectory], {
+      cacheToFile,
+      batchSize: 2,
+      includeCompilerDiagnostics: true,
+      validateAssemblies: false,
+    });
+
+    const tablet = await LanguageTablet.fromFile(cacheToFile);
+
+    // Should have 4 snippets (3 from classes + 1 from README)
+    expect(tablet.snippetKeys.length).toEqual(4);
+
+    // Verify that snippets were processed (don't check didCompile since it depends on includeCompilerDiagnostics)
+    for (const key of tablet.snippetKeys) {
+      const snippet = tablet.tryGetSnippet(key);
+      expect(snippet).toBeDefined();
+      expect(snippet?.originalSource.source).toBeDefined();
+    }
+
+    // Should have no errors
+    expect(results.diagnostics.filter((d) => d.isError)).toEqual([]);
+  } finally {
+    batchAssembly.cleanup();
+  }
+});
+
 test('example can successfully use a jsii package from the interwebs', async () => {
   // GIVEN
   const otherAssembly = TestJsiiModule.fromSource(
@@ -906,3 +1005,102 @@ function bogusTranslatedSnippet() {
     true,
   );
 }
+
+test('batch compilation handles variable name collisions', async () => {
+  const collisionAssembly = TestJsiiModule.fromSource(
+    {
+      'index.ts': `
+      /**
+       * ClassA with example using 'params'
+       *
+       * @example
+       * const params = { value: 'A' };
+       * console.log(params);
+       */
+      export class ClassA {
+        public methodA() {}
+      }
+      
+      /**
+       * ClassB with example also using 'params'
+       *
+       * @example
+       * const params = { value: 'B' };
+       * console.log(params);
+       */
+      export class ClassB {
+        public methodB() {}
+      }
+      `,
+    },
+    {
+      name: 'collision_test',
+      jsii: DUMMY_JSII_CONFIG,
+    },
+  );
+
+  try {
+    const cacheToFile = path.join(collisionAssembly.moduleDirectory, 'collision.tabl.json');
+
+    // Extract with batch size of 2 - should NOT have redeclaration errors
+    const results = await extract.extractSnippets([collisionAssembly.moduleDirectory], {
+      cacheToFile,
+      batchSize: 2,
+      includeCompilerDiagnostics: true,
+      validateAssemblies: false,
+    });
+
+    // Should NOT have diagnostics about redeclaration
+    const redeclarationErrors = results.diagnostics.filter(
+      (d) => d.formattedMessage.includes('Cannot redeclare') && d.formattedMessage.includes('params'),
+    );
+
+    expect(redeclarationErrors.length).toBe(0);
+  } finally {
+    collisionAssembly.cleanup();
+  }
+});
+
+test('batch compilation preserves line numbers in error messages', async () => {
+  const lineNumberAssembly = TestJsiiModule.fromSource(
+    {
+      'index.ts': `
+      /**
+       * ClassA with intentional error
+       *
+       * @example
+       * const x: number = 'not a number';
+       */
+      export class ClassA {
+        public methodA() {}
+      }
+      `,
+    },
+    {
+      name: 'line_number_test',
+      jsii: DUMMY_JSII_CONFIG,
+    },
+  );
+
+  try {
+    const cacheToFile = path.join(lineNumberAssembly.moduleDirectory, 'line-numbers.tabl.json');
+
+    const results = await extract.extractSnippets([lineNumberAssembly.moduleDirectory], {
+      cacheToFile,
+      batchSize: 2,
+      includeCompilerDiagnostics: true,
+      validateAssemblies: false,
+      loose: true, // Don't throw on compilation errors
+    });
+
+    // Should have a type error on line 1 (the only line in the snippet)
+    const typeErrors = results.diagnostics.filter((d) => d.formattedMessage.includes('not assignable'));
+
+    expect(typeErrors.length).toBe(1);
+    // Strip ANSI color codes before matching
+    const plainMessage = typeErrors[0].formattedMessage.replace(/\x1b\[[0-9;]*m/g, '');
+    expect(plainMessage).toContain('.ts:1:7 - error TS2322'); // Line 1, pos 7
+  } finally {
+    lineNumberAssembly.cleanup();
+  }
+});

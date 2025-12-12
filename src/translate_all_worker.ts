@@ -7,7 +7,7 @@ import * as logging from './logging';
 import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippetSchema } from './tablets/schema';
 import { TranslatedSnippet } from './tablets/tablets';
-import { RosettaDiagnostic, Translator, makeRosettaDiagnostic } from './translate';
+import { RosettaDiagnostic, makeRosettaDiagnostic, Translator } from './translate';
 import { TranslateAllResult } from './translate_all';
 
 export interface TranslateBatchRequest {
@@ -15,6 +15,7 @@ export interface TranslateBatchRequest {
   readonly snippets: TypeScriptSnippet[];
   readonly includeCompilerDiagnostics: boolean;
   readonly logLevel?: logging.Level;
+  readonly batchSize?: number;
 }
 
 export interface TranslateBatchResponse {
@@ -26,11 +27,33 @@ export interface TranslateBatchResponse {
 function translateBatch(request: TranslateBatchRequest): TranslateBatchResponse {
   // because we are in a worker process we need to explicitly configure the log level again
   logging.configure({ level: request.logLevel ?? logging.Level.QUIET, prefix: request.workerName });
-  const result = singleThreadedTranslateAll(request.snippets, request.includeCompilerDiagnostics);
+  const result = request.batchSize
+    ? batchTranslateAll(request.snippets, request.includeCompilerDiagnostics)
+    : singleThreadedTranslateAll(request.snippets, request.includeCompilerDiagnostics);
 
   return {
     translatedSchemas: result.translatedSnippets.map((s) => s.snippet),
     diagnostics: result.diagnostics,
+  };
+}
+
+function batchTranslateAll(snippets: TypeScriptSnippet[], includeCompilerDiagnostics: boolean): TranslateAllResult {
+  const translatedSnippets = new Array<TranslatedSnippet>();
+
+  const failures = new Array<RosettaDiagnostic>();
+
+  const translator = new Translator(includeCompilerDiagnostics);
+
+  try {
+    const results = translator.translateSnippets(snippets);
+    translatedSnippets.push(...results);
+  } catch (e: any) {
+    failures.push(makeRosettaDiagnostic(true, `rosetta: error translating batch: ${e}\n${e.stack}`));
+  }
+
+  return {
+    translatedSnippets,
+    diagnostics: [...translator.diagnostics, ...failures],
   };
 }
 
