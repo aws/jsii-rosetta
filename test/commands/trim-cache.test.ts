@@ -54,7 +54,7 @@ test('trim-cache removes unused snippets', async () => {
 
   // GIVEN
   const tbl = new LanguageTablet();
-  tbl.addSnippet(bogusTranslatedSnippet());
+  tbl.addSnippets(bogusTranslatedSnippet());
   await tbl.save(cacheFile);
 
   // WHEN
