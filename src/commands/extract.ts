@@ -99,6 +99,13 @@ export interface ExtractOptions {
    * @default true
    */
   readonly cleanup?: boolean;
+
+  /**
+   * Batch size for compiling snippets together
+   *
+   * @default undefined (no batching)
+   */
+  readonly batchSize?: number;
 }
 
 export async function extractAndInfuse(assemblyLocations: string[], options: ExtractOptions): Promise<ExtractResult> {
@@ -182,6 +189,7 @@ export async function extractSnippets(
     const result = await translator.translateAll(snippets, {
       compilationDirectory: options.compilationDirectory,
       cleanup: options.cleanup,
+      batchSize: options.batchSize,
     });
 
     const delta = (Date.now() - startTime) / 1000;
