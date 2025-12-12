@@ -214,7 +214,7 @@ export class AstRenderer<C> {
   /**
    * Return a newline if the given node is preceded by at least one newline
    *
-   * Used to mirror newline use between matchin brackets (such as { ... } and [ ... ]).
+   * Used to mirror newline use between matching brackets (such as { ... } and [ ... ]).
    */
   public mirrorNewlineBefore(viz?: ts.Node, suffix = '', otherwise = ''): string {
     if (viz === undefined) {

@@ -14,7 +14,7 @@ import {
 } from '../jsii/jsii-utils';
 import { jsiiTargetParameter } from '../jsii/packages';
 import { TargetLanguage } from '../languages/target-language';
-import { NO_SYNTAX, OTree, renderTree } from '../o-tree';
+import { NO_SYNTAX, OTree, ChildVisibilityOTree, renderTree } from '../o-tree';
 import { AstRenderer, nimpl, CommentSyntax } from '../renderer';
 import { SubmoduleReference } from '../submodule-reference';
 import {
@@ -124,7 +124,7 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   /**
    * Synthetic imports that need to be added as a final step
    */
-  private readonly syntheticImportsToAdd = new Array<string>();
+  private readonly syntheticImportsToAdd = new Array<[string, ts.Node]>();
 
   protected override statementTerminator = '';
 
@@ -429,7 +429,7 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
     }
 
     const structName =
-      structType.kind === 'struct' ? this.importedNameForType(structType.jsiiSym) : structType.type.symbol.name;
+      structType.kind === 'struct' ? this.importedNameForType(structType.jsiiSym, node) : structType.type.symbol.name;
 
     return this.renderObjectLiteralExpression(`${structName}(`, ')', true, node, context);
   }
@@ -795,7 +795,7 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   /**
    * Find the import for the FQNs submodule, and return it and the rest of the name
    */
-  private importedNameForType(jsiiSym: JsiiSymbol) {
+  private importedNameForType(jsiiSym: JsiiSymbol, node: ts.Node) {
     // Look for an existing import that contains this symbol
     for (const imp of this.imports) {
       if (jsiiSym.fqn.startsWith(`${imp.importedFqn}.`)) {
@@ -807,16 +807,26 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
     // Otherwise look up the Python name of this symbol (but not for fake imports from tests)
     const pythonName = findPythonName(jsiiSym);
     if (!jsiiSym.fqn.startsWith('fake_jsii.') && pythonName) {
-      this.syntheticImportsToAdd.push(pythonName);
+      this.syntheticImportsToAdd.push([pythonName, node]);
     }
     return simpleName(jsiiSym.fqn);
   }
 
-  private renderSyntheticImports(): string[] {
-    const grouped = groupBy(this.syntheticImportsToAdd, namespaceName);
-    return Object.entries(grouped).map(([namespaceFqn, fqns]) => {
-      const simpleNames = fqns.map(simpleName);
-      return `from ${namespaceFqn} import ${simpleNames.join(', ')}\n`;
+  private renderSyntheticImports(): OTree[] {
+    const grouped = groupBy(this.syntheticImportsToAdd, ([fqn]) => namespaceName(fqn));
+    return Object.entries(grouped).map(([namespaceFqn, entries]) => {
+      // Create an OTree for each imported name with its causing node's span
+      const nameOTrees = entries.map(([fqn, node]) => {
+        const tree = new OTree([simpleName(fqn)]);
+        tree.setSpan(node.getStart(), node.getEnd());
+        return tree;
+      });
+
+      // Use ChildVisibilityOTree so the import only renders if at least one name is visible
+      return new ChildVisibilityOTree([`from ${namespaceFqn} import `], nameOTrees, {
+        separator: ', ',
+        suffix: '\n',
+      });
     });
   }
 }
