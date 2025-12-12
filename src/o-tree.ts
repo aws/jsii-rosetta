@@ -18,8 +18,8 @@ export interface OTreeOptions {
   separator?: string;
 
   /**
-   * Whether trailing separators should be output. This imples children will be
-   * writen each on a new line.
+   * Whether trailing separators should be output. This implies children will be
+   * written each on a new line.
    *
    * @default false
    */
@@ -66,14 +66,14 @@ export class OTree implements OTree {
 
   public readonly attachComment: boolean;
 
-  private readonly prefix: Array<OTree | string>;
-  private readonly children: Array<OTree | string>;
-  private span?: Span;
+  protected readonly prefix: Array<OTree | string>;
+  protected readonly children: Array<OTree | string>;
+  private _span?: Span;
 
   public constructor(
     prefix: Array<OTree | string | undefined>,
     children?: Array<OTree | string | undefined>,
-    private readonly options: OTreeOptions = {},
+    protected readonly options: OTreeOptions = {},
   ) {
     this.prefix = OTree.simplify(prefix);
     this.children = OTree.simplify(children ?? []);
@@ -81,10 +81,17 @@ export class OTree implements OTree {
   }
 
   /**
+   * The span in the source file this tree node relates to
+   */
+  public get span(): Span | undefined {
+    return this._span;
+  }
+
+  /**
    * Set the span in the source file this tree node relates to
    */
   public setSpan(start: number, end: number) {
-    this.span = { start, end };
+    this._span = { start, end };
   }
 
   public write(sink: OTreeSink) {
@@ -92,7 +99,7 @@ export class OTree implements OTree {
       return;
     }
 
-    const meVisible = sink.renderingForSpan(this.span);
+    const meVisible = sink.renderingForSpan(this._span);
 
     for (const x of this.prefix) {
       sink.write(x);
@@ -124,7 +131,7 @@ export class OTree implements OTree {
       if (this.options.separator && this.options.trailingSeparator) {
         sink.ensureNewLine();
       }
-      sink.renderingForSpan(this.span);
+      sink.renderingForSpan(this._span);
       sink.write(this.options.suffix);
     }
   }
@@ -241,6 +248,13 @@ export class OTreeSink {
     return this.rendering;
   }
 
+  public isSpanVisible(span: Span): boolean {
+    if (this.options.visibleSpans) {
+      return this.options.visibleSpans.fullyContainsSpan(span);
+    }
+    return true;
+  }
+
   public requestIndentChange(x: number): () => void {
     if (x === 0) {
       return () => undefined;
@@ -340,6 +354,39 @@ export function renderTree(tree: OTree, options?: OTreeSinkOptions): string {
 
 function containsNewline(x: string) {
   return x.includes('\n');
+}
+
+/**
+ * An OTree that only renders its prefix and suffix if at least one child is visible
+ *
+ * Used for synthetic imports where the import statement should only appear
+ * if at least one of the imported names is actually used in visible code
+ */
+export class ChildVisibilityOTree extends OTree {
+  public override write(sink: OTreeSink) {
+    if (!sink.tagOnce(this.options.renderOnce)) {
+      return;
+    }
+
+    // Find the first visible child and use its span
+    const firstVisibleChild = this.children?.find((child): child is OTree & { span: Span } => {
+      if (child instanceof OTree && child.span) {
+        return sink.isSpanVisible(child.span);
+      }
+      return false;
+    });
+
+    if (!firstVisibleChild) {
+      // No visible children, don't render anything
+      return;
+    }
+
+    // Set our span to match the first visible child's span
+    this.setSpan(firstVisibleChild.span.start, firstVisibleChild.span.end);
+
+    // Render normally with the span set
+    super.write(sink);
+  }
 }
 
 export interface Span {

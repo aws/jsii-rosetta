@@ -234,7 +234,7 @@ function insertExample(
   }
 
   for (const tablet of tablets) {
-    tablet.addSnippet(
+    tablet.addSnippets(
       example.withLocation({
         api: { api: 'type', fqn: type.fqn },
         field: { field: 'example' },
