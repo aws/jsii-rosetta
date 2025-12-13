@@ -693,15 +693,7 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsii/check-node@1.119.0":
-  version "1.119.0"
-  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.119.0.tgz#d4acb0ada485114c8c2b4ad34d8c4bbc418f66b8"
-  integrity sha512-dJ6hz+kpDWC/gAR7X5gmZVWjHX24Nlh2YEYKfY4r/NXrAp+2tdQ1Xhzt1fgOyh0nea+yLdiBLjkOzE1sRIPQFA==
-  dependencies:
-    chalk "^4.1.2"
-    semver "^7.7.2"
-
-"@jsii/check-node@^1.121.0":
+"@jsii/check-node@1.121.0", "@jsii/check-node@^1.121.0":
   version "1.121.0"
   resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.121.0.tgz#cfb32df36b38c308deb8e64f0406d73a55aaa8f1"
   integrity sha512-0mPTsD9PDx/+Kvi6xNfOMzcxWW/nzo74rp96vN5qVg8pZThtzHqR14X0z4E/SqfYVs6Tv+Xiu4ctRRFmwe4xtQ==
@@ -709,14 +701,7 @@
     chalk "^4.1.2"
     semver "^7.7.2"
 
-"@jsii/spec@1.119.0":
-  version "1.119.0"
-  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.119.0.tgz#e8b4f3bee3b454ea2f0da8f409390ff7ac653e19"
-  integrity sha512-A542Rq4h+DkBivoYWYmo86j8fdmd5kzGNN+2K+MhKPbZ3mHYRN6HHa3fLKYPcbNyLRi1eT+n8LXaVjEBtDKEDQ==
-  dependencies:
-    ajv "^8.17.1"
-
-"@jsii/spec@^1.121.0":
+"@jsii/spec@1.121.0", "@jsii/spec@^1.121.0":
   version "1.121.0"
   resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.121.0.tgz#43eeee50904151cebd1a68b2e93e35f104e24ee5"
   integrity sha512-TDDUKTSRgRB0j2Yti+LOgUzjka8D+NdJm9vzYu1DOGu8Oje8cl9hRYZUmGoW8dWQLnF1dcouUP0n9PLvVKzu5w==
@@ -3590,12 +3575,12 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.9.1:
-  version "5.9.14"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.9.14.tgz#c70d88e513c278623535a79d63bdb6fbfd29cd86"
-  integrity sha512-M6V+NATk/lnuNc4SN4y0SwoPO5GqBwr0cwPUtzkNq8MaCVp4nYV4ere3TUBbud92qcNOALXHMuYYKYWfTVV4kA==
+  version "5.9.19"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.9.19.tgz#5ffcc1a4b76f33cd155c52def4d6fb82be8e7d7e"
+  integrity sha512-9pixHNxOPaRymWGPAIROZCuLaV/WgsvDiNNcnTokNfdtDrRBGiVvbXzZ34rHHNE8i820OBWvrkHTD2yRz19cAg==
   dependencies:
-    "@jsii/check-node" "1.119.0"
-    "@jsii/spec" "1.119.0"
+    "@jsii/check-node" "1.121.0"
+    "@jsii/spec" "1.121.0"
     case "^1.6.3"
     chalk "^4"
     fast-deep-equal "^3.1.3"
