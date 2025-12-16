@@ -5,7 +5,7 @@ import * as workerpool from 'workerpool';
 import * as logging from './logging';
 import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippet } from './tablets/tablets';
-import { RosettaDiagnostic } from './translate';
+import { RosettaDiagnostic, extractTimingInfo, formatTimingTable } from './translate';
 import type { TranslateBatchRequest, TranslateBatchResponse } from './translate_all_worker';
 
 /**
@@ -46,14 +46,23 @@ export async function translateAll(
       requests.map((request) => pool.exec('translateBatch', [request])),
     );
 
-    const diagnostics = new Array<RosettaDiagnostic>();
+    const allDiagnostics = new Array<RosettaDiagnostic>();
     const translatedSnippets = new Array<TranslatedSnippet>();
 
     // Combine results
     for (const response of responses) {
-      diagnostics.push(...response.diagnostics);
+      allDiagnostics.push(...response.diagnostics);
       translatedSnippets.push(...response.translatedSchemas.map(TranslatedSnippet.fromSchema));
     }
+
+    // Extract and display timing info if enabled
+    const { timings, diagnostics } = extractTimingInfo(allDiagnostics);
+    if (process.env.TIMING === '1' && timings.length > 0) {
+      const table = formatTimingTable(timings);
+      // emitted as warn so that it's always shown
+      table && logging.warn(table);
+    }
+
     return { diagnostics, translatedSnippets };
   } finally {
     // Not waiting on purpose

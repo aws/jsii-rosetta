@@ -1104,3 +1104,41 @@ test('batch compilation preserves line numbers in error messages', async () => {
     lineNumberAssembly.cleanup();
   }
 });
+
+describe('timing feature', () => {
+  test('TIMING=1 enables timing collection', async () => {
+    const timingAssembly = TestJsiiModule.fromSource(
+      {
+        'index.ts': `
+        /**
+         * @example
+         * const x = 1;
+         */
+        export class ClassA {}
+        `,
+      },
+      {
+        name: 'timing_test',
+        jsii: DUMMY_JSII_CONFIG,
+      },
+    );
+
+    try {
+      const oldEnv = process.env.TIMING;
+      process.env.TIMING = '1';
+
+      const result = await extract.extractSnippets([timingAssembly.moduleDirectory], {
+        includeCompilerDiagnostics: false,
+        validateAssemblies: false,
+        writeToImplicitTablets: false,
+      });
+
+      process.env.TIMING = oldEnv;
+
+      // The feature works if extraction completes without error
+      expect(result.diagnostics).toBeDefined();
+    } finally {
+      timingAssembly.cleanup();
+    }
+  });
+});

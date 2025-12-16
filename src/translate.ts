@@ -10,7 +10,6 @@ import { renderTree } from './o-tree';
 import { AstRenderer, AstHandler, AstRendererOptions } from './renderer';
 import { TypeScriptSnippet, completeSource, SnippetParameters, formatLocation } from './snippet';
 import { SubmoduleReference, SubmoduleReferenceMap } from './submodule-reference';
-import { snippetKey } from './tablets/key';
 import { ORIGINAL_SNIPPET_KEY } from './tablets/schema';
 import { TranslatedSnippet } from './tablets/tablets';
 import { SyntaxKindCounter } from './typescript/syntax-kind-counter';
@@ -74,19 +73,8 @@ export class Translator {
    * Translates a single snippet in its own TS context.
    */
   public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
-    const start = performance.now();
-    logging.debug(`Translating ${snippetKey(snip)} ${inspect(snip.parameters ?? {})}`);
-
     const translator = this.translatorFor(snip);
     const translated = this.translateSnippet(snip, translator, languages);
-
-    const duration = performance.now() - start;
-    logging.debug(
-      `Completed ${snippetKey(snip)} ${inspect({
-        duration: `${(duration / 1000).toFixed(2)}s`,
-      })}`,
-    );
-
     return translated;
   }
 
@@ -405,6 +393,11 @@ function filterVisibleDiagnostics(diags: readonly ts.Diagnostic[], visibleSpans:
  *
  * Reduce it down to only the information we need.
  */
+export interface SnippetTimingInfo {
+  readonly snippetKey: string;
+  readonly durationMs: number;
+}
+
 export interface RosettaDiagnostic {
   /**
    * If this is an error diagnostic or not
@@ -422,10 +415,70 @@ export interface RosettaDiagnostic {
    * Ends in a newline.
    */
   readonly formattedMessage: string;
+
+  /**
+   * Optional timing information for snippet translation
+   */
+  readonly timingInfo?: SnippetTimingInfo;
 }
 
 export function makeRosettaDiagnostic(isError: boolean, formattedMessage: string): RosettaDiagnostic {
   return { isError, formattedMessage, isFromStrictAssembly: false };
+}
+
+export function makeTimingDiagnostic(snippetKey: string, durationMs: number): RosettaDiagnostic {
+  return {
+    isError: false,
+    isFromStrictAssembly: false,
+    formattedMessage: '',
+    timingInfo: { snippetKey, durationMs },
+  };
+}
+
+export function extractTimingInfo(diagnostics: readonly RosettaDiagnostic[]): {
+  timings: SnippetTimingInfo[];
+  diagnostics: RosettaDiagnostic[];
+} {
+  const timings: SnippetTimingInfo[] = [];
+  const regular: RosettaDiagnostic[] = [];
+
+  for (const diag of diagnostics) {
+    if (diag.timingInfo) {
+      timings.push(diag.timingInfo);
+    } else {
+      regular.push(diag);
+    }
+  }
+
+  return { timings, diagnostics: regular };
+}
+
+export function formatTimingTable(timings: SnippetTimingInfo[]): string {
+  if (timings.length === 0) {
+    return '';
+  }
+
+  const totalTime = timings.reduce((sum, t) => sum + t.durationMs, 0);
+  const sorted = timings.sort((a, b) => b.durationMs - a.durationMs).slice(0, 10);
+
+  const lines = [
+    '',
+    '=== Top 10 Slowest Snippets ===',
+    'Rank | Time (s) | % of Total | Snippet Key',
+    '-----|----------|------------|------------',
+  ];
+
+  for (const [idx, timing] of sorted.entries()) {
+    const timeS = (timing.durationMs / 1000).toFixed(2).padStart(8);
+    const pct = ((timing.durationMs / totalTime) * 100).toFixed(1).padStart(10);
+    lines.push(`${(idx + 1).toString().padEnd(4)} | ${timeS} | ${pct} | ${timing.snippetKey}`);
+  }
+
+  lines.push('');
+  lines.push(`Total translation time: ${(totalTime / 1000).toFixed(2)}s`);
+  lines.push('');
+
+  return lines.join('\n');
 }
 
 /**
