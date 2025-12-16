@@ -5,7 +5,7 @@ import { inspect } from 'node:util';
 import * as workerpool from 'workerpool';
 
 import * as logging from './logging';
-import { TypeScriptSnippet } from './snippet';
+import { formatLocation, TypeScriptSnippet } from './snippet';
 import { snippetKey } from './tablets/key';
 import { TranslatedSnippetSchema } from './tablets/schema';
 import { TranslatedSnippet } from './tablets/tablets';
@@ -89,7 +89,7 @@ export function singleThreadedTranslateAll(
       );
     }
 
-    const timing = makeTimingDiagnostic(currentSnippetKey, performance.now() - start);
+    const timing = makeTimingDiagnostic(currentSnippetKey, formatLocation(block.location), performance.now() - start);
     timings.push(timing);
     logging.debug(
       `Completed ${timing.timingInfo!.snippetKey} ${inspect({

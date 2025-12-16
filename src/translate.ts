@@ -394,6 +394,7 @@ function filterVisibleDiagnostics(diags: readonly ts.Diagnostic[], visibleSpans:
  * Reduce it down to only the information we need.
  */
 export interface SnippetTimingInfo {
+  readonly name: string;
   readonly snippetKey: string;
   readonly durationMs: number;
 }
@@ -426,12 +427,12 @@ export function makeRosettaDiagnostic(isError: boolean, formattedMessage: string
   return { isError, formattedMessage, isFromStrictAssembly: false };
 }
 
-export function makeTimingDiagnostic(snippetKey: string, durationMs: number): RosettaDiagnostic {
+export function makeTimingDiagnostic(snippetKey: string, name: string, durationMs: number): RosettaDiagnostic {
   return {
     isError: false,
     isFromStrictAssembly: false,
     formattedMessage: '',
-    timingInfo: { snippetKey, durationMs },
+    timingInfo: { snippetKey, name, durationMs },
   };
 }
 
@@ -464,14 +465,14 @@ export function formatTimingTable(timings: SnippetTimingInfo[]): string {
   const lines = [
     '',
     '=== Top 10 Slowest Snippets ===',
-    'Rank | Time (s) | % of Total | Snippet Key',
-    '-----|----------|------------|------------',
+    'Rank | Time (s) | % of Total | Snippet ',
+    '-----|----------|------------|--------------------------------',
   ];
 
   for (const [idx, timing] of sorted.entries()) {
     const timeS = (timing.durationMs / 1000).toFixed(2).padStart(8);
-    const pct = ((timing.durationMs / totalTime) * 100).toFixed(1).padStart(10);
-    lines.push(`${(idx + 1).toString().padEnd(4)} | ${timeS} | ${pct} | ${timing.snippetKey}`);
+    const pct = ((timing.durationMs / totalTime) * 100).toFixed(1).padStart(9) + '%';
+    lines.push(`${(idx + 1).toString().padEnd(4)} | ${timeS} | ${pct} | ${timing.name}`);
   }
 
   lines.push('');

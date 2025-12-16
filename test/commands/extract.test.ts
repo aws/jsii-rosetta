@@ -1123,11 +1123,13 @@ describe('timing feature', () => {
       },
     );
 
+    const mockWarn = jest.spyOn(logging, 'warn').mockImplementation();
+
     try {
       const oldEnv = process.env.TIMING;
       process.env.TIMING = '1';
 
-      const result = await extract.extractSnippets([timingAssembly.moduleDirectory], {
+      await extract.extractSnippets([timingAssembly.moduleDirectory], {
         includeCompilerDiagnostics: false,
         validateAssemblies: false,
         writeToImplicitTablets: false,
@@ -1135,9 +1137,9 @@ describe('timing feature', () => {
 
       process.env.TIMING = oldEnv;
 
-      // The feature works if extraction completes without error
-      expect(result.diagnostics).toBeDefined();
+      expect(mockWarn).toHaveBeenCalledWith(expect.stringContaining('Top 10 Slowest Snippets'));
     } finally {
+      mockWarn.mockRestore();
       timingAssembly.cleanup();
     }
   });

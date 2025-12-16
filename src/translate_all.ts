@@ -60,7 +60,7 @@ export async function translateAll(
     if (process.env.TIMING === '1' && timings.length > 0) {
       const table = formatTimingTable(timings);
       // emitted as warn so that it's always shown
-      table && logging.warn(table);
+      logging.warn(table);
     }
 
     return { diagnostics, translatedSnippets };
