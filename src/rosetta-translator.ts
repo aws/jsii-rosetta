@@ -208,6 +208,10 @@ export class RosettaTranslator {
       snippet.withFingerprint(this.fingerprinter.fingerprintAll(snippet.fqnsReferenced())),
     );
 
+    if (process.env.DEBUG_TYPE_FINGERPRINTS) {
+      this.fingerprinter.writeDebugFile(process.env.DEBUG_TYPE_FINGERPRINTS);
+    }
+
     if (options?.addToTablet ?? true) {
       this.tablet.addSnippets(...fingerprinted);
     }

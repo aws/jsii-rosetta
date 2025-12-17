@@ -302,6 +302,31 @@ jsii-rosetta extract \
   $(find . -name .jsii)
 ```
 
+## Debugging
+
+### Type Fingerprints
+
+To debug type fingerprinting issues, set the `DEBUG_TYPE_FINGERPRINTS` environment variable to a file path.
+This writes all computed type fingerprints to the specified file in alphabetically sorted format:
+
+```sh
+DEBUG_TYPE_FINGERPRINTS=type-fingerprints.txt jsii-rosetta extract $(find . -name .jsii)
+```
+
+The output file contains one line per type in the format `<fqn>: <hash>`, making it easy to compare
+fingerprints across different runs using standard diff tools.
+
+### Translation Timing
+
+To display timing information for snippet translations, set the `TIMING=1` environment variable:
+
+```sh
+TIMING=1 jsii-rosetta extract $(find . -name .jsii)
+```
+
+This outputs a table showing compilation time for each snippet, helping identify performance bottlenecks.
+Note that timing is not supported when using batch compilation mode.
+
 ### Translations and pacmak
 
 `jsii-pacmak` will read translation from tablets to substitute translated examples
