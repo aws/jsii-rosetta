@@ -1106,7 +1106,7 @@ test('batch compilation preserves line numbers in error messages', async () => {
 });
 
 describe('timing feature', () => {
-  test('TIMING=1 enables timing collection', async () => {
+  test('TIMING=1 returns timing data for printing at the end', async () => {
     const timingAssembly = TestJsiiModule.fromSource(
       {
         'index.ts': `
@@ -1123,13 +1123,11 @@ describe('timing feature', () => {
       },
     );
 
-    const mockWarn = jest.spyOn(logging, 'warn').mockImplementation();
-
     try {
       const oldEnv = process.env.TIMING;
       process.env.TIMING = '1';
 
-      await extract.extractSnippets([timingAssembly.moduleDirectory], {
+      const result = await extract.extractSnippets([timingAssembly.moduleDirectory], {
         includeCompilerDiagnostics: false,
         validateAssemblies: false,
         writeToImplicitTablets: false,
@@ -1137,9 +1135,10 @@ describe('timing feature', () => {
 
       process.env.TIMING = oldEnv;
 
-      expect(mockWarn).toHaveBeenCalledWith(expect.stringContaining('Top 10 Slowest Snippets'));
+      expect(result.timings).toBeDefined();
+      expect(result.timings).toHaveLength(1);
+      expect(result.timings![0].name).toContain('timing_test');
     } finally {
-      mockWarn.mockRestore();
       timingAssembly.cleanup();
     }
   });
