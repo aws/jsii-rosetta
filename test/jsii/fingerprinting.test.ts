@@ -2,9 +2,9 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as spec from '@jsii/spec';
 import { fakeAssembly } from './fake-assembly';
-import { withTemporaryDirectory } from '../testutil';
 import { RosettaTranslator, typeScriptSnippetFromVisibleSource } from '../../lib';
 import { TypeFingerprinter } from '../../lib/jsii/fingerprinting';
+import { withTemporaryDirectory } from '../testutil';
 
 const location = { api: { api: 'file', fileName: 'test.ts' } as const };
 
