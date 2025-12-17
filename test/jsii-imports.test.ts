@@ -445,8 +445,8 @@ function makeJsiiModule(options: { readonly withModule: boolean; readonly nested
 
   const source: MultipleSources = options.withModule
     ? {
-        'index.ts': 'export * as submod from "./submodule/module";',
-        'submodule/module.ts': payload,
+        'index.ts': 'export * as submod from "./submodule/index";',
+        'submodule/index.ts': payload,
         'submodule/.jsiirc.json': JSON.stringify({
           targets: {
             python: {
