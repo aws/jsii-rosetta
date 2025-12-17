@@ -219,6 +219,7 @@ export class RosettaTranslator {
     return {
       translatedSnippets: fingerprinted,
       diagnostics: result.diagnostics,
+      timings: result.timings,
     };
   }
 }

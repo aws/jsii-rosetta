@@ -11,7 +11,7 @@ import { infuse, DEFAULT_INFUSION_RESULTS_NAME } from './commands/infuse';
 import { readTablet } from './commands/read';
 import { transliterateAssembly } from './commands/transliterate';
 import { trimCache } from './commands/trim-cache';
-import { TranslateResult, translateTypeScript, RosettaDiagnostic } from './index';
+import { TranslateResult, translateTypeScript, RosettaDiagnostic, formatTimingTable } from './index';
 import { getVisitorFromLanguage, TargetLanguage } from './languages';
 import * as logging from './logging';
 import { emitSupportPolicyInformation } from './support';
@@ -300,6 +300,11 @@ async function main() {
           : await extractSnippets(absAssemblies, extractOptions);
 
         handleDiagnostics(result.diagnostics, args.fail, result.tablet.count);
+
+        // Print timing table at the very end
+        if (result.timings && result.timings.length > 0) {
+          logging.warn(formatTimingTable(result.timings));
+        }
       }),
     )
     .command(

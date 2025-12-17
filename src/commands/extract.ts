@@ -12,12 +12,13 @@ import { RosettaTranslator, RosettaTranslatorOptions } from '../rosetta-translat
 import { TypeScriptSnippet, SnippetParameters } from '../snippet';
 import { snippetKey } from '../tablets/key';
 import { LanguageTablet, DEFAULT_TABLET_NAME, DEFAULT_TABLET_NAME_COMPRESSED } from '../tablets/tablets';
-import { RosettaDiagnostic } from '../translate';
+import { RosettaDiagnostic, SnippetTimingInfo } from '../translate';
 import { groupBy, isDefined } from '../util';
 
 export interface ExtractResult {
   diagnostics: RosettaDiagnostic[];
   tablet: LanguageTablet;
+  timings?: SnippetTimingInfo[];
 }
 
 export interface ExtractOptions {
@@ -182,6 +183,7 @@ export async function extractSnippets(
   }
 
   const diagnostics = [];
+  const timings: SnippetTimingInfo[] = [];
   if (snippets.length > 0) {
     logging.info('Translating');
     const startTime = Date.now();
@@ -199,6 +201,7 @@ export async function extractSnippets(
       )}s/snippet)`,
     );
     diagnostics.push(...result.diagnostics);
+    timings.push(...(result.timings ?? []));
   } else {
     logging.info('Nothing left to translate');
   }
@@ -234,7 +237,7 @@ export async function extractSnippets(
     await output.save(options.cacheToFile, options.compressCacheToFile);
   }
 
-  return { diagnostics, tablet: translator.tablet };
+  return { diagnostics, tablet: translator.tablet, timings };
 }
 
 /**

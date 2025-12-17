@@ -5,7 +5,7 @@ import * as workerpool from 'workerpool';
 import * as logging from './logging';
 import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippet } from './tablets/tablets';
-import { RosettaDiagnostic, extractTimingInfo, formatTimingTable } from './translate';
+import { RosettaDiagnostic, SnippetTimingInfo, extractTimingInfo } from './translate';
 import type { TranslateBatchRequest, TranslateBatchResponse } from './translate_all_worker';
 
 /**
@@ -55,15 +55,14 @@ export async function translateAll(
       translatedSnippets.push(...response.translatedSchemas.map(TranslatedSnippet.fromSchema));
     }
 
-    // Extract and display timing info if enabled
+    // Extract timing info if enabled
     const { timings, diagnostics } = extractTimingInfo(allDiagnostics);
-    if (process.env.TIMING === '1' && timings.length > 0) {
-      const table = formatTimingTable(timings);
-      // emitted as warn so that it's always shown
-      logging.warn(table);
-    }
 
-    return { diagnostics, translatedSnippets };
+    return {
+      diagnostics,
+      translatedSnippets,
+      timings: process.env.TIMING === '1' ? timings : undefined,
+    };
   } finally {
     // Not waiting on purpose
     void pool.terminate();
@@ -97,4 +96,5 @@ function batchSnippets(
 export interface TranslateAllResult {
   translatedSnippets: TranslatedSnippet[];
   diagnostics: RosettaDiagnostic[];
+  timings?: SnippetTimingInfo[];
 }
