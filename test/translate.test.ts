@@ -2,6 +2,7 @@ import { TestJsiiModule, DUMMY_JSII_CONFIG } from './testutil';
 import { SnippetTranslator, TypeScriptSnippet, PythonVisitor, TargetLanguage } from '../lib';
 import { VisualizeAstVisitor } from '../lib/languages/visualize';
 import { snippetKey } from '../lib/tablets/key';
+import { makeTimingDiagnostic, extractTimingInfo, formatTimingTable } from '../lib/translate';
 
 const location = {
   api: { api: 'moduleReadme', moduleFqn: '@aws-cdk/aws-apigateway' },
@@ -217,4 +218,69 @@ test('declarations are translated correctly in all jsii languages', () => {
   } finally {
     assembly.cleanup();
   }
+});
+
+describe('timing diagnostics', () => {
+  test('makeTimingDiagnostic creates valid diagnostic', () => {
+    const diag = makeTimingDiagnostic('abc', 'test/snippet', 1234.5);
+
+    expect(diag.isError).toBe(false);
+    expect(diag.isFromStrictAssembly).toBe(false);
+    expect(diag.formattedMessage).toBe('');
+    expect(diag.timingInfo).toEqual({
+      snippetKey: 'abc',
+      name: 'test/snippet',
+      durationMs: 1234.5,
+    });
+  });
+
+  test('extractTimingInfo separates timing from regular diagnostics', () => {
+    const diagnostics = [
+      { isError: true, isFromStrictAssembly: false, formattedMessage: 'error' },
+      makeTimingDiagnostic('abc', 'snippet1', 100),
+      { isError: false, isFromStrictAssembly: false, formattedMessage: 'warning' },
+      makeTimingDiagnostic('def', 'snippet2', 200),
+    ];
+
+    const { timings, diagnostics: regular } = extractTimingInfo(diagnostics);
+
+    expect(timings).toHaveLength(2);
+    expect(timings[0]).toEqual({ snippetKey: 'abc', name: 'snippet1', durationMs: 100 });
+    expect(timings[1]).toEqual({ snippetKey: 'def', name: 'snippet2', durationMs: 200 });
+    expect(regular).toHaveLength(2);
+    expect(regular[0].formattedMessage).toBe('error');
+    expect(regular[1].formattedMessage).toBe('warning');
+  });
+
+  test('formatTimingTable shows top 10 snippets', () => {
+    const timings = Array.from({ length: 15 }, (_, i) => ({
+      name: `readme${i}`,
+      snippetKey: `snippet${i}`,
+      durationMs: (15 - i) * 1000,
+    }));
+
+    const output = formatTimingTable(timings);
+
+    expect(output).toContain('Top 10 Slowest Snippets');
+    expect(output).toContain('readme0');
+    expect(output).toContain('readme9');
+    expect(output).not.toContain('readme10');
+    expect(output).toContain('Total translation time: 120.00s');
+  });
+
+  test('formatTimingTable handles empty list', () => {
+    const output = formatTimingTable([]);
+    expect(output).toBe('');
+  });
+
+  test('formatTimingTable shows percentages correctly', () => {
+    const timings = [
+      { name: 'slow', snippetKey: 'abc', durationMs: 5000 },
+      { name: 'fast', snippetKey: 'def', durationMs: 5000 },
+    ];
+
+    const output = formatTimingTable(timings);
+
+    expect(output).toContain('50.0');
+  });
 });
