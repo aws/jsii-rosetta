@@ -1104,3 +1104,43 @@ test('batch compilation preserves line numbers in error messages', async () => {
     lineNumberAssembly.cleanup();
   }
 });
+
+describe('timing feature', () => {
+  test('TIMING=1 enables timing collection', async () => {
+    const timingAssembly = TestJsiiModule.fromSource(
+      {
+        'index.ts': `
+        /**
+         * @example
+         * const x = 1;
+         */
+        export class ClassA {}
+        `,
+      },
+      {
+        name: 'timing_test',
+        jsii: DUMMY_JSII_CONFIG,
+      },
+    );
+
+    const mockWarn = jest.spyOn(logging, 'warn').mockImplementation();
+
+    try {
+      const oldEnv = process.env.TIMING;
+      process.env.TIMING = '1';
+
+      await extract.extractSnippets([timingAssembly.moduleDirectory], {
+        includeCompilerDiagnostics: false,
+        validateAssemblies: false,
+        writeToImplicitTablets: false,
+      });
+
+      process.env.TIMING = oldEnv;
+
+      expect(mockWarn).toHaveBeenCalledWith(expect.stringContaining('Top 10 Slowest Snippets'));
+    } finally {
+      mockWarn.mockRestore();
+      timingAssembly.cleanup();
+    }
+  });
+});
