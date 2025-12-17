@@ -147,13 +147,6 @@ project.compileTask.exec(
 
 new JsiiDependencyUpgrades(project);
 
-// contributors:update
-project.addDevDeps('all-contributors-cli');
-const contributors = project.addTask('contributors:update', {
-  exec: 'all-contributors check | grep "Missing contributors" -A 1 | tail -n1 | sed -e "s/,//g" | xargs -n1 | grep -v "\\[bot\\]" | grep -v "aws-cdk-automation" | xargs -n1 -I{} all-contributors add {} code',
-});
-contributors.exec('all-contributors generate');
-
 // VSCode will look at the "closest" file named "tsconfig.json" when deciding on which config to use
 // for a given TypeScript file with the TypeScript language server. In order to make this "seamless"
 // we'll be dropping `tsconfig.json` files at strategic locations in the project. These will not be
