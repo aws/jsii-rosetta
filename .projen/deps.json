@@ -52,10 +52,6 @@
       "type": "build"
     },
     {
-      "name": "all-contributors-cli",
-      "type": "build"
-    },
-    {
       "name": "constructs",
       "version": "^10.0.0",
       "type": "build"
