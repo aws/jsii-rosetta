@@ -1,4 +1,5 @@
 import * as crypto from 'node:crypto';
+import * as fs from 'node:fs';
 import * as spec from '@jsii/spec';
 
 /**
@@ -39,6 +40,15 @@ export class TypeFingerprinter {
    */
   public fingerprintType(fqn: string) {
     return this.doFingerprint(fqn, new Set([fqn]));
+  }
+
+  /**
+   * Write the fingerprint cache to a debug file
+   */
+  public writeDebugFile(filename: string) {
+    const entries = Array.from(this.cache.entries()).sort(([a], [b]) => a.localeCompare(b));
+    const lines = entries.map(([fqn, hash]) => `${fqn}: ${hash}`);
+    fs.writeFileSync(filename, lines.join('\n') + '\n');
   }
 
   private doFingerprint(fqn: string, recursionBreaker: Set<string>) {
