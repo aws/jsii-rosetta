@@ -77,6 +77,50 @@ test('extract samples from test assembly', async () => {
   expect(tablet.compressedSource).toBeFalsy();
 });
 
+test('cached fingerprints get updated', async () => {
+  // This is to recreate a real-life failure condition, slightly differently.
+  // Real scenario:
+  // 1. Cache snippet gets written
+  // 2. Type changed without changing example -> fingerprint invalidated
+  // 3. Rosetta doesn't re-use the cached snippet because of the fingerprint, so translates
+  // 4. When writing to the cache again, the fingerprint isn't updated so the snippet stays dirty forever
+  //
+  // Test recreation (without invalidating the upstream type)
+  // 1. Cache snippet gets written
+  // 2. We go into the cache file and manually change the fingerprint to something else
+  // 3. The same
+  // 4. We assert that the fingerprint is updated in the cache
+
+  const cacheFile = path.join(assembly.moduleDirectory, 'test.tabl.json');
+
+  // 1.
+  await extract.extractSnippets([assembly.moduleDirectory], {
+    cacheToFile: cacheFile,
+    ...defaultExtractOptions,
+  });
+
+  // 2.
+  const tablet = new LanguageTablet();
+  await tablet.load(cacheFile);
+
+  const someKey = Array.from(tablet.snippetKeys)[0];
+  const actualFingerprint = tablet.tryGetSnippet(someKey)!.snippet.fqnsFingerprint;
+  mutable(tablet.tryGetSnippet(someKey)!.snippet).fqnsFingerprint = '**bogus**';
+  await tablet.save(cacheFile);
+
+  // 3.
+  await extract.extractSnippets([assembly.moduleDirectory], {
+    cacheFromFile: cacheFile,
+    cacheToFile: cacheFile,
+    ...defaultExtractOptions,
+  });
+
+  // 4.
+  const tablet2 = new LanguageTablet();
+  await tablet2.load(cacheFile);
+  expect(tablet2.tryGetSnippet(someKey)?.snippet.fqnsFingerprint).toEqual(actualFingerprint);
+});
+
 test('extract can compress cached tablet file', async () => {
   const compressedCacheFile = path.join(assembly.moduleDirectory, 'test.tabl.gz');
   await extract.extractSnippets([assembly.moduleDirectory], {
@@ -838,7 +882,7 @@ test('batch compilation works with multiple snippets', async () => {
       export class ClassA {
         public methodA() {}
       }
-      
+
       /**
        * ClassB with example
        *
@@ -849,7 +893,7 @@ test('batch compilation works with multiple snippets', async () => {
       export class ClassB {
         public methodB() {}
       }
-      
+
       /**
        * ClassC with example
        *
@@ -1020,7 +1064,7 @@ test('batch compilation handles variable name collisions', async () => {
       export class ClassA {
         public methodA() {}
       }
-      
+
       /**
        * ClassB with example also using 'params'
        *
@@ -1143,3 +1187,7 @@ describe('timing feature', () => {
     }
   });
 });
+
+function mutable<A>(x: A): { -readonly [P in keyof A]: A[P] } {
+  return x;
+}
