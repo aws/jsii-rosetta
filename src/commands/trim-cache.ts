@@ -28,6 +28,5 @@ export async function trimCache(options: TrimCacheOptions): Promise<void> {
   // if the original file was compressed, then compress the updated file too
   await updated.save(options.cacheFile, original.compressedSource);
 
-  // eslint-disable-next-line prettier/prettier
-  logging.info(`${options.cacheFile}: ${updated.count} snippets remaining (${original.count} - ${updated.count} trimmed)`);
+  logging.info(`${options.cacheFile}: ${updated.count} snippets remaining (${original.count - updated.count} trimmed)`);
 }
