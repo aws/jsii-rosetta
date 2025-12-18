@@ -85,15 +85,6 @@ export class LanguageTablet {
     }
   }
 
-  /**
-   * Add one snippet to this tablet
-   *
-   * @deprecated use addTranslations instead
-   */
-  public addTranslation(snippet: TranslatedSnippet) {
-    this.addTranslations(snippet);
-  }
-
   public get snippetKeys() {
     return Object.keys(this.snippets);
   }
