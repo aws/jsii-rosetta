@@ -76,9 +76,9 @@ export async function infuse(assemblyLocations: string[], options?: InfuseOption
 
   const availableTranslations = new LanguageTablet();
   if (options?.cacheFromFile) {
-    availableTranslations.addTablet(await LanguageTablet.fromOptionalFile(options.cacheFromFile));
+    availableTranslations.addTranslationsFromTablet(await LanguageTablet.fromOptionalFile(options.cacheFromFile));
   }
-  availableTranslations.addTablets(...Object.values(defaultTablets));
+  availableTranslations.addTranslationsFromTablets(...Object.values(defaultTablets));
 
   const { translationsByFqn, originalsByKey } = await availableSnippetsPerFqn(assemblies, availableTranslations);
 
@@ -234,7 +234,7 @@ function insertExample(
   }
 
   for (const tablet of tablets) {
-    tablet.addSnippets(
+    tablet.addTranslations(
       example.withLocation({
         api: { api: 'type', fqn: type.fqn },
         field: { field: 'example' },
