@@ -65,9 +65,11 @@ export class LanguageTablet {
   private readonly snippets: Record<string, TranslatedSnippet> = {};
 
   /**
-   * Add one or more snippets to this tablet
+   * Add translations from one or more snippets to this tablet
+   *
+   * WARNING: snippet metadata will not be overwritten, only translations.
    */
-  public addSnippets(...snippets: TranslatedSnippet[]) {
+  public addTranslations(...snippets: TranslatedSnippet[]) {
     for (const snippet of snippets) {
       const existingSnippet = this.snippets[snippet.key];
       this.snippets[snippet.key] = existingSnippet ? existingSnippet.mergeTranslations(snippet) : snippet;
@@ -75,12 +77,21 @@ export class LanguageTablet {
   }
 
   /**
+   * Add one or more snippets to this tablet, overwriting matching snippets and all of their translations
+   */
+  public addSnippets(...snippets: TranslatedSnippet[]) {
+    for (const snippet of snippets) {
+      this.snippets[snippet.key] = snippet;
+    }
+  }
+
+  /**
    * Add one snippet to this tablet
    *
-   * @deprecated use addSnippets instead
+   * @deprecated use addTranslations instead
    */
-  public addSnippet(snippet: TranslatedSnippet) {
-    this.addSnippets(snippet);
+  public addTranslation(snippet: TranslatedSnippet) {
+    this.addTranslations(snippet);
   }
 
   public get snippetKeys() {
@@ -89,12 +100,21 @@ export class LanguageTablet {
 
   /**
    * Add all snippets from the given tablets into this one
+   *
+   * WARNING: snippet metadata will not be overwritten, only translations.
    */
-  public addTablets(...tablets: LanguageTablet[]) {
+  public addTranslationsFromTablets(...tablets: LanguageTablet[]) {
     for (const tablet of tablets) {
-      for (const snippet of Object.values(tablet.snippets)) {
-        this.addSnippet(snippet);
-      }
+      this.addTranslations(...Object.values(tablet.snippets));
+    }
+  }
+
+  /**
+   * Add all snippets from the given tablets into this one, overwriting existing snippets
+   */
+  public addSnippetsFromTablets(...tablets: LanguageTablet[]) {
+    for (const tablet of tablets) {
+      this.addSnippets(...Object.values(tablet.snippets));
     }
   }
 
@@ -103,8 +123,8 @@ export class LanguageTablet {
    *
    * @deprecated Use `addTablets()` instead.
    */
-  public addTablet(tablet: LanguageTablet) {
-    this.addTablets(tablet);
+  public addTranslationsFromTablet(tablet: LanguageTablet) {
+    this.addTranslationsFromTablets(tablet);
   }
 
   public tryGetSnippet(key: string): TranslatedSnippet | undefined {

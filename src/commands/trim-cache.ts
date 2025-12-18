@@ -24,7 +24,7 @@ export async function trimCache(options: TrimCacheOptions): Promise<void> {
 
   const original = await LanguageTablet.fromFile(options.cacheFile);
   const updated = new LanguageTablet();
-  updated.addSnippets(...snippets.map((snip) => original.tryGetSnippet(snippetKey(snip))).filter(isDefined));
+  updated.addTranslations(...snippets.map((snip) => original.tryGetSnippet(snippetKey(snip))).filter(isDefined));
   // if the original file was compressed, then compress the updated file too
   await updated.save(options.cacheFile, original.compressedSource);
 

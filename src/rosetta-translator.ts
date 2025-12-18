@@ -88,12 +88,12 @@ export class RosettaTranslator {
 
   public async addToCache(filename: string) {
     const tab = await LanguageTablet.fromOptionalFile(filename);
-    this.cache.addTablet(tab);
+    this.cache.addTranslationsFromTablet(tab);
   }
 
   public addTabletsToCache(...tablets: LanguageTablet[]) {
     for (const tab of tablets) {
-      this.cache.addTablet(tab);
+      this.cache.addTranslationsFromTablet(tab);
     }
   }
 
@@ -122,7 +122,7 @@ export class RosettaTranslator {
       switch (fromCache.type) {
         case 'hit':
           if (addToTablet) {
-            this.tablet.addSnippets(fromCache.snippet);
+            this.tablet.addTranslations(fromCache.snippet);
           }
           translations.push(fromCache.snippet);
 
@@ -213,7 +213,7 @@ export class RosettaTranslator {
     }
 
     if (options?.addToTablet ?? true) {
-      this.tablet.addSnippets(...fingerprinted);
+      this.tablet.addTranslations(...fingerprinted);
     }
 
     return {
