@@ -221,7 +221,7 @@ export async function extractSnippets(
         const translations = snips.map(({ key }) => translator.tablet.tryGetSnippet(key)).filter(isDefined);
 
         const asmTablet = new LanguageTablet();
-        asmTablet.addSnippets(...translations);
+        asmTablet.addTranslations(...translations);
         await asmTablet.save(asmTabletFile, compressedTablet);
       }),
     );
@@ -233,7 +233,7 @@ export async function extractSnippets(
     const output = options.trimCache
       ? new LanguageTablet()
       : await LanguageTablet.fromOptionalFile(options.cacheToFile);
-    output.addTablets(translator.tablet);
+    output.addSnippetsFromTablets(translator.tablet);
     await output.save(options.cacheToFile, options.compressCacheToFile);
   }
 
