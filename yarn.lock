@@ -693,15 +693,7 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@jsii/check-node@1.122.0":
-  version "1.122.0"
-  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.122.0.tgz#1720c042675655ec35eeb835e597257220137e36"
-  integrity sha512-WwolUMLYgSlW8bKbdnXR7HctKEbWxSEme6hZeLn5B9I72GbfN8SaI+xm2uoHsHMyy0UGMKbK10q9UIua/CPefQ==
-  dependencies:
-    chalk "^4.1.2"
-    semver "^7.7.2"
-
-"@jsii/check-node@^1.124.0":
+"@jsii/check-node@1.124.0":
   version "1.124.0"
   resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.124.0.tgz#ce29857ebcdac8281189dbf77f5a73defe9ae16a"
   integrity sha512-Po3BMOyYOB4H8SM/x3Uuvr/inmQCJp58NgC/iYZoDaDz46ukRdTjn6SrdorFrChLrykqf9DMnLOOoFnrPaod7g==
@@ -709,10 +701,18 @@
     chalk "^4.1.2"
     semver "^7.7.2"
 
-"@jsii/spec@^1.122.0", "@jsii/spec@^1.124.0":
-  version "1.124.0"
-  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.124.0.tgz#0abed01f2f8d3d3fcf21d832b79a643628c06eff"
-  integrity sha512-Mw5uS6490EVZk275zYl1jCt6RH8AWAd9zIsebmeE+Y15GR4Ps6sqKxSAidzoH6Fnem+3TtWJTERpcrBT2iDHiQ==
+"@jsii/check-node@^1.125.0":
+  version "1.125.0"
+  resolved "https://registry.yarnpkg.com/@jsii/check-node/-/check-node-1.125.0.tgz#15c58df5871a6da40bc45f84aed8c76556e5fb1b"
+  integrity sha512-vhFFXFiq2JPE7KoUC54/VsASiuWMu0+rS3BExteIZ3zGu8TdcSLh9aHbfYbww5MjpDTWxxW8TgXumgFTSlyT0Q==
+  dependencies:
+    chalk "^4.1.2"
+    semver "^7.7.2"
+
+"@jsii/spec@^1.124.0", "@jsii/spec@^1.125.0":
+  version "1.125.0"
+  resolved "https://registry.yarnpkg.com/@jsii/spec/-/spec-1.125.0.tgz#9ddac9b0b8b33e7ce872d970809f9f36cf08c55f"
+  integrity sha512-FneFGrzBMAUjLM1Z4LY3VuWhUrBWUgfrPYLsjnC11HwcMgE1LvVi26QIuTKvV0KWCStIJu4N2TkOEc82b0hbUQ==
   dependencies:
     ajv "^8.17.1"
 
@@ -3583,12 +3583,12 @@ jsesc@~0.5.0:
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
 jsii@~5.8.0:
-  version "5.8.26"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.8.26.tgz#172f3f85809ea9e7f36e5e4cc2157e106b6abd32"
-  integrity sha512-u56Vc8epJwFAedErFV/vVAIR4FhJCG13iCnf9tUcQobL+NZm1hU0ECiZpEH1zuHHvHY8zPzAIpU240q12Ik2Tw==
+  version "5.8.27"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.8.27.tgz#04f60cfe4ca4d00b8dd31390a200ae9756d27651"
+  integrity sha512-eNaWgp47+b32pYgmlS9gu1UzyNe5FOs+0+2/ta26LCTjP1QItSpQelWbEZZSCl5wT6SnzOh2/5ADJVCpItxIhw==
   dependencies:
-    "@jsii/check-node" "1.122.0"
-    "@jsii/spec" "^1.122.0"
+    "@jsii/check-node" "1.124.0"
+    "@jsii/spec" "^1.124.0"
     case "^1.6.3"
     chalk "^4"
     fast-deep-equal "^3.1.3"
