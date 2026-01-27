@@ -38,7 +38,7 @@
     "@types/commonmark": "^0.27.10",
     "@types/jest": "^29.5.14",
     "@types/mock-fs": "^4.13.4",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@types/semver": "^7.7.1",
     "@types/stream-json": "^1.7.8",
     "@types/tar": "^6.1.13",
@@ -57,7 +57,7 @@
     "memfs": "^4.51.1",
     "mock-fs": "^5.5.0",
     "prettier": "^2.8.8",
-    "projen": "^0.98.32",
+    "projen": "^0.99.8",
     "tar": "^6.2.1",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2"
@@ -78,7 +78,7 @@
     "yargs": "^17.7.2"
   },
   "engines": {
-    "node": ">= 18.12.0"
+    "node": ">= 20.16.0"
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
