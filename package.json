@@ -65,8 +65,8 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@jsii/check-node": "^1.125.0",
-    "@jsii/spec": "^1.125.0",
+    "@jsii/check-node": "^1.126.0",
+    "@jsii/spec": "^1.126.0",
     "@xmldom/xmldom": "^0.9.8",
     "chalk": "^4",
     "commonmark": "^0.31.2",
