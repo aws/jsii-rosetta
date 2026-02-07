@@ -59,7 +59,7 @@
     "memfs": "^4.56.10",
     "mock-fs": "^5.5.0",
     "prettier": "^2.8.8",
-    "projen": "^0.99.9",
+    "projen": "^0.99.10",
     "tar": "^6.2.1",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2"
@@ -72,7 +72,7 @@
     "commonmark": "^0.31.2",
     "fast-glob": "^3.3.3",
     "jsii": "~5.8.0",
-    "semver": "^7.7.3",
+    "semver": "^7.7.4",
     "semver-intersect": "^1.5.0",
     "stream-json": "^1.9.1",
     "typescript": "~5.8",
