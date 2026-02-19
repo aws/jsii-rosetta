@@ -106,7 +106,16 @@ function resolveConflict(
 
   if (a.type === 'concrete' && b.type === 'concrete') {
     if (b.resolvedDirectory !== a.resolvedDirectory) {
-      throw new Error(`Dependency conflict: ${name} can be either ${a.resolvedDirectory} or ${b.resolvedDirectory}`);
+      // Different locations on disk, check the actual versions, we may have hoisting issues
+      const aVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const bVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
+
+      // Versions are the same, good enough
+      if (aVersion === bVersion) {
+        return a;
+      }
+
+      throw new Error(`Dependency conflict: ${name} can be either ${a.resolvedDirectory} (v${aVersion}‚ or ${b.resolvedDirectory} (v${bVersion})`);
     }
     return a;
   }
