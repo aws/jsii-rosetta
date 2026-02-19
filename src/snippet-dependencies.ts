@@ -115,7 +115,9 @@ function resolveConflict(
         return a;
       }
 
-      throw new Error(`Dependency conflict: ${name} can be either ${a.resolvedDirectory} (v${aVersion}‚ or ${b.resolvedDirectory} (v${bVersion})`);
+      throw new Error(
+        `Dependency conflict: ${name} can be either ${a.resolvedDirectory} (v${aVersion}‚ or ${b.resolvedDirectory} (v${bVersion})`,
+      );
     }
     return a;
   }
