@@ -55,8 +55,6 @@ function batchTranslateAll(snippets: TypeScriptSnippet[], includeCompilerDiagnos
     const results = translator.translateSnippets(snippets);
     translatedSnippets.push(...results);
   } catch (e: any) {
-    const snippetKeys = snippets.map((s) => snippetKey(s)).join(', ');
-    logging.error(`Failed translating batch containing: ${snippetKeys}`);
     failures.push(makeRosettaDiagnostic(true, `rosetta: error translating batch: ${e}\n${e.stack}`));
   }
 
