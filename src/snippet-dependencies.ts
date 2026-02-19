@@ -20,14 +20,15 @@ const { intersect } = require('semver-intersect');
  * We assume here the dependencies will not conflict.
  */
 export function collectDependencies(snippets: TypeScriptSnippet[]) {
+  const sources: Record<string, TypeScriptSnippet> = {};
   const ret: Record<string, CompilationDependency> = {};
   for (const snippet of snippets) {
     for (const [name, source] of Object.entries(snippet.compilationDependencies ?? {})) {
       try {
         ret[name] = resolveConflict(name, source, ret[name]);
+        sources[name] = snippet;
       } catch (e: any) {
-        logging.error(`Dependency conflict triggered by snippet at ${formatLocation(snippet.location)}`);
-        throw e;
+        throw new Error(`Dependency conflict between snippets ${fmtSource(snippet)} and ${fmtSource(sources[name])}: ${e.message}`);
       }
     }
   }
@@ -102,59 +103,56 @@ export async function resolveDependenciesFromPackageJson(packageJson: PackageJso
 
 function resolveConflict(
   name: string,
-  a: CompilationDependency,
-  b: CompilationDependency | undefined,
+  new_: CompilationDependency,
+  prev: CompilationDependency | undefined,
 ): CompilationDependency {
-  if (!b) {
-    return a;
+  if (!prev) {
+    return new_;
   }
 
-  if (a.type === 'concrete' && b.type === 'concrete') {
-    if (b.resolvedDirectory !== a.resolvedDirectory) {
+  if (new_.type === 'concrete' && prev.type === 'concrete') {
+    if (prev.resolvedDirectory !== new_.resolvedDirectory) {
       // Different locations on disk, check the actual versions, we may have hoisting issues
-      const aVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
-      const bVersion = JSON.parse(fs.readFileSync(`${b.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const newVersion = JSON.parse(fs.readFileSync(`${new_.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const prevVersion = JSON.parse(fs.readFileSync(`${prev.resolvedDirectory}/package.json`, 'utf-8')).version;
 
       // Versions are the same, good enough
-      if (aVersion === bVersion) {
-        logging.info(
-          `Dependency ${name} found at multiple locations (${a.resolvedDirectory}, ${b.resolvedDirectory}) with same version (${aVersion}), using ${a.resolvedDirectory}`,
-        );
-        return a;
+      if (newVersion === prevVersion) {
+        return new_;
       }
 
       throw new Error(
-        `Dependency conflict: ${name} can be either ${a.resolvedDirectory} (v${aVersion}‚ or ${b.resolvedDirectory} (v${bVersion})`,
+        `${name} can be either ${new_.resolvedDirectory} (v${newVersion})‚ or ${prev.resolvedDirectory} (v${prevVersion})`,
       );
     }
-    return a;
+    return new_;
   }
 
-  if (a.type === 'symbolic' && b.type === 'symbolic') {
+  if (new_.type === 'symbolic' && prev.type === 'symbolic') {
     // Intersect the ranges
     return {
       type: 'symbolic',
-      versionRange: myVersionIntersect(a.versionRange, b.versionRange),
+      versionRange: myVersionIntersect(new_.versionRange, prev.versionRange),
     };
   }
 
-  if (a.type === 'concrete' && b.type === 'symbolic') {
+  if (new_.type === 'concrete' && prev.type === 'symbolic') {
     const concreteVersion: string = JSON.parse(
-      fs.readFileSync(path.join(a.resolvedDirectory, 'package.json'), 'utf-8'),
+      fs.readFileSync(path.join(new_.resolvedDirectory, 'package.json'), 'utf-8'),
     ).version;
 
-    if (!semver.satisfies(concreteVersion, b.versionRange, { includePrerelease: true })) {
+    if (!semver.satisfies(concreteVersion, prev.versionRange, { includePrerelease: true })) {
       throw new Error(
-        `Dependency conflict: ${name} expected to match ${b.versionRange} but found ${concreteVersion} at ${a.resolvedDirectory}`,
+        `${name} expected to match ${prev.versionRange} but found ${concreteVersion} at ${new_.resolvedDirectory}`,
       );
     }
 
-    return a;
+    return new_;
   }
 
-  if (a.type === 'symbolic' && b.type === 'concrete') {
+  if (new_.type === 'symbolic' && prev.type === 'concrete') {
     // Reverse roles so we fall into the previous case
-    return resolveConflict(name, b, a);
+    return resolveConflict(name, prev, new_);
   }
 
   throw new Error('Cases should have been exhaustive');
@@ -371,4 +369,8 @@ function setExtend<A>(xs: Set<A>, ys: Set<A>) {
  */
 function windowsToUnix(x: string) {
   return x.replace(/\\/g, '/');
+}
+
+function fmtSource(loc?: TypeScriptSnippet) {
+  return loc ? formatLocation(loc.location) : '<unknown snippet>';
 }
