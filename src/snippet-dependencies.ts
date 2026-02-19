@@ -374,5 +374,5 @@ function windowsToUnix(x: string) {
 }
 
 function fmtSource(loc?: TypeScriptSnippet) {
-  return loc ? formatLocation(loc.location) : '<unknown snippet>';
+  return loc ? formatLocation(loc.location) : '** should never happen**';
 }
