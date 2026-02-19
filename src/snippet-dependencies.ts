@@ -108,7 +108,7 @@ function resolveConflict(
     if (b.resolvedDirectory !== a.resolvedDirectory) {
       // Different locations on disk, check the actual versions, we may have hoisting issues
       const aVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
-      const bVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const bVersion = JSON.parse(fs.readFileSync(`${b.resolvedDirectory}/package.json`, 'utf-8')).version;
 
       // Versions are the same, good enough
       if (aVersion === bVersion) {
