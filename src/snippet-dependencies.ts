@@ -9,7 +9,7 @@ import * as semver from 'semver';
 
 import { findDependencyDirectory, findUp, isBuiltinModule } from './find-utils';
 import * as logging from './logging';
-import { TypeScriptSnippet, CompilationDependency } from './snippet';
+import { TypeScriptSnippet, CompilationDependency, formatLocation } from './snippet';
 import { mkDict, formatList, pathExists } from './util';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { intersect } = require('semver-intersect');
@@ -20,10 +20,20 @@ const { intersect } = require('semver-intersect');
  * We assume here the dependencies will not conflict.
  */
 export function collectDependencies(snippets: TypeScriptSnippet[]) {
+  const prevSnippet: Record<string, TypeScriptSnippet> = {};
   const ret: Record<string, CompilationDependency> = {};
-  for (const snippet of snippets) {
-    for (const [name, source] of Object.entries(snippet.compilationDependencies ?? {})) {
-      ret[name] = resolveConflict(name, source, ret[name]);
+  for (const curSnippet of snippets) {
+    for (const [name, source] of Object.entries(curSnippet.compilationDependencies ?? {})) {
+      try {
+        ret[name] = resolveConflict(name, source, ret[name]);
+        prevSnippet[name] = curSnippet;
+      } catch (e: any) {
+        throw new Error(
+          `Dependency conflict between snippets ${fmtSource(curSnippet)} and ${fmtSource(prevSnippet[name])}: ${
+            e.message
+          }`,
+        );
+      }
     }
   }
   return ret;
@@ -106,7 +116,18 @@ function resolveConflict(
 
   if (a.type === 'concrete' && b.type === 'concrete') {
     if (b.resolvedDirectory !== a.resolvedDirectory) {
-      throw new Error(`Dependency conflict: ${name} can be either ${a.resolvedDirectory} or ${b.resolvedDirectory}`);
+      // Different locations on disk, check the actual versions, we may have hoisting issues
+      const aVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const bVersion = JSON.parse(fs.readFileSync(`${b.resolvedDirectory}/package.json`, 'utf-8')).version;
+
+      // Versions are the same, good enough
+      if (aVersion === bVersion) {
+        return a;
+      }
+
+      throw new Error(
+        `${name} can be either ${a.resolvedDirectory} (v${aVersion})‚ or ${b.resolvedDirectory} (v${bVersion})`,
+      );
     }
     return a;
   }
@@ -126,7 +147,7 @@ function resolveConflict(
 
     if (!semver.satisfies(concreteVersion, b.versionRange, { includePrerelease: true })) {
       throw new Error(
-        `Dependency conflict: ${name} expected to match ${b.versionRange} but found ${concreteVersion} at ${a.resolvedDirectory}`,
+        `${name} expected to match ${b.versionRange} but found ${concreteVersion} at ${a.resolvedDirectory}`,
       );
     }
 
@@ -352,4 +373,8 @@ function setExtend<A>(xs: Set<A>, ys: Set<A>) {
  */
 function windowsToUnix(x: string) {
   return x.replace(/\\/g, '/');
+}
+
+function fmtSource(loc?: TypeScriptSnippet) {
+  return loc ? formatLocation(loc.location) : '** should never happen**';
 }
