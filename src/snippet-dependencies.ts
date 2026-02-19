@@ -28,7 +28,9 @@ export function collectDependencies(snippets: TypeScriptSnippet[]) {
         ret[name] = resolveConflict(name, source, ret[name]);
         prevSnippet[name] = curSnippet;
       } catch (e: any) {
-        throw new Error(`Dependency conflict between snippets ${fmtSource(curSnippet)} and ${fmtSource(prevSnippet[name])}: ${e.message}`);
+        throw new Error(
+          `Dependency conflict between snippets ${fmtSource(curSnippet)} and ${fmtSource(prevSnippet[name])}: ${e.message}`,
+        );
       }
     }
   }
