@@ -117,7 +117,9 @@ function resolveConflict(
 
       // Versions are the same, good enough
       if (aVersion === bVersion) {
-        logging.info(`Dependency ${name} found at multiple locations (${a.resolvedDirectory}, ${b.resolvedDirectory}) with same version (${aVersion}), using ${a.resolvedDirectory}`);
+        logging.info(
+          `Dependency ${name} found at multiple locations (${a.resolvedDirectory}, ${b.resolvedDirectory}) with same version (${aVersion}), using ${a.resolvedDirectory}`,
+        );
         return a;
       }
 

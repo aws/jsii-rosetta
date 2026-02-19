@@ -86,7 +86,11 @@ export function singleThreadedTranslateAll(
     try {
       translatedSnippets.push(translator.translate(block));
     } catch (e: any) {
-      logging.error(`Failed translating snippet: ${currentSnippetKey} at ${formatLocation(block.location)}, params: ${inspect(block.parameters ?? {})}`);
+      logging.error(
+        `Failed translating snippet: ${currentSnippetKey} at ${formatLocation(block.location)}, params: ${inspect(
+          block.parameters ?? {},
+        )}`,
+      );
       failures.push(
         makeRosettaDiagnostic(true, `rosetta: error translating snippet: ${e}\n${e.stack}\n${block.completeSource}`),
       );
