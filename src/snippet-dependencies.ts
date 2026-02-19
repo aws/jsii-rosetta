@@ -103,56 +103,56 @@ export async function resolveDependenciesFromPackageJson(packageJson: PackageJso
 
 function resolveConflict(
   name: string,
-  new_: CompilationDependency,
-  prev: CompilationDependency | undefined,
+  a: CompilationDependency,
+  b: CompilationDependency | undefined,
 ): CompilationDependency {
-  if (!prev) {
-    return new_;
+  if (!b) {
+    return a;
   }
 
-  if (new_.type === 'concrete' && prev.type === 'concrete') {
-    if (prev.resolvedDirectory !== new_.resolvedDirectory) {
+  if (a.type === 'concrete' && b.type === 'concrete') {
+    if (b.resolvedDirectory !== a.resolvedDirectory) {
       // Different locations on disk, check the actual versions, we may have hoisting issues
-      const newVersion = JSON.parse(fs.readFileSync(`${new_.resolvedDirectory}/package.json`, 'utf-8')).version;
-      const prevVersion = JSON.parse(fs.readFileSync(`${prev.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const aVersion = JSON.parse(fs.readFileSync(`${a.resolvedDirectory}/package.json`, 'utf-8')).version;
+      const bVersion = JSON.parse(fs.readFileSync(`${b.resolvedDirectory}/package.json`, 'utf-8')).version;
 
       // Versions are the same, good enough
-      if (newVersion === prevVersion) {
-        return new_;
+      if (aVersion === bVersion) {
+        return a;
       }
 
       throw new Error(
-        `${name} can be either ${new_.resolvedDirectory} (v${newVersion})‚ or ${prev.resolvedDirectory} (v${prevVersion})`,
+        `${name} can be either ${a.resolvedDirectory} (v${aVersion})‚ or ${b.resolvedDirectory} (v${bVersion})`,
       );
     }
-    return new_;
+    return a;
   }
 
-  if (new_.type === 'symbolic' && prev.type === 'symbolic') {
+  if (a.type === 'symbolic' && b.type === 'symbolic') {
     // Intersect the ranges
     return {
       type: 'symbolic',
-      versionRange: myVersionIntersect(new_.versionRange, prev.versionRange),
+      versionRange: myVersionIntersect(a.versionRange, b.versionRange),
     };
   }
 
-  if (new_.type === 'concrete' && prev.type === 'symbolic') {
+  if (a.type === 'concrete' && b.type === 'symbolic') {
     const concreteVersion: string = JSON.parse(
-      fs.readFileSync(path.join(new_.resolvedDirectory, 'package.json'), 'utf-8'),
+      fs.readFileSync(path.join(a.resolvedDirectory, 'package.json'), 'utf-8'),
     ).version;
 
-    if (!semver.satisfies(concreteVersion, prev.versionRange, { includePrerelease: true })) {
+    if (!semver.satisfies(concreteVersion, b.versionRange, { includePrerelease: true })) {
       throw new Error(
-        `${name} expected to match ${prev.versionRange} but found ${concreteVersion} at ${new_.resolvedDirectory}`,
+        `${name} expected to match ${b.versionRange} but found ${concreteVersion} at ${a.resolvedDirectory}`,
       );
     }
 
-    return new_;
+    return a;
   }
 
-  if (new_.type === 'symbolic' && prev.type === 'concrete') {
+  if (a.type === 'symbolic' && b.type === 'concrete') {
     // Reverse roles so we fall into the previous case
-    return resolveConflict(name, prev, new_);
+    return resolveConflict(name, b, a);
   }
 
   throw new Error('Cases should have been exhaustive');
