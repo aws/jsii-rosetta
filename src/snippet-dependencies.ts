@@ -20,15 +20,15 @@ const { intersect } = require('semver-intersect');
  * We assume here the dependencies will not conflict.
  */
 export function collectDependencies(snippets: TypeScriptSnippet[]) {
-  const sources: Record<string, TypeScriptSnippet> = {};
+  const prevSnippet: Record<string, TypeScriptSnippet> = {};
   const ret: Record<string, CompilationDependency> = {};
-  for (const snippet of snippets) {
-    for (const [name, source] of Object.entries(snippet.compilationDependencies ?? {})) {
+  for (const curSnippet of snippets) {
+    for (const [name, source] of Object.entries(curSnippet.compilationDependencies ?? {})) {
       try {
         ret[name] = resolveConflict(name, source, ret[name]);
-        sources[name] = snippet;
+        prevSnippet[name] = curSnippet;
       } catch (e: any) {
-        throw new Error(`Dependency conflict between snippets ${fmtSource(snippet)} and ${fmtSource(sources[name])}: ${e.message}`);
+        throw new Error(`Dependency conflict between snippets ${fmtSource(curSnippet)} and ${fmtSource(prevSnippet[name])}: ${e.message}`);
       }
     }
   }
