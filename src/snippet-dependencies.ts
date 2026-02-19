@@ -9,7 +9,7 @@ import * as semver from 'semver';
 
 import { findDependencyDirectory, findUp, isBuiltinModule } from './find-utils';
 import * as logging from './logging';
-import { TypeScriptSnippet, CompilationDependency } from './snippet';
+import { TypeScriptSnippet, CompilationDependency, formatLocation } from './snippet';
 import { mkDict, formatList, pathExists } from './util';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { intersect } = require('semver-intersect');
@@ -23,7 +23,12 @@ export function collectDependencies(snippets: TypeScriptSnippet[]) {
   const ret: Record<string, CompilationDependency> = {};
   for (const snippet of snippets) {
     for (const [name, source] of Object.entries(snippet.compilationDependencies ?? {})) {
-      ret[name] = resolveConflict(name, source, ret[name]);
+      try {
+        ret[name] = resolveConflict(name, source, ret[name]);
+      } catch (e: any) {
+        logging.error(`Dependency conflict triggered by snippet at ${formatLocation(snippet.location)}`);
+        throw e;
+      }
     }
   }
   return ret;
@@ -112,6 +117,7 @@ function resolveConflict(
 
       // Versions are the same, good enough
       if (aVersion === bVersion) {
+        logging.info(`Dependency ${name} found at multiple locations (${a.resolvedDirectory}, ${b.resolvedDirectory}) with same version (${aVersion}), using ${a.resolvedDirectory}`);
         return a;
       }
 
