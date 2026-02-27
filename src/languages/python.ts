@@ -842,8 +842,13 @@ function mangleIdentifier(originalIdentifier: string) {
     // Probably a class, leave as-is
     return originalIdentifier;
   }
-  // Turn into snake-case
-  const cased = originalIdentifier.replace(/[^A-Z][A-Z]/g, (m) => `${m[0].slice(0, 1)}_${m.slice(1).toLowerCase()}`);
+  // Turn into snake_case by inserting '_' at two kinds of boundary, then lowercasing:
+  // 1. lowercase/digit → uppercase: e.g. myVPCId → my_VPCId, getHTTPSUrl → get_HTTPSUrl
+  // 2. end of uppercase run → new word: e.g. my_VPCId → my_VPC_Id, get_HTTPSUrl → get_HTTPS_Url
+  const cased = originalIdentifier
+    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+    .toLowerCase();
   return IDENTIFIER_KEYWORDS.includes(cased) ? `${cased}_` : cased;
 }
 
