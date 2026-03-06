@@ -76,7 +76,10 @@ export class CSharpXmlCommentRenderer extends MarkdownRenderer {
       // An html string fails to parse unless it is wrapped into a document root element
       // We fake this, by wrapping the inline html into an artificial root element,
       // and for rendering only selecting its children.
-      const dom = new DOMParser().parseFromString(`<jsii-root>${html}</jsii-root>`, MIME_TYPE.HTML);
+      const dom = new DOMParser({ onError: () => {} }).parseFromString(
+        `<jsii-root>${html}</jsii-root>`,
+        MIME_TYPE.HTML,
+      );
       const fragment = dom.createDocumentFragment();
       for (const child of Array.from(dom.firstChild?.childNodes ?? [])) {
         fragment.appendChild(child);

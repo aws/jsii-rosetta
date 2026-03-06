@@ -50,7 +50,11 @@ export function makeJavaEscaper(): Escaper {
 
 type Escapes = Array<[RegExp, string]>;
 
+// eslint-disable-next-line no-control-regex
+const PROHIBITED_XML_CHARS = new RegExp('[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFE\uFFFF]', 'g');
+
 const TEXT: Escapes = [
+  [PROHIBITED_XML_CHARS, ''],
   [new RegExp('&', 'g'), '&amp;'],
   [new RegExp('<', 'g'), '&lt;'],
   [new RegExp('>', 'g'), '&gt;'],
