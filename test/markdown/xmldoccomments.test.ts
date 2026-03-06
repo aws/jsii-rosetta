@@ -94,6 +94,49 @@ test('convert header properly', () => {
   );
 });
 
+test('unclosed placeholder tags are escaped without stderr noise', () => {
+  // These are common in AWS docs as placeholders like <region>, <account-id>, etc.
+  // CommonMark parses them as html_inline nodes. The DOMParser should not log errors to stderr.
+  const stderrWrite = jest.spyOn(process.stderr, 'write').mockImplementation(() => true);
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  try {
+    expectOutput(
+      'app/<load-balancer-name>/<load-balancer-id>',
+      'app/&lt;load-balancer-name&gt;/&lt;load-balancer-id&gt;',
+    );
+    expect(stderrWrite).not.toHaveBeenCalled();
+    expect(consoleError).not.toHaveBeenCalled();
+  } finally {
+    stderrWrite.mockRestore();
+    consoleError.mockRestore();
+  }
+});
+
+test('prohibited XML characters are stripped from text', () => {
+  // CommonMark replaces \x00 with \uFFFD, so we test chars that pass through unchanged
+  expectOutput('Hello\x08\x0B\x0C\x0E\x1FWorld', 'HelloWorld');
+});
+
+test('prohibited XML characters are stripped from inline code', () => {
+  expectOutput('`code\x01here`', '<c>codehere</c>');
+});
+
+test('prohibited XML characters are stripped from attributes', () => {
+  expectOutput(
+    '![alt\x01text](http://example.com/img\x02.png)',
+    '<img alt="alttext" src="http://example.com/img%02.png" />',
+  );
+});
+
+test('allowed control characters are preserved', () => {
+  // tab (0x09), newline (0x0A), carriage return (0x0D) are valid in XML
+  expectOutput('Hello\tWorld', 'Hello\tWorld');
+});
+
+test('prohibited XML characters combined with other escapes', () => {
+  expectOutput('a\x01&\x02<\x03>b', 'a&amp;&lt;&gt;b');
+});
+
 function expectOutput(source: string, expected: string) {
   if (DEBUG) {
     // tslint:disable-next-line:no-console
