@@ -27,6 +27,16 @@
     "strictPropertyInitialization": true,
     "stripInternal": true,
     "target": "es2020",
+    "types": [
+      "commonmark",
+      "jest",
+      "mock-fs",
+      "node",
+      "semver",
+      "stream-json",
+      "tar",
+      "workerpool"
+    ],
     "moduleResolution": "nodenext",
     "isolatedModules": true,
     "noImplicitOverride": true,
