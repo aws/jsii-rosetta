@@ -1,26 +1,9 @@
-import { github } from 'projen';
+import { typescript } from 'projen';
 
-export const ACTIONS_CHECKOUT: github.workflows.JobStep = {
-  name: 'Checkout',
-  uses: 'actions/checkout@v4',
-  with: {
-    ref: '${{ github.sha }}',
-    repository: '${{ github.repository }}',
-  },
-};
-
-export function ACTIONS_SETUP_NODE(nodeVersion?: string): github.workflows.JobStep {
-  return {
-    name: 'Setup Node.js',
-    uses: 'actions/setup-node@v4',
-    with: {
-      'cache': 'yarn',
-      'node-version': nodeVersion,
-    },
-  };
+/**
+ * Returns the standard workflow setup steps (corepack, setup-node, install).
+ * Uses projen's renderWorkflowSetup() to stay in sync with the package manager config.
+ */
+export function workflowSetup(project: typescript.TypeScriptProject): ReturnType<typeof project.renderWorkflowSetup> {
+  return project.renderWorkflowSetup();
 }
-
-export const YARN_INSTALL: github.workflows.JobStep = {
-  name: 'Install dependencies',
-  run: 'yarn install --frozen-lockfile',
-};

@@ -19,6 +19,7 @@ export class JsiiDependencyUpgrades extends Component {
 
     const upgrades = new javascript.UpgradeDependencies(project, {
       exclude: jsiiDeps,
+      cooldown: 3,
       workflowOptions: {
         branches,
         labels: ['auto-approve'],
@@ -42,6 +43,7 @@ export class JsiiDependencyUpgrades extends Component {
       taskName: 'upgrade-jsii',
       include: jsiiDeps,
       target: 'semver',
+      cooldown: 3,
       pullRequestTitle: 'upgrade jsii & typescript',
       workflowOptions: {
         branches,
