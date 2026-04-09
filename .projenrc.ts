@@ -1,4 +1,5 @@
 import { DependencyType, github, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
+import { YarnNodeLinker } from 'projen/lib/javascript/yarnrc';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
 import { SUPPORT_POLICY, SupportPolicy } from './projenrc/support';
@@ -34,6 +35,13 @@ const project = new typescript.TypeScriptProject({
   ],
 
   autoDetectBin: true,
+
+  packageManager: javascript.NodePackageManager.YARN_BERRY,
+  yarnBerryOptions: {
+    yarnRcOptions: {
+      nodeLinker: YarnNodeLinker.NODE_MODULES,
+    },
+  },
 
   minNodeVersion: '20.16.0', // Node.js 20 LTS
   tsconfig: {

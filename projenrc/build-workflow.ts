@@ -58,6 +58,10 @@ export class BuildWorkflow {
             uses: 'actions/checkout@v4',
           },
           {
+            name: 'Enable corepack',
+            run: 'corepack enable',
+          },
+          {
             name: 'Setup Node.js',
             uses: 'actions/setup-node@v4',
             with: {
@@ -78,7 +82,7 @@ export class BuildWorkflow {
           },
           {
             name: 'Install dependencies',
-            run: 'yarn install --check-files',
+            run: 'yarn install --immutable',
           },
           {
             name: 'compile',
@@ -207,6 +211,10 @@ export class BuildWorkflow {
             with: { name: 'build-output', path: '${{ github.workspace }}' },
           },
           {
+            name: 'Enable corepack',
+            run: 'corepack enable',
+          },
+          {
             name: 'Setup Node.js',
             uses: 'actions/setup-node@v4',
             with: {
@@ -216,7 +224,7 @@ export class BuildWorkflow {
           },
           {
             name: 'Install dependencies',
-            run: 'yarn install --frozen-lockfile',
+            run: 'yarn install --immutable',
           },
           // Re-run post-compile to ensure /fixtures/ symlinks are correctly present...
           {
@@ -263,6 +271,10 @@ export class BuildWorkflow {
             with: { name: 'build-output', path: '${{ github.workspace }}' },
           },
           {
+            name: 'Enable corepack',
+            run: 'corepack enable',
+          },
+          {
             name: 'Setup Node.js',
             uses: 'actions/setup-node@v4',
             with: {
@@ -272,7 +284,7 @@ export class BuildWorkflow {
           },
           {
             name: 'Install dependencies',
-            run: 'yarn install --frozen-lockfile',
+            run: 'yarn install --immutable',
           },
           {
             name: 'Package',
