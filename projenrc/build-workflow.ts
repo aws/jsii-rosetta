@@ -39,7 +39,7 @@ export class BuildWorkflow {
       });
     }
 
-    const nodeVersion = project.minNodeVersion?.split('.', 1).at(0) ?? 'lts/*';
+    const nodeVersion = project.minNodeVersion?.split('.', 1)[0] ?? 'lts/*';
 
     wf.addJobs({
       'build': {
