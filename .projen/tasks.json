@@ -213,17 +213,18 @@
       "description": "upgrade dependencies",
       "env": {
         "CI": "0",
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
         "YARN_NPM_MINIMAL_AGE_GATE": "4320"
       },
       "steps": [
         {
-          "exec": "yarn dlx npm-check-updates@18 --upgrade --target=minor --cooldown=3 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/stream-json,@types/tar,@types/workerpool,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+          "exec": "yarn dlx npm-check-updates@20 --upgrade --target=minor --cooldown=3 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/stream-json,@types/tar,@types/workerpool,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
         },
         {
           "exec": "yarn install --no-immutable"
         },
         {
-          "exec": "yarn up @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/semver @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs prettier projen tar ts-jest ts-node @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
+          "exec": "yarn up -R @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/semver @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs prettier projen tar ts-jest ts-node @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
         },
         {
           "exec": "yarn projen"
@@ -238,17 +239,18 @@
       "description": "upgrade jsii & typescript",
       "env": {
         "CI": "0",
+        "YARN_ENABLE_IMMUTABLE_INSTALLS": "false",
         "YARN_NPM_MINIMAL_AGE_GATE": "4320"
       },
       "steps": [
         {
-          "exec": "yarn dlx npm-check-updates@18 --upgrade --target=semver --cooldown=3 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=jsii,typescript,@jsii/check-node,@jsii/spec"
+          "exec": "yarn dlx npm-check-updates@20 --upgrade --target=semver --cooldown=3 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=jsii,typescript,@jsii/check-node,@jsii/spec"
         },
         {
           "exec": "yarn install --no-immutable"
         },
         {
-          "exec": "yarn up jsii typescript @jsii/check-node @jsii/spec"
+          "exec": "yarn up -R jsii typescript @jsii/check-node @jsii/spec"
         },
         {
           "exec": "yarn projen"
