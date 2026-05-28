@@ -28,7 +28,7 @@ export class ReleaseWorkflow {
     const publishTarget = 'publish-target';
     const federateToAwsStep: github.workflows.JobStep = {
       name: 'Federate to AWS',
-      uses: 'aws-actions/configure-aws-credentials@v4',
+      uses: 'aws-actions/configure-aws-credentials@v6',
       with: {
         'aws-region': 'us-east-1',
         'role-to-assume': '${{ secrets.AWS_ROLE_TO_ASSUME }}',
@@ -114,11 +114,12 @@ export class ReleaseWorkflow {
         },
         {
           name: 'Upload artifact',
-          uses: 'actions/upload-artifact@v4.3.6',
+          uses: 'actions/upload-artifact@v7',
           with: {
-            name: releasePackageName,
-            path: '${{ github.workspace }}/dist',
-            overwrite: true,
+            'name': releasePackageName,
+            'path': '${{ github.workspace }}/dist',
+            'overwrite': true,
+            'include-hidden-files': true,
           },
         },
       ],
@@ -126,7 +127,7 @@ export class ReleaseWorkflow {
 
     const downloadArtifactStep: github.workflows.JobStep = {
       name: 'Download artifact',
-      uses: 'actions/download-artifact@v4',
+      uses: 'actions/download-artifact@v8',
       with: {
         name: releasePackageName,
       },
@@ -225,9 +226,8 @@ export class ReleaseWorkflow {
         },
         {
           name: 'Setup Node.js',
-          uses: 'actions/setup-node@v4',
+          uses: 'actions/setup-node@v6',
           with: {
-            'always-auth': true,
             'node-version': nodeVersion,
             'registry-url': `https://registry.npmjs.org/`,
           },
@@ -249,6 +249,7 @@ export class ReleaseWorkflow {
           run: [
             'npm publish ${{ github.workspace }}/js/jsii-*.tgz',
             '--access=public',
+            '--provenance',
             `--tag=\${{ needs.build.outputs.${PublishTargetOutput.DIST_TAG} }}`,
           ].join(' '),
         },
