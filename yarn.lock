@@ -919,17 +919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/check-node@npm:1.131.0":
-  version: 1.131.0
-  resolution: "@jsii/check-node@npm:1.131.0"
-  dependencies:
-    chalk: "npm:^4.1.2"
-    semver: "npm:^7.7.4"
-  checksum: 10c0/f708449e69a5da18cbff90585b6f95f972ec1cb6cfaf15e8f47448e02c5f15f8249d17311249936d9a148404abede235372014a76a4c20af6fc73c3e1d1d832f
-  languageName: node
-  linkType: hard
-
-"@jsii/check-node@npm:^1.132.0":
+"@jsii/check-node@npm:1.132.0, @jsii/check-node@npm:^1.132.0":
   version: 1.132.0
   resolution: "@jsii/check-node@npm:1.132.0"
   dependencies:
@@ -939,14 +929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/spec@npm:1.131.0":
-  version: 1.131.0
-  resolution: "@jsii/spec@npm:1.131.0"
-  checksum: 10c0/81e3faebf32076b0d86a8358052a693db9127442c9c11fbfe8b17bf8a80bbbedbf7fb97ef1c11626d521c6e2b6f9e7e59af7b677b3be4b574aa5f8b399cc441a
-  languageName: node
-  linkType: hard
-
-"@jsii/spec@npm:^1.132.0":
+"@jsii/spec@npm:1.132.0, @jsii/spec@npm:^1.132.0":
   version: 1.132.0
   resolution: "@jsii/spec@npm:1.132.0"
   checksum: 10c0/c0f62aa25665130e75f73f11493b5452bfb6705319c99f95fdacccca410f403b6b5380d792d0f7e0de4a1c09d47d0642ca9527b0bf03f9bcda261b8c5f2788bf
@@ -4950,11 +4933,11 @@ __metadata:
   linkType: soft
 
 "jsii@npm:~5.9.1":
-  version: 5.9.42
-  resolution: "jsii@npm:5.9.42"
+  version: 5.9.43
+  resolution: "jsii@npm:5.9.43"
   dependencies:
-    "@jsii/check-node": "npm:1.131.0"
-    "@jsii/spec": "npm:1.131.0"
+    "@jsii/check-node": "npm:1.132.0"
+    "@jsii/spec": "npm:1.132.0"
     case: "npm:^1.6.3"
     chalk: "npm:^4"
     fast-deep-equal: "npm:^3.1.3"
@@ -4967,7 +4950,7 @@ __metadata:
     yargs: "npm:^17.7.2"
   bin:
     jsii: bin/jsii
-  checksum: 10c0/1b2c70ec5943fb78017f14d52d77675bca0b00fb71c90df6eb75f78237ff6ce14b3434a5516d923432f9c216c08dde8899ab62db9a568780cd780eb8ba42e14d
+  checksum: 10c0/dc5490e14ddcdee8019abad8728cf83ce05eacb5e6d8cbe648cf4b2b150924e4c0929dd869918f7e905ebeb579c68993948ff9ec51d4a9c8d223b95f5c7f3cf9
   languageName: node
   linkType: hard
 
@@ -6270,7 +6253,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.3, semver@npm:^7.7.1, semver@npm:^7.7.3, semver@npm:^7.7.4, semver@npm:^7.8.0, semver@npm:^7.8.1":
+"semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.3, semver@npm:^7.7.1, semver@npm:^7.7.3, semver@npm:^7.8.0, semver@npm:^7.8.1":
   version: 7.8.1
   resolution: "semver@npm:7.8.1"
   bin:
