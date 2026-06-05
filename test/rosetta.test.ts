@@ -1,4 +1,4 @@
-import * as mockfs from 'mock-fs';
+import mockfs from 'mock-fs';
 
 import { fakeAssembly } from './jsii/fake-assembly';
 import { testSnippetLocation } from './testutil';

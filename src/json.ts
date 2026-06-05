@@ -1,7 +1,7 @@
 import { Readable, pipeline } from 'node:stream';
 import { promisify } from 'node:util';
 import { parser } from 'stream-json';
-import * as Assembler from 'stream-json/Assembler';
+import Assembler from 'stream-json/Assembler';
 import { disassembler } from 'stream-json/Disassembler';
 import { stringer } from 'stream-json/Stringer';
 

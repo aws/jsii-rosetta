@@ -108,6 +108,9 @@ export const STANDARD_COMPILER_OPTIONS: ts.CompilerOptions = {
   noUnusedLocals: false, // Important, becomes super annoying without this
   noUnusedParameters: false, // Important, becomes super annoying without this
   resolveJsonModule: true,
+  // TypeScript 6.0 defaults `types` to [] which prevents auto-discovery of @types/*
+  // We need ambient types (e.g. @types/node for `console`) to be available
+  types: ['*'],
   strict: true,
   strictNullChecks: true,
   strictPropertyInitialization: true,
