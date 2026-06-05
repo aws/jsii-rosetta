@@ -5,7 +5,7 @@
     "outDir": "lib",
     "alwaysStrict": true,
     "declaration": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "inlineSourceMap": false,
     "inlineSources": true,

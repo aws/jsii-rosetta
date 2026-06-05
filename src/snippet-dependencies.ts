@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { PackageJson } from '@jsii/spec';
-import * as fastGlob from 'fast-glob';
+import fastGlob from 'fast-glob';
 import * as semver from 'semver';
 
 import { findDependencyDirectory, findUp, isBuiltinModule } from './find-utils';

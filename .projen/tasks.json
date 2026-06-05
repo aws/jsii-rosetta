@@ -64,7 +64,7 @@
           "exec": "tsc --build"
         },
         {
-          "exec": "tsc lib/index.d.ts --noEmit --skipLibCheck -t es2020 -m nodenext"
+          "exec": "tsc lib/index.d.ts --noEmit --skipLibCheck --ignoreConfig -t es2020 -m nodenext"
         }
       ]
     },
