@@ -4934,7 +4934,7 @@ __metadata:
     memfs: "npm:^4.57.7"
     mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
-    projen: "npm:^0.99.73"
+    projen: "npm:^0.99.74"
     semver: "npm:^7.8.4"
     semver-intersect: "npm:^1.5.0"
     stream-json: "npm:^1.9.1"
@@ -5913,9 +5913,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.99.73":
-  version: 0.99.73
-  resolution: "projen@npm:0.99.73"
+"projen@npm:^0.99.74":
+  version: 0.99.74
+  resolution: "projen@npm:0.99.74"
   dependencies:
     "@iarna/toml": "npm:^2.2.5"
     case: "npm:^1.6.3"
@@ -5927,7 +5927,7 @@ __metadata:
     fast-json-patch: "npm:^3.1.1"
     ini: "npm:^2.0.0"
     parse-conflict-json: "npm:^4.0.0"
-    semver: "npm:^7.8.3"
+    semver: "npm:^7.8.4"
     shx: "npm:^0.4.0"
     xmlbuilder2: "npm:^4.0.3"
     yaml: "npm:^2.2.2"
@@ -5936,7 +5936,7 @@ __metadata:
     constructs: ^10.5.0
   bin:
     projen: bin/projen
-  checksum: 10c0/1186920dd1f2b4a57e392ca78825dd73358377262420478f8aa24b416cb509e5d4bef3782c94dc56eb12e09670d830851202a86709aece1c8b4468c05e0386b3
+  checksum: 10c0/0746633bcd14e496d09108554b851068af1368276adc9f248a205e3466579e2aeaa93f02fc9a6d4654acb6429b754e782a2cdf5a67bfe7669d994e08fa71a6c1
   languageName: node
   linkType: hard
 
@@ -6270,7 +6270,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.3, semver@npm:^7.7.1, semver@npm:^7.7.3, semver@npm:^7.8.0, semver@npm:^7.8.1, semver@npm:^7.8.2, semver@npm:^7.8.3, semver@npm:^7.8.4":
+"semver@npm:^7.3.5, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.3, semver@npm:^7.7.1, semver@npm:^7.7.3, semver@npm:^7.8.0, semver@npm:^7.8.1, semver@npm:^7.8.2, semver@npm:^7.8.4":
   version: 7.8.4
   resolution: "semver@npm:7.8.4"
   bin:
