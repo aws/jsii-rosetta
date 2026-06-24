@@ -40,9 +40,8 @@ The current status of `jsii-rosetta` releases is:
 
 | Release | Status      | EOS        | Comment                                                                                                 |
 | ------- | ----------- | ---------- | ------------------------------------------------------------------------------------------------------- |
-| `5.9.x` | Current     | TBD        | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.9-latest?label=jsii-rosetta%40v5.9-latest&logo=npm) |
-| `5.8.x` | Maintenance | 2026-02-15 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.8-latest?label=jsii-rosetta%40v5.8-latest&logo=npm) |
-| `5.7.x` | Maintenance | 2025-09-15 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.7-latest?label=jsii-rosetta%40v5.7-latest&logo=npm) |
+| `6.0.x` | Current     | TBD        | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v6.0-latest?label=jsii-rosetta%40v6.0-latest&logo=npm) |
+| `5.9.x` | Maintenance | 2027-01-01 | ![npm](https://img.shields.io/npm/v/jsii-rosetta/v5.9-latest?label=jsii-rosetta%40v5.9-latest&logo=npm) |
 
 ## :gear: Contributing
 
