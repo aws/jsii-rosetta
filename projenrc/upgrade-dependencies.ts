@@ -29,7 +29,9 @@ export class JsiiDependencyUpgrades extends Component {
     for (const upgradeWorkflow of upgrades.workflows) {
       if (upgradeWorkflow.name.startsWith('upgrade-maintenance-')) {
         upgradeWorkflow.file?.patch(
-          JsonPatch.add('/jobs/upgrade/steps/3', {
+          // Insert after the "Install dependencies" step (index 4), since the
+          // back-port runs `yarn projen` which requires node_modules to exist.
+          JsonPatch.add('/jobs/upgrade/steps/4', {
             name: 'Back-port projenrc changes from main',
             env: { CI: 'false' },
             run: 'git fetch origin main && git checkout FETCH_HEAD -- README.md && yarn projen',
