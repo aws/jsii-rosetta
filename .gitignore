@@ -52,14 +52,6 @@ jspm_packages/
 !/.eslintrc.json
 !/.github/workflows/upgrade-main.yml
 !/.github/workflows/upgrade-jsii-main.yml
-<<<<<<< HEAD
-/build-tools/tsconfig.json
-/projenrc/tsconfig.json
-/test/tsconfig.json
-/test/translations/tsconfig.json
-=======
-!/.github/workflows/upgrade-jsii-maintenance-v5.9.yml
->>>>>>> 4517b6b (chore: remove loop to manually add tsconfig files (#3695))
 !/.vscode/settings.json
 !/.vscode/extensions.json
 !/.github/workflows/build.yml
