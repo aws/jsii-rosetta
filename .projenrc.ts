@@ -1,4 +1,4 @@
-import { DependencyType, github, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
+import { DependencyType, github, javascript, JsonPatch, typescript, YamlFile } from 'projen';
 import { YarnNodeLinker } from 'projen/lib/javascript/yarnrc';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
@@ -155,22 +155,6 @@ project.compileTask.exec(
 
 new JsiiDependencyUpgrades(project);
 
-// VSCode will look at the "closest" file named "tsconfig.json" when deciding on which config to use
-// for a given TypeScript file with the TypeScript language server. In order to make this "seamless"
-// we'll be dropping `tsconfig.json` files at strategic locations in the project. These will not be
-// committed as they are only here for VSCode comfort.
-for (const dir of ['build-tools', 'projenrc', 'test', 'test/translations']) {
-  new JsonFile(project, `${dir}/tsconfig.json`, {
-    allowComments: true,
-    committed: false,
-    marker: true,
-    obj: {
-      extends: '../tsconfig.dev.json',
-      references: [{ path: '../tsconfig.json' }],
-    },
-    readonly: true,
-  });
-}
 project.tsconfig?.file?.patch(
   JsonPatch.add('/compilerOptions/composite', true),
   JsonPatch.add('/compilerOptions/declarationMap', true),
