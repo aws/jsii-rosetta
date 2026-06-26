@@ -1,4 +1,4 @@
-import { DependencyType, github, javascript, JsonFile, JsonPatch, typescript, YamlFile } from 'projen';
+import { DependencyType, github, javascript, JsonPatch, typescript, YamlFile } from 'projen';
 import { YarnNodeLinker } from 'projen/lib/javascript/yarnrc';
 import { BuildWorkflow } from './projenrc/build-workflow';
 import { ReleaseWorkflow } from './projenrc/release';
