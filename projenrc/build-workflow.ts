@@ -173,9 +173,6 @@ export class BuildWorkflow {
           },
           {
             name: 'Push changes',
-            // The branch name (`head.ref`) is user-controlled input and must not
-            // be interpolated directly into the shell command (script injection).
-            // Pass it through an environment variable and reference it quoted.
             env: {
               HEAD_REF: '${{ github.event.pull_request.head.ref }}',
             },
