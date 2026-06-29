@@ -4883,7 +4883,7 @@ __metadata:
     memfs: "npm:^4.57.8"
     mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
-    projen: "npm:^0.100.6"
+    projen: "npm:^0.100.7"
     semver: "npm:^7.8.5"
     semver-intersect: "npm:^1.5.0"
     stream-json: "npm:^1.9.1"
@@ -5832,9 +5832,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.100.6":
-  version: 0.100.6
-  resolution: "projen@npm:0.100.6"
+"projen@npm:^0.100.7":
+  version: 0.100.7
+  resolution: "projen@npm:0.100.7"
   dependencies:
     "@iarna/toml": "npm:^2.2.5"
     case: "npm:^1.6.3"
@@ -5855,7 +5855,7 @@ __metadata:
     constructs: ^10.5.0
   bin:
     projen: bin/projen
-  checksum: 10c0/f6f68d3f7e133c2d4979e8f6c1dd17fe9a71c440586769be6664166a712512366d17481bf529985cde1a8fffda229d5fccc1c2634cee85c80da1bd0757952af1
+  checksum: 10c0/de6da1b17867218a5c51f7c411fde99be633992477f7ed995b03e8817cc3571c890bc5aa53408ab90fe0aa5c7339cc190892608dd2bb2861641af8a406631694
   languageName: node
   linkType: hard
 
@@ -6614,15 +6614,15 @@ __metadata:
   linkType: hard
 
 "tar@npm:^7.5.4":
-  version: 7.5.16
-  resolution: "tar@npm:7.5.16"
+  version: 7.5.17
+  resolution: "tar@npm:7.5.17"
   dependencies:
     "@isaacs/fs-minipass": "npm:^4.0.0"
     chownr: "npm:^3.0.0"
     minipass: "npm:^7.1.2"
     minizlib: "npm:^3.1.0"
     yallist: "npm:^5.0.0"
-  checksum: 10c0/4f37f3c4bd2ca2755fd736a5df1d573c1a868ec1b1e893346aeafa95ac510f9e2fd1469420bd866cc7904799e5bd4ac62b5d4f03fe27747d6e1e373b44505c5c
+  checksum: 10c0/794e80834d6fa29a526d7c6dc82684cd1d0fbc4b7dd4a86c730946a996314149b60e29f1bff8623936bb1442da7de241890c16ce6268f16cc5ef2aa5b9615953
   languageName: node
   linkType: hard
 
