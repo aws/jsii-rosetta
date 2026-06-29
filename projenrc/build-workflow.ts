@@ -173,10 +173,16 @@ export class BuildWorkflow {
           },
           {
             name: 'Push changes',
+            // The branch name (`head.ref`) is user-controlled input and must not
+            // be interpolated directly into the shell command (script injection).
+            // Pass it through an environment variable and reference it quoted.
+            env: {
+              HEAD_REF: '${{ github.event.pull_request.head.ref }}',
+            },
             run: [
               'git add .',
               'git commit -s -m "chore: self-mutation"',
-              'git push origin HEAD:${{ github.event.pull_request.head.ref }}',
+              'git push origin "HEAD:$HEAD_REF"',
             ].join('\n'),
           },
         ],
