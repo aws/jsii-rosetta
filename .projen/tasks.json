@@ -1,5 +1,5 @@
 {
-  "manifestVersion": 2,
+  "manifestVersion": 3,
   "env": {
     "PATH": "$(yarn exec node --print process.env.PATH)"
   },
