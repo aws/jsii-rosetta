@@ -88,6 +88,20 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
     return UNARY_OPS[operator];
   }
 
+  public postfixUnaryExpression(node: ts.PostfixUnaryExpression, context: AstRenderer<C>): OTree {
+    // The only postfix unary operators are `++`/`--`, which most target languages
+    // cannot express. Default to reporting them as unsupported; languages that can
+    // translate them (e.g. Ruby's `+= 1`/`-= 1`) override this.
+    return this.notImplemented(node, context);
+  }
+
+  public conditionalExpression(node: ts.ConditionalExpression, context: AstRenderer<C>): OTree {
+    // Ternaries don't translate uniformly across languages (e.g. Python uses a
+    // different word order). Report as unsupported by default; languages whose
+    // syntax matches (e.g. Ruby) override this.
+    return this.notImplemented(node, context);
+  }
+
   public translateBinaryOperator(operator: string) {
     if (operator === '===') {
       return '==';
@@ -388,7 +402,7 @@ const UNARY_OPS: { [op in ts.PrefixUnaryOperator]: string } = {
  * Array.isArray; // <- function type
  * ```
  */
-function isExpressionOfFunctionType(typeChecker: ts.TypeChecker, expr: ts.Expression) {
+export function isExpressionOfFunctionType(typeChecker: ts.TypeChecker, expr: ts.Expression) {
   const type = typeChecker.getTypeAtLocation(expr).getNonNullableType();
   return type.getCallSignatures().length > 0;
 }

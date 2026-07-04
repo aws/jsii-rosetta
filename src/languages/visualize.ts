@@ -164,6 +164,14 @@ export class VisualizeAstVisitor implements AstHandler<void> {
     return this.defaultNode('prefixUnaryExpression', node, context);
   }
 
+  public postfixUnaryExpression(node: ts.PostfixUnaryExpression, context: AstRenderer<void>): OTree {
+    return this.defaultNode('postfixUnaryExpression', node, context);
+  }
+
+  public conditionalExpression(node: ts.ConditionalExpression, context: AstRenderer<void>): OTree {
+    return this.defaultNode('conditionalExpression', node, context);
+  }
+
   public spreadElement(node: ts.SpreadElement, context: AstRenderer<void>): OTree {
     return this.defaultNode('spreadElement', node, context);
   }

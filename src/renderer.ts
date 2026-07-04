@@ -326,6 +326,10 @@ export class AstRenderer<C> {
         return visitor.asExpression(tree as ts.AsExpression, this);
       case ts.SyntaxKind.PrefixUnaryExpression:
         return visitor.prefixUnaryExpression(tree as ts.PrefixUnaryExpression, this);
+      case ts.SyntaxKind.PostfixUnaryExpression:
+        return visitor.postfixUnaryExpression(tree as ts.PostfixUnaryExpression, this);
+      case ts.SyntaxKind.ConditionalExpression:
+        return visitor.conditionalExpression(tree as ts.ConditionalExpression, this);
       case ts.SyntaxKind.SpreadAssignment:
         if (this.textOf(tree) === '...') {
           return visitor.ellipsis(tree as ts.SpreadAssignment, this);
@@ -474,6 +478,8 @@ export interface AstHandler<C> {
   methodSignature(node: ts.MethodSignature, context: AstRenderer<C>): OTree;
   asExpression(node: ts.AsExpression, context: AstRenderer<C>): OTree;
   prefixUnaryExpression(node: ts.PrefixUnaryExpression, context: AstRenderer<C>): OTree;
+  postfixUnaryExpression(node: ts.PostfixUnaryExpression, context: AstRenderer<C>): OTree;
+  conditionalExpression(node: ts.ConditionalExpression, context: AstRenderer<C>): OTree;
   spreadElement(node: ts.SpreadElement, context: AstRenderer<C>): OTree;
   spreadAssignment(node: ts.SpreadAssignment, context: AstRenderer<C>): OTree;
   templateExpression(node: ts.TemplateExpression, context: AstRenderer<C>): OTree;
