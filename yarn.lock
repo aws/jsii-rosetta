@@ -929,13 +929,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/check-node@npm:^1.137.0":
-  version: 1.137.0
-  resolution: "@jsii/check-node@npm:1.137.0"
+"@jsii/check-node@npm:^1.138.0":
+  version: 1.138.0
+  resolution: "@jsii/check-node@npm:1.138.0"
   dependencies:
     chalk: "npm:^4.1.2"
-    semver: "npm:^7.8.4"
-  checksum: 10c0/672f1517864c61104ec94c000058e4103027397dd81d1001bb0e4c792133fd8230a038817c9b9042f986d68e6f1cc3765f2fc7a3b9a4b318b82139f41daa4e24
+    semver: "npm:^7.8.5"
+  checksum: 10c0/1cf815123a54704d819e4d512853664b01b67d4c3e4c70930d3a65fd60cda97c933da7df02db37ff35655a997c639785cee93976eb468315308658d9056d9896
   languageName: node
   linkType: hard
 
@@ -946,10 +946,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/spec@npm:^1.137.0":
-  version: 1.137.0
-  resolution: "@jsii/spec@npm:1.137.0"
-  checksum: 10c0/69298bdafb06de6b2e7a1af77715c45a7e0d4ea97508df8259f84e5b59ce7dd7d90161773d52c81e11ce532a28c91756e73cb843c645976c5627da96c7f7c710
+"@jsii/spec@npm:^1.138.0":
+  version: 1.138.0
+  resolution: "@jsii/spec@npm:1.138.0"
+  checksum: 10c0/f02c89c6597aa237a35f184667aeaf4916af136fd854f148918569a43b91ac8378ffb20396ed0961079ec492037ab607177100d593c14965860173b7c0a7b37f
   languageName: node
   linkType: hard
 
@@ -4854,8 +4854,8 @@ __metadata:
   dependencies:
     "@actions/core": "npm:^1.11.1"
     "@actions/github": "npm:^5.1.1"
-    "@jsii/check-node": "npm:^1.137.0"
-    "@jsii/spec": "npm:^1.137.0"
+    "@jsii/check-node": "npm:^1.138.0"
+    "@jsii/spec": "npm:^1.138.0"
     "@types/commonmark": "npm:^0.27.10"
     "@types/jest": "npm:^29.5.14"
     "@types/mock-fs": "npm:^4.13.4"
