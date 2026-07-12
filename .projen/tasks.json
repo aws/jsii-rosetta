@@ -239,13 +239,65 @@
       },
       "steps": [
         {
-          "exec": "yarn dlx npm-check-updates@20 --upgrade --target=minor --cooldown=3 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/stream-json,@types/tar,@types/workerpool,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+          "execArgs": [
+            "yarn",
+            "dlx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--cooldown=3",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/stream-json,@types/tar,@types/workerpool,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+          ]
         },
         {
           "exec": "yarn install --no-immutable"
         },
         {
-          "exec": "yarn up -R @actions/core @actions/github @types/commonmark @types/jest @types/mock-fs @types/node @types/semver @types/stream-json @types/tar @types/workerpool @typescript-eslint/eslint-plugin @typescript-eslint/parser constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint-plugin-unicorn eslint fs-monkey jest memfs mock-fs prettier projen tar ts-jest ts-node @xmldom/xmldom chalk commonmark fast-glob semver semver-intersect stream-json workerpool yargs"
+          "execArgs": [
+            "yarn",
+            "up",
+            "-R",
+            "@actions/core",
+            "@actions/github",
+            "@types/commonmark",
+            "@types/jest",
+            "@types/mock-fs",
+            "@types/node",
+            "@types/semver",
+            "@types/stream-json",
+            "@types/tar",
+            "@types/workerpool",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "constructs",
+            "eslint-config-prettier",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint-plugin-prettier",
+            "eslint-plugin-unicorn",
+            "eslint",
+            "fs-monkey",
+            "jest",
+            "memfs",
+            "mock-fs",
+            "prettier",
+            "projen",
+            "tar",
+            "ts-jest",
+            "ts-node",
+            "@xmldom/xmldom",
+            "chalk",
+            "commonmark",
+            "fast-glob",
+            "semver",
+            "semver-intersect",
+            "stream-json",
+            "workerpool",
+            "yargs"
+          ]
         },
         {
           "exec": "yarn projen"
@@ -265,13 +317,32 @@
       },
       "steps": [
         {
-          "exec": "yarn dlx npm-check-updates@20 --upgrade --target=semver --cooldown=3 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=jsii,typescript,@jsii/check-node,@jsii/spec"
+          "execArgs": [
+            "yarn",
+            "dlx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=semver",
+            "--cooldown=3",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=jsii,typescript,@jsii/check-node,@jsii/spec"
+          ]
         },
         {
           "exec": "yarn install --no-immutable"
         },
         {
-          "exec": "yarn up -R jsii typescript @jsii/check-node @jsii/spec"
+          "execArgs": [
+            "yarn",
+            "up",
+            "-R",
+            "jsii",
+            "typescript",
+            "@jsii/check-node",
+            "@jsii/spec"
+          ]
         },
         {
           "exec": "yarn projen"
