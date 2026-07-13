@@ -4884,7 +4884,7 @@ __metadata:
     memfs: "npm:^4.64.0"
     mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
-    projen: "npm:^0.101.6"
+    projen: "npm:^0.101.8"
     semver: "npm:^7.8.5"
     semver-intersect: "npm:^1.5.0"
     stream-json: "npm:^1.9.1"
@@ -5833,9 +5833,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.101.6":
-  version: 0.101.6
-  resolution: "projen@npm:0.101.6"
+"projen@npm:^0.101.8":
+  version: 0.101.8
+  resolution: "projen@npm:0.101.8"
   dependencies:
     "@iarna/toml": "npm:^2.2.5"
     case: "npm:^1.6.3"
@@ -5856,7 +5856,7 @@ __metadata:
     constructs: ^10.5.0
   bin:
     projen: bin/projen
-  checksum: 10c0/4907cef14094cb096e645947ad63774adfe939c92b7813caf4e934e7097db9772fba29e906d0089b2ebc621460217969bf5505eaf2fef8bc00d28f99ee3726a8
+  checksum: 10c0/d52fdda50ae703dca5a2bcedce8424f6bb8781b0f5244cad92df6bdb15e76f4bbf7acaf6ab875304acc7abc580d6995be9d38d0a759b2ca7a6042a894ad7a9a3
   languageName: node
   linkType: hard
 
