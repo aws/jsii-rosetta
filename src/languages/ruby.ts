@@ -16,7 +16,12 @@ import { AstRenderer, CommentSyntax } from '../renderer';
 import { SubmoduleReference } from '../submodule-reference';
 import { stripCommentMarkers, voidExpressionString, matchAst, nodeOfType } from '../typescript/ast-utils';
 import { ImportStatement } from '../typescript/imports';
-import { isEnumAccess, parameterAcceptsUndefined, inferredTypeOfExpression } from '../typescript/types';
+import {
+  isEnumAccess,
+  isStaticReadonlyAccess,
+  parameterAcceptsUndefined,
+  inferredTypeOfExpression,
+} from '../typescript/types';
 
 // Ruby keywords and standard reserved names. Since Rosetta translates code snippets
 // directly without dynamic target configurations, we use this hardcoded set to escape
@@ -419,6 +424,16 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
 
     if (isEnumAccess(context.typeChecker, node)) {
       return new OTree([context.convert(node.expression), '::', toSnakeCase(node.name.text).toUpperCase()]);
+    }
+
+    // Static readonly (const) property access — the "enum-like class" pattern
+    // (`BlockPublicAccess.BLOCK_ALL`, `Runtime.RUBY_4_0`). Unlike enum members
+    // (`::`), pacmak exposes these as class methods accessed with `.`, and the
+    // member keeps its constant casing (matching pacmak's `rubyConstName`).
+    // Without this, the access falls into the type-reference branch below and the
+    // member is dropped, leaving just `AWSCDK::S3::BlockPublicAccess`.
+    if (isStaticReadonlyAccess(context.typeChecker, node)) {
+      return new OTree([context.convert(node.expression), '.', toSnakeCase(node.name.text).toUpperCase()]);
     }
 
     const nameText = node.name.text;

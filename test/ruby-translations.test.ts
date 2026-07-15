@@ -51,6 +51,15 @@ describe('static members', () => {
     expect(ruby).toContain('FOO = 5');
     expect(ruby).not.toContain('attr_reader :foo');
   });
+
+  test('static readonly (const) property access uses `.` + the constant name, not dropped', () => {
+    // Regression: `BlockPublicAccess.BLOCK_ALL` used to render as just the type
+    // (`...BlockPublicAccess`), silently dropping the member.
+    const ruby = toRuby(['class C {', '  static readonly BLOCK_ALL = new C();', '}', 'const x = C.BLOCK_ALL;'].join('\n'));
+    expect(ruby).toContain('C.BLOCK_ALL');
+    // dot access, not the enum-style `::`
+    expect(ruby).not.toContain('C::BLOCK_ALL');
+  });
 });
 
 describe('type assertions', () => {
