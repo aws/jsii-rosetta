@@ -318,7 +318,14 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
     if (node.packageName.startsWith('.')) {
       return new OTree([`require_relative '${node.packageName}'`], [], { canBreakLine: true });
     }
-    let gemName = node.packageName.replace(/^@/, '').replace(/\//g, '-');
+    // The specifier may address a submodule (e.g. `aws-cdk-lib/aws-s3tables`), but the
+    // gem is the npm *package* — the submodule is autoloaded from it, there is no
+    // per-submodule require. Keep the package name only: two segments for a scoped
+    // package (`@scope/name`), one otherwise. So `aws-cdk-lib/aws-s3tables` -> the
+    // `aws-cdk-lib` gem, not the non-existent `aws-cdk-lib-aws-s3tables`.
+    const parts = node.packageName.split('/');
+    const pkg = node.packageName.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
+    const gemName = pkg.replace(/^@/, '').replace(/\//g, '-');
     return new OTree([`require '${gemName}'`], [], { canBreakLine: true });
   }
 

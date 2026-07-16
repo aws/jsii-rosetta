@@ -9,6 +9,27 @@ function toRuby(source: string): string {
   return translateTypeScript({ contents: source, fileName: 'test.ts' }, new RubyVisitor()).translation;
 }
 
+describe('imports -> require', () => {
+  test.each([
+    // A plain package import maps to the gem of the same name.
+    ["import * as cdk from 'aws-cdk-lib';", "require 'aws-cdk-lib'"],
+    // A *submodule* import resolves to the gem, not a per-submodule require: the
+    // submodule is autoloaded from the package. Regression: this used to `/`->`-` the
+    // whole path and emit `require 'aws-cdk-lib-aws-s3tables'`.
+    ["import * as s3tables from 'aws-cdk-lib/aws-s3tables';", "require 'aws-cdk-lib'"],
+    ["import { Bucket } from 'aws-cdk-lib/aws-s3';", "require 'aws-cdk-lib'"],
+    // Scoped packages: @scope/name -> scope-name; a submodule still maps to the package.
+    ["import { Foo } from '@scope/jsii-calc-lib';", "require 'scope-jsii-calc-lib'"],
+    ["import { Foo } from '@scope/jsii-calc-lib/submodule';", "require 'scope-jsii-calc-lib'"],
+  ])('%s -> %s', (source, expected) => {
+    expect(toRuby(source)).toContain(expected);
+  });
+
+  test('relative imports use require_relative', () => {
+    expect(toRuby("import { Foo } from './my-module';")).toContain("require_relative './my-module'");
+  });
+});
+
 describe('if / elsif / else chains', () => {
   test('an if / else-if / else chain emits exactly one `end`', () => {
     const ruby = toRuby(['if (a) {', '  x();', '} else if (b) {', '  y();', '} else {', '  z();', '}'].join('\n'));
