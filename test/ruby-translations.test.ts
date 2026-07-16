@@ -30,6 +30,49 @@ describe('imports -> require', () => {
   });
 });
 
+describe('array literal formatting', () => {
+  test('a broken array puts each element on its own line, not just the closing bracket', () => {
+    const ruby = toRuby(
+      [
+        "new Foo(stack, 'T', {",
+        '  replicas: [',
+        "    { region: 'us-east-1' }, { region: 'us-east-2' }",
+        '  ],',
+        '});',
+      ].join('\n'),
+    );
+    // Regression: elements shared one line while `]` dropped to its own line
+    // (`...{region: "us-east-2"}\n    ]`). Each element should be on its own line.
+    expect(ruby).toMatch(/\{region: "us-east-1"\},\n/);
+    expect(ruby).toContain('{region: "us-east-2"}');
+  });
+
+  test('a short array stays inline', () => {
+    expect(toRuby('const x = [1, 2, 3];')).toContain('[1, 2, 3]');
+  });
+
+  test('a broken hash keeps a property after a multi-line value on its own line', () => {
+    const ruby = toRuby(
+      [
+        "new Foo(stack, 'T', {",
+        '  importSource: {',
+        '    inputFormat: InputFormat.csv({',
+        "      delimiter: ',',",
+        '    }),',
+        '    bucket: bucket,',
+        '  },',
+        '});',
+      ].join('\n'),
+    );
+    // Regression: `bucket:` was stranded on the csv(...) closing line (`}), bucket: bucket`).
+    expect(ruby).toMatch(/\}\),\n\s*bucket: bucket/);
+  });
+
+  test('a short hash stays inline', () => {
+    expect(toRuby("const x = { a: 1, b: 2 };")).toContain('{a: 1, b: 2}');
+  });
+});
+
 describe('if / elsif / else chains', () => {
   test('an if / else-if / else chain emits exactly one `end`', () => {
     const ruby = toRuby(['if (a) {', '  x();', '} else if (b) {', '  y();', '} else {', '  z();', '}'].join('\n'));

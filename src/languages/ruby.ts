@@ -706,9 +706,14 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
    */
   private renderObjectLiteralExpression(node: ts.ObjectLiteralExpression, context: RubyVisitorContext): OTree {
     if (node.properties.length === 0) return new OTree(['{}']);
+    // Same normalisation as arrays: a multi-line hash puts every property on its own
+    // line, so a property following a multi-line value (e.g. `bucket:` after a broken
+    // `InputFormat.csv({...})`) no longer gets stranded on the value's closing line.
+    const multiline = context.textOf(node).includes('\n');
     return new OTree(['{'], context.convertAll(node.properties), {
-      suffix: context.mirrorNewlineBefore(node.properties[0], '}'),
-      separator: ', ',
+      suffix: '}',
+      separator: multiline ? ',' : ', ',
+      trailingSeparator: multiline,
       indent: 4,
     });
   }
@@ -745,9 +750,15 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
    */
   public override arrayLiteralExpression(node: ts.ArrayLiteralExpression, context: RubyVisitorContext): OTree {
     if (node.elements.length === 0) return new OTree(['[]']);
+    // Normalise the layout instead of mirroring the source's line breaks faithfully:
+    // if the literal spans multiple lines, put *every* element on its own line (and the
+    // `]` on its own line). Otherwise keep it inline. Mirroring produced inconsistent
+    // output — elements sharing a line while `]` dropped to a line of its own.
+    const multiline = context.textOf(node).includes('\n');
     return new OTree(['['], context.convertAll(node.elements), {
-      suffix: context.mirrorNewlineBefore(node.elements[0], ']'),
-      separator: ', ',
+      suffix: ']',
+      separator: multiline ? ',' : ', ',
+      trailingSeparator: multiline,
       indent: 4,
     });
   }
