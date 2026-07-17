@@ -344,6 +344,16 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
     if (node.type && ts.isTypeLiteralNode(node.type)) {
       return new OTree([context.convert(node.name), ' = {}']);
     }
+    // An uninitialised declaration (`declare const bucket: s3.IBucket`) is a "given" —
+    // something the reader supplies. Ruby has no type annotations, so keep the type as a
+    // trailing comment, e.g. `bucket = nil # AWSCDK::S3::IBucket`, instead of dropping it.
+    if (node.type && ts.isTypeReferenceNode(node.type)) {
+      const sym = lookupJsiiSymbolFromNode(context.typeChecker, node.type.typeName);
+      const rubyName = sym ? findRubyName(sym) : undefined;
+      if (rubyName) {
+        return new OTree([context.convert(node.name), ` = nil # ${rubyName}`]);
+      }
+    }
     return new OTree([context.convert(node.name), ' = nil']);
   }
 
