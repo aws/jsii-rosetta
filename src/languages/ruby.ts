@@ -69,66 +69,6 @@ const RUBY_RESERVED_NAMES = new Set([
   '__send__',
 ]);
 
-// Common AWS and CDK acronyms. Because Rosetta transliterates TypeScript snippets
-// on-the-fly without loading the full .jsii assemblies/dependency closures of the referenced
-// packages, it doesn't have access to dynamic targets.ruby.acronyms config. This list ensures
-// that namespaces in generated snippets match the correct PascalCasing of compiled Ruby gems.
-const CDK_ACRONYMS = [
-  'AWS',
-  'S3',
-  'IAM',
-  'VPC',
-  'CDK',
-  'SQS',
-  'SNS',
-  'EC2',
-  'RDS',
-  'KMS',
-  'ECS',
-  'EKS',
-  'EFS',
-  'ELB',
-  'WAF',
-  'SSM',
-  'SES',
-  'SAM',
-  'MSK',
-  'MWAA',
-  'ACM',
-  'EMR',
-  'FSX',
-  'QLDB',
-  'RAM',
-  'FMS',
-  'DAX',
-  'DMS',
-  'DLM',
-  'FIS',
-  'IVS',
-  'CUR',
-  'OAM',
-  'PCS',
-  'RUM',
-  'CE',
-  'APS',
-  'DSQL',
-  'ARN',
-  'API',
-  'DB',
-  'CIDR',
-  'IP',
-  'DNS',
-  'URL',
-  'URI',
-  'SSL',
-  'TLS',
-  'ALB',
-  'NLB',
-  'TCP',
-  'UDP',
-  'IPv4',
-];
-
 function toPascalCase(str: string) {
   return str.replace(/(^|[^a-zA-Z0-9]+)([a-zA-Z0-9])/g, (_, _sep, char) => char.toUpperCase());
 }
@@ -184,9 +124,11 @@ export function toSnakeCase(camel: string) {
  * Handles scoped packages (@scope/name -> Scope::Name), hyphens (jsii-calc -> JsiiCalc),
  * and capitalizes standard/dynamic acronyms while respecting word boundary rules.
  *
- * @param acronyms additional acronyms to recognise (e.g. from an assembly's
- *   `targets.ruby.acronyms`). They are merged with — and deduplicated against —
- *   the built-in `CDK_ACRONYMS` list, so the built-ins always apply.
+ * @param acronyms the acronyms to recognise, from the referenced assembly's
+ *   `targets.ruby.acronyms`. The assembly config is the single source of truth
+ *   for acronym casing (it is compiler-validated, library-specific data);
+ *   rosetta deliberately carries no built-in list — a snippet translated
+ *   without assembly info simply gets plain PascalCase.
  */
 export function rubyModuleName(name: string, acronyms: string[] = []): string {
   if (name.startsWith('@')) {
@@ -200,8 +142,8 @@ export function rubyModuleName(name: string, acronyms: string[] = []): string {
   const sanitized = name.replace(/[^a-zA-Z0-9_]/g, '');
   let pascal = sanitized.charAt(0) === sanitized.charAt(0).toUpperCase() ? sanitized : toPascalCase(sanitized);
 
-  const allAcronyms = [...new Set([...acronyms, ...CDK_ACRONYMS])];
-  // Restore uppercase casing to known acronyms (e.g., AWS, VPC, S3) in the PascalCase string.
+  const allAcronyms = [...new Set(acronyms)];
+  // Restore uppercase casing to the caller-declared acronyms in the PascalCase string.
   // We use word-boundary and next-character checks to avoid uppercase conversion inside unrelated
   // words (e.g., capitalizing 'SI' inside 'Simple').
   for (const acronym of allAcronyms) {
@@ -226,9 +168,14 @@ export function rubyModuleName(name: string, acronyms: string[] = []): string {
  * Best-effort Ruby module name for a jsii module FQN (e.g. `aws-cdk-lib.aws_s3`) when no
  * assembly is loaded. The core CDK library configures its Ruby names explicitly in
  * `.jsiirc.json` (`aws-cdk-lib` -> `AWSCDK`, `aws-s3` -> `S3`, dropping the redundant
- * service-level `aws` prefix); like `CDK_ACRONYMS` above, that config is unavailable
- * without the assemblies, so the dominant case is mirrored here to keep snippet
- * namespaces aligned with the compiled gems.
+ * service-level `aws` prefix); that config is unavailable without the assemblies, so the
+ * dominant case is mirrored here to keep snippet namespaces aligned with the compiled gems.
+ *
+ * NOTE: this special-casing is the one remaining piece of CDK-specific knowledge in this
+ * visitor, and it only affects snippets whose type references cannot be resolved to an
+ * assembly at all. The structural fix is for callers (which hold the assembly) to supply
+ * naming config for unresolved references; until that API exists, this guess keeps
+ * non-compiling README snippets readable.
  */
 export function guessRubyModuleName(fqn: string): string {
   const [packageName, ...submodulePath] = fqn.split('.');

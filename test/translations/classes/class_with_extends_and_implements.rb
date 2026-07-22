@@ -1,3 +1,3 @@
 class MyClass < SomeOtherClass
-  include CDK::SomeInterface
+  include Cdk::SomeInterface
 end

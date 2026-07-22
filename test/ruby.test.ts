@@ -48,26 +48,36 @@ describe('rubyModuleName', () => {
     ['homonymousForwardReferences', 'HomonymousForwardReferences'],
     // Hyphenated package names become a single concatenated module
     ['jsii-calc', 'JsiiCalc'],
-    // Known acronyms are upper-cased
-    ['s3', 'S3'],
-    ['vpc', 'VPC'],
-    ['iam', 'IAM'],
-    ['aws', 'AWS'],
+    // Without declared acronyms there is no acronym knowledge: plain PascalCase.
+    // Acronym casing is library data (`targets.ruby.acronyms` in the assembly),
+    // not something this visitor knows on its own.
+    ['s3', 'S3'], // single letter + digit pascals to S3 with no list involved
+    ['vpc', 'Vpc'],
+    ['iam', 'Iam'],
+    ['aws', 'Aws'],
   ])('formats %s -> %s', (input, expected) => {
     expect(rubyModuleName(input)).toBe(expected);
   });
 
   test('handles scoped package names (@scope/name)', () => {
-    expect(rubyModuleName('@aws-cdk/core')).toBe('AWSCDK::Core');
+    expect(rubyModuleName('@aws-cdk/core', ['AWS', 'CDK'])).toBe('AWSCDK::Core');
+    expect(rubyModuleName('@aws-cdk/core')).toBe('AwsCdk::Core');
   });
 
-  test('respects caller-supplied acronyms in addition to the built-in CDK list', () => {
-    // 'FOO' is not a built-in acronym; passing it should upper-case the segment.
+  test('declared acronyms are authoritative — the mechanism, with test-owned data', () => {
+    // Any caller-declared acronym is honoured...
     expect(rubyModuleName('myFoo', ['FOO'])).toBe('MyFOO');
-    // Built-in CDK acronyms still apply even when custom ones are supplied.
-    expect(rubyModuleName('s3', ['FOO'])).toBe('S3');
-    // A custom acronym that overlaps a built-in is deduplicated (applied once, not twice).
-    expect(rubyModuleName('s3', ['S3'])).toBe('S3');
+    expect(rubyModuleName('vpc', ['VPC'])).toBe('VPC');
+    // ...and an undeclared one has no effect, because there is no built-in list.
+    expect(rubyModuleName('vpc', ['FOO'])).toBe('Vpc');
+    // Duplicated declarations are applied once, not twice.
+    expect(rubyModuleName('vpc', ['VPC', 'VPC'])).toBe('VPC');
+  });
+
+  test('short acronyms do not over-match inside unrelated words', () => {
+    expect(rubyModuleName('certificate', ['CE'])).toBe('Certificate');
+    expect(rubyModuleName('database', ['DB'])).toBe('Database');
+    expect(rubyModuleName('ramp', ['RAM'])).toBe('Ramp');
   });
 });
 
@@ -77,7 +87,9 @@ describe('guessRubyModuleName', () => {
     // redundant service-level `aws` prefix dropped from submodules.
     ['aws-cdk-lib', 'AWSCDK'],
     ['aws-cdk-lib.aws_s3', 'AWSCDK::S3'],
-    ['aws-cdk-lib.aws_ec2', 'AWSCDK::EC2'],
+    // Without an assembly there is no acronym config, so multi-letter service
+    // names get plain PascalCase — an honest guess, not fake authority.
+    ['aws-cdk-lib.aws_ec2', 'AWSCDK::Ec2'],
     ['aws-cdk-lib.pipelines', 'AWSCDK::Pipelines'],
     // Non-CDK assemblies follow the default naming rules, with submodules nested via `::`.
     ['jsii-calc', 'JsiiCalc'],

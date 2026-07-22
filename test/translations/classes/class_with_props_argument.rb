@@ -1,4 +1,4 @@
-class MyClass < CDK::SomeOtherClass
+class MyClass < Cdk::SomeOtherClass
   def initialize(scope, id, props)
     super(scope, id, props)
 

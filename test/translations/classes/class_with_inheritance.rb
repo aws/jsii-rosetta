@@ -1,2 +1,2 @@
-class MyClass < CDK::SomeOtherClass
+class MyClass < Cdk::SomeOtherClass
 end

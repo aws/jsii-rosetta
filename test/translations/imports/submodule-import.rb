@@ -3,7 +3,7 @@ require 'jsii-calc'
 require_relative './.gen/providers/aws'
 
 # Access without existing type information
-aws_kms_key_examplekms = AWS::KMS::KMSKey.new(self, "examplekms", {
+aws_kms_key_examplekms = Aws::Kms::KmsKey.new(self, "examplekms", {
     deletion_window_in_days: 7,
     description: "KMS key 1",
 })
