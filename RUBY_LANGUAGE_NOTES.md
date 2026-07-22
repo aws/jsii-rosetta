@@ -81,22 +81,26 @@ them:
 | `a ?? b` | `a \|\| b` | invalid `a ?? b` + error |
 | `foo(...items)` | `foo(*items)` | `(SpreadElement …)` placeholder + error |
 | `{ ...opts, b: 2 }` | `{ **opts, b: 2 }` | `(SpreadAssignment …)` placeholder + error |
-| `i++` / `++i` | `i += 1` | `(PostfixUnaryExpression …)` placeholder + error / invalid `++i` |
-| `i--` / `--i` | `i -= 1` | invalid passthrough |
+| `i++` / `++i` | `i += 1` | invalid `i++` passed through + error / invalid `++i` |
+| `i--` / `--i` | `i -= 1` | invalid `i--` passed through + error / invalid `--i` |
 | `expr === other` | `expr == other` | (also handled by the base visitor) |
 
 These cases are covered by Ruby-only test fixtures under `test/translations/`
 (`expressions/strict_inequality_and_nullish`, `calls/spread_arguments`,
 `expressions/object_spread`, `expressions/increment_decrement`). We deliberately
 do **not** add `.py`/`.java`/`.cs`/`.go` fixtures for them, since that would
-codify the broken placeholder output as "expected".
+codify the broken output as "expected". (The non-Ruby fallback for ternaries
+and `++`/`--` is asserted by unit tests in `test/languages/default.test.ts`
+instead.)
 
-Note: `PostfixUnaryExpression` (`i++` / `i--`) was previously not dispatched by
-the renderer at all. Supporting it required a small shared change —
-`renderer.ts` (dispatch + `AstHandler`), a default `postfixUnaryExpression` in
-`default.ts` that reports it as unsupported, and the no-op pass-through in
-`visualize.ts`. Other languages therefore keep their existing "unsupported"
-behaviour; only Ruby translates it.
+Note: `PostfixUnaryExpression` (`i++` / `i--`) and `ConditionalExpression`
+(ternaries) were previously not dispatched by the renderer at all. Supporting
+them required a small shared change — `renderer.ts` (dispatch + `AstHandler`),
+default handlers in `default.ts` that report the node as unsupported and then
+fall back to the renderer's raw-source passthrough (via
+`AstRenderer.renderUnsupported`, exactly what undispatched nodes got), and the
+pass-throughs in `visualize.ts`. Other languages therefore keep their existing
+"unsupported" behaviour; only Ruby translates them.
 
 ### Object-literal diagnostics
 

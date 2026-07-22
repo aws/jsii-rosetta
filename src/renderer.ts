@@ -357,8 +357,19 @@ export class AstRenderer<C> {
         if (ts.isToken(tree)) {
           return visitor.token(tree, this);
         }
-        this.reportUnsupported(tree, undefined);
+        return this.renderUnsupported(tree, undefined);
     }
+  }
+
+  /**
+   * Fallback for a node that cannot be translated: report it, then render its source text
+   *
+   * This is the treatment nodes without a typed dispatch case receive; typed handlers
+   * that cannot translate a node (such as the `DefaultVisitor` ternary and postfix
+   * `++`/`--` handlers) call this to get the identical fallback.
+   */
+  public renderUnsupported(tree: ts.Node, language: TargetLanguage | undefined): OTree {
+    this.reportUnsupported(tree, language);
 
     if (this.options.bestEffort !== false) {
       // When doing best-effort conversion and we don't understand the node type, just return the complete text of it as-is

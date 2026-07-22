@@ -90,16 +90,18 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
 
   public postfixUnaryExpression(node: ts.PostfixUnaryExpression, context: AstRenderer<C>): OTree {
     // The only postfix unary operators are `++`/`--`, which most target languages
-    // cannot express. Default to reporting them as unsupported; languages that can
-    // translate them (e.g. Ruby's `+= 1`/`-= 1`) override this.
-    return this.notImplemented(node, context);
+    // cannot express. Report them as unsupported but keep the original source text,
+    // like nodes without a typed dispatch case; languages that can translate them
+    // (e.g. Ruby's `+= 1`/`-= 1`) override this.
+    return this.unsupported(node, context);
   }
 
   public conditionalExpression(node: ts.ConditionalExpression, context: AstRenderer<C>): OTree {
     // Ternaries don't translate uniformly across languages (e.g. Python uses a
-    // different word order). Report as unsupported by default; languages whose
-    // syntax matches (e.g. Ruby) override this.
-    return this.notImplemented(node, context);
+    // different word order). Report as unsupported but keep the original source text,
+    // like nodes without a typed dispatch case; languages whose syntax matches
+    // (e.g. Ruby) override this.
+    return this.unsupported(node, context);
   }
 
   public translateBinaryOperator(operator: string) {
@@ -374,6 +376,15 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
   private notImplemented(node: ts.Node, context: AstRenderer<C>) {
     context.reportUnsupported(node, this.language);
     return nimpl(node, context);
+  }
+
+  /**
+   * Report the node as unsupported, but render it the way the renderer treats
+   * nodes without a typed dispatch case: raw source text in best-effort mode
+   * (the default), an UnknownSyntax placeholder otherwise.
+   */
+  private unsupported(node: ts.Node, context: AstRenderer<C>) {
+    return context.renderUnsupported(node, this.language);
   }
 }
 
