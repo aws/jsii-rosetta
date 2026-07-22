@@ -1,5 +1,5 @@
 expected = {
     Foo: "Bar",
     Baz: 5,
-    Qux: ["Waldo", "Fred"]
+    Qux: ["Waldo", "Fred"],
 }

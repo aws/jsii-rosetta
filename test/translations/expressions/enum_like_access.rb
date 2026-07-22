@@ -1,1 +1,1 @@
-puts(EnumType::ENUM_VALUE_A)
+puts(EnumType.ENUM_VALUE_A)

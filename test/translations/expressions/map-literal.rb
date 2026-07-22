@@ -1,3 +1,3 @@
 map = {
-    "Access-Control-Allow-Origin" => "\"*\""
+    "Access-Control-Allow-Origin" => "\"*\"",
 }

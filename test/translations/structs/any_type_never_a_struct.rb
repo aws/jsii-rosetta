@@ -1,3 +1,3 @@
 function_that_takes_an_any({
-    argument: 5
+    argument: 5,
 })

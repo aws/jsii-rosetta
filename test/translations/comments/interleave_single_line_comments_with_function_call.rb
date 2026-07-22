@@ -3,5 +3,5 @@ some_function(arg1, {
     arg2: "string",
 
     # A comment before arg3
-    arg3: "boo"
+    arg3: "boo",
 })
