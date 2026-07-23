@@ -2,6 +2,7 @@ import { CSharpVisitor } from './csharp';
 import { GoVisitor } from './go';
 import { JavaVisitor } from './java';
 import { PythonVisitor } from './python';
+import { RubyVisitor } from './ruby';
 import { TargetLanguage } from './target-language';
 import { VisualizeAstVisitor } from './visualize';
 import { AstHandler } from '../renderer';
@@ -29,6 +30,10 @@ export const TARGET_LANGUAGES: { [key in TargetLanguage]: VisitorFactory } = {
   [TargetLanguage.GO]: {
     version: GoVisitor.VERSION,
     createVisitor: () => new GoVisitor(),
+  },
+  [TargetLanguage.RUBY]: {
+    version: RubyVisitor.VERSION,
+    createVisitor: () => new RubyVisitor(),
   },
 };
 

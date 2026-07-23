@@ -88,6 +88,36 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
     return UNARY_OPS[operator];
   }
 
+  public postfixUnaryExpression(node: ts.PostfixUnaryExpression, context: AstRenderer<C>): OTree {
+    // The only postfix unary operators are `++`/`--`, which most target languages
+    // cannot express. Report them as unsupported but keep the original source text,
+    // like nodes without a typed dispatch case; languages that can translate them
+    // (e.g. Ruby's `+= 1`/`-= 1`) override this.
+    return this.unsupported(node, context);
+  }
+
+  public conditionalExpression(node: ts.ConditionalExpression, context: AstRenderer<C>): OTree {
+    // Ternaries don't translate uniformly across languages (e.g. Python uses a
+    // different word order). Report as unsupported but keep the original source text,
+    // like nodes without a typed dispatch case; languages whose syntax matches
+    // (e.g. Ruby) override this.
+    return this.unsupported(node, context);
+  }
+
+  public arrowFunction(node: ts.ArrowFunction, context: AstRenderer<C>): OTree {
+    // Function values don't translate uniformly — most target languages model
+    // jsii callbacks as interface implementations, not bare functions. Report
+    // as unsupported by default (raw source text in best-effort mode, exactly
+    // as before this handler existed); languages with a natural lambda form
+    // (e.g. Ruby) override this.
+    return this.unsupported(node, context);
+  }
+
+  public functionExpression(node: ts.FunctionExpression, context: AstRenderer<C>): OTree {
+    // See arrowFunction.
+    return this.unsupported(node, context);
+  }
+
   public translateBinaryOperator(operator: string) {
     if (operator === '===') {
       return '==';
@@ -361,6 +391,15 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
     context.reportUnsupported(node, this.language);
     return nimpl(node, context);
   }
+
+  /**
+   * Report the node as unsupported, but render it the way the renderer treats
+   * nodes without a typed dispatch case: raw source text in best-effort mode
+   * (the default), an UnknownSyntax placeholder otherwise.
+   */
+  private unsupported(node: ts.Node, context: AstRenderer<C>) {
+    return context.renderUnsupported(node, this.language);
+  }
 }
 
 const UNARY_OPS: { [op in ts.PrefixUnaryOperator]: string } = {
@@ -388,7 +427,7 @@ const UNARY_OPS: { [op in ts.PrefixUnaryOperator]: string } = {
  * Array.isArray; // <- function type
  * ```
  */
-function isExpressionOfFunctionType(typeChecker: ts.TypeChecker, expr: ts.Expression) {
+export function isExpressionOfFunctionType(typeChecker: ts.TypeChecker, expr: ts.Expression) {
   const type = typeChecker.getTypeAtLocation(expr).getNonNullableType();
   return type.getCallSignatures().length > 0;
 }
