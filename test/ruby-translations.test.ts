@@ -28,6 +28,25 @@ describe('imports -> require', () => {
   test('relative imports use require_relative', () => {
     expect(toRuby("import { Foo } from './my-module';")).toContain("require_relative './my-module'");
   });
+
+  test('imports resolving to the same gem emit a single require', () => {
+    const ruby = toRuby(
+      ["import * as s3 from 'aws-cdk-lib/aws-s3';", "import * as sqs from 'aws-cdk-lib/aws-sqs';"].join('\n'),
+    );
+    // Regression: each import used to emit its own `require 'aws-cdk-lib'`.
+    expect(ruby.match(/require 'aws-cdk-lib'/g)).toHaveLength(1);
+    expect(ruby).not.toContain('\n\n');
+  });
+
+  test('require dedupe resets between snippets when a visitor is reused', () => {
+    // `translateMarkdown` renders every snippet in a document with a single
+    // visitor instance; a require emitted for one snippet must not suppress
+    // the same require in the next one.
+    const visitor = new RubyVisitor();
+    const snippet = { contents: "import * as cdk from 'aws-cdk-lib';", fileName: 'test.ts' };
+    translateTypeScript(snippet, visitor);
+    expect(translateTypeScript(snippet, visitor).translation).toContain("require 'aws-cdk-lib'");
+  });
 });
 
 describe('array literal formatting', () => {

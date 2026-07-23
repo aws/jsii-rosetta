@@ -1,5 +1,4 @@
 require 'jsii-calc'
-require 'jsii-calc'
 require_relative './.gen/providers/aws'
 
 # Access without existing type information

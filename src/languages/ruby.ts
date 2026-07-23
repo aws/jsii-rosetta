@@ -248,12 +248,27 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
   public readonly defaultContext = {};
   protected override statementTerminator = '';
 
+  /**
+   * `require` statements already emitted for the source file currently being rendered.
+   *
+   * Distinct import statements can resolve to the same gem (e.g. two submodule imports
+   * of `aws-cdk-lib`), and repeating the `require` would be noise in the translation.
+   * Reset per source file (in `sourceFile`) because a single visitor instance may render
+   * multiple snippets (e.g. `translateMarkdown` reuses one visitor for a whole document).
+   */
+  private readonly emittedRequires = new Set<string>();
+
   public constructor() {
     super();
   }
 
   public mergeContext(old: RubyLanguageContext, update: Partial<RubyLanguageContext>) {
     return Object.assign({}, old, update);
+  }
+
+  public override sourceFile(node: ts.SourceFile, context: RubyVisitorContext): OTree {
+    this.emittedRequires.clear();
+    return super.sourceFile(node, context);
   }
 
   /**
@@ -263,7 +278,7 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
    */
   public override importStatement(node: ImportStatement, _context: RubyVisitorContext): OTree {
     if (node.packageName.startsWith('.')) {
-      return new OTree([`require_relative '${node.packageName}'`], [], { canBreakLine: true });
+      return this.renderRequire(`require_relative '${node.packageName}'`);
     }
     // The specifier may address a submodule (e.g. `aws-cdk-lib/aws-s3tables`), but the
     // gem is the npm *package* — the submodule is autoloaded from it, there is no
@@ -273,7 +288,22 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
     const parts = node.packageName.split('/');
     const pkg = node.packageName.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
     const gemName = pkg.replace(/^@/, '').replace(/\//g, '-');
-    return new OTree([`require '${gemName}'`], [], { canBreakLine: true });
+    return this.renderRequire(`require '${gemName}'`);
+  }
+
+  /**
+   * Renders a `require`/`require_relative` line, deduplicating repeats within a source file.
+   *
+   * A duplicate renders as an empty OTree *without* `canBreakLine`: the renderer only
+   * attaches leading trivia (the preceding newline) to trees that can break the line,
+   * so the duplicate disappears without leaving a blank line behind.
+   */
+  private renderRequire(requireLine: string): OTree {
+    if (this.emittedRequires.has(requireLine)) {
+      return new OTree([]);
+    }
+    this.emittedRequires.add(requireLine);
+    return new OTree([requireLine], [], { canBreakLine: true });
   }
 
   /**
