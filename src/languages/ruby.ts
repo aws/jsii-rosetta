@@ -1013,6 +1013,49 @@ export class RubyVisitor extends DefaultVisitor<RubyLanguageContext> {
   }
 
   /**
+   * Translates arrow functions to Ruby lambdas: `(bell) => bell.ring()`
+   * becomes `->(bell) { bell.ring }`, and a block body becomes a multi-line
+   * lambda. Runnable output — the runtime coerces Procs into single-method
+   * interface implementations at jsii call sites, so a rendered lambda is a
+   * working callback, not just a visual approximation.
+   */
+  public override arrowFunction(node: ts.ArrowFunction, context: RubyVisitorContext): OTree {
+    return this.renderLambda(node, node.body, context);
+  }
+
+  /** Translates `function (a) { ... }` expressions exactly like arrows. */
+  public override functionExpression(node: ts.FunctionExpression, context: RubyVisitorContext): OTree {
+    return this.renderLambda(node, node.body, context);
+  }
+
+  private renderLambda(
+    node: ts.ArrowFunction | ts.FunctionExpression,
+    body: ts.ConciseBody,
+    context: RubyVisitorContext,
+  ): OTree {
+    // Only simple identifier parameters translate cleanly; destructuring,
+    // defaults and rest parameters fall back to the shared unsupported path
+    // (diagnostic + raw source text), same as any untranslatable node.
+    const simple = node.parameters.every(
+      (p) => ts.isIdentifier(p.name) && p.initializer == null && p.dotDotDotToken == null,
+    );
+    if (!simple) {
+      return context.renderUnsupported(node, TargetLanguage.RUBY);
+    }
+
+    const params = node.parameters.map((p) => toSnakeCase((p.name as ts.Identifier).text));
+    const head = params.length > 0 ? `->(${params.join(', ')}) ` : '-> ';
+
+    if (ts.isBlock(body)) {
+      return new OTree([head, '{'], [context.convert(body)], {
+        canBreakLine: true,
+        suffix: '\n}',
+      });
+    }
+    return new OTree([head, '{ ', context.convert(body), ' }']);
+  }
+
+  /**
    * Translates `if-else` statements to Ruby syntax.
    * Handles inline suffix `if` for single statements, `elsif` for else-if chains, and standard `if/else/end` blocks.
    */

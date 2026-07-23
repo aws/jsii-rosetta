@@ -12,6 +12,7 @@ import { translateTypeScript } from '../../lib/translate';
 
 const TERNARY = 'const x = a === b ? null : myValue;';
 const POSTFIX = 'let i = 0;\ni++;';
+const ARROW = 'foo({ produce: () => arnLookup });';
 
 describe.each([
   ['Python', () => new PythonVisitor()],
@@ -30,6 +31,14 @@ describe.each([
 
     expect(result.translation).toContain('i++');
     expect(result.translation).not.toContain('PostfixUnaryExpression');
+    expect(result.diagnostics.some((d) => d.formattedMessage.includes('not supported'))).toBe(true);
+  });
+
+  test('for an arrow function', () => {
+    const result = translateTypeScript({ contents: ARROW, fileName: 'test.ts' }, makeVisitor());
+
+    expect(result.translation).toContain('() => arnLookup');
+    expect(result.translation).not.toContain('ArrowFunction');
     expect(result.diagnostics.some((d) => d.formattedMessage.includes('not supported'))).toBe(true);
   });
 });
@@ -55,5 +64,36 @@ describe('Ruby overrides the fallback', () => {
 
     expect(result.translation).toContain('i += 1');
     expect(result.diagnostics).toHaveLength(0);
+  });
+
+  test('translates arrow functions to lambdas', () => {
+    // Plain arrow: no diagnostics at all.
+    const plain = translateTypeScript({ contents: 'const cb = () => arnLookup;', fileName: 'test.ts' }, new RubyVisitor());
+    expect(plain.translation).toContain('cb = -> { arn_lookup }');
+    expect(plain.diagnostics).toHaveLength(0);
+
+    // The TypeScript-object-literal callback mirror. (The untyped object
+    // literal itself carries rosetta's standard "cannot infer type" warning —
+    // unrelated to arrows — so only the rendering is asserted here.)
+    const literal = translateTypeScript({ contents: ARROW, fileName: 'test.ts' }, new RubyVisitor());
+    expect(literal.translation).toContain('produce: -> { arn_lookup }');
+    expect(literal.translation).not.toContain('=>');
+  });
+
+  test('translates a parameterised block-bodied arrow', () => {
+    const source = 'consumer.ring((bell) => {\n  bell.ring();\n  return true;\n});';
+    const result = translateTypeScript({ contents: source, fileName: 'test.ts' }, new RubyVisitor());
+
+    expect(result.translation).toContain('->(bell) {');
+    expect(result.translation).toContain('bell.ring');
+    expect(result.diagnostics).toHaveLength(0);
+  });
+
+  test('a destructuring arrow parameter falls back to raw source with a diagnostic', () => {
+    const source = 'foo(({ a }) => a);';
+    const result = translateTypeScript({ contents: source, fileName: 'test.ts' }, new RubyVisitor());
+
+    expect(result.translation).toContain('({ a }) => a');
+    expect(result.diagnostics.some((d) => d.formattedMessage.includes('not supported'))).toBe(true);
   });
 });

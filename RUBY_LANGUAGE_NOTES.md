@@ -117,11 +117,15 @@ These TypeScript constructs are not specifically handled by the Ruby visitor and
 fall back to the renderer's best-effort raw-text passthrough (the same limitation
 shared by the other language visitors):
 
-- `while`, classic `for (;;)`, `switch`, arrow / function expressions, object/
-  array destructuring, `typeof`, `delete`, and `enum` *declarations*. (In
-  practice the example corpus iterates with `for...of`, which **is** handled —
-  `xs.each do |x| … end`. The ternary `?:` is also handled — Ruby's syntax is
-  identical.)
+- `while`, classic `for (;;)`, `switch`, object/array destructuring (including
+  destructuring arrow parameters), `typeof`, `delete`, and `enum`
+  *declarations*. (In practice the example corpus iterates with `for...of`,
+  which **is** handled — `xs.each do |x| … end`. The ternary `?:` is also
+  handled — Ruby's syntax is identical. Arrow and function expressions with
+  simple parameters **are** handled: they render as Ruby lambdas —
+  `(bell) => bell.ring()` becomes `->(bell) { bell.ring }` — and the output is
+  runnable, because the Ruby runtime coerces Procs into single-method
+  interface implementations at jsii call sites.)
 
 The exported helpers `toSnakeCase` and `rubyModuleName` carry the trickiest logic
 (acronyms, scoped packages, reserved-word escaping) and have dedicated unit tests

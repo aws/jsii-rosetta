@@ -172,6 +172,14 @@ export class VisualizeAstVisitor implements AstHandler<void> {
     return this.defaultNode('conditionalExpression', node, context);
   }
 
+  public arrowFunction(node: ts.ArrowFunction, context: AstRenderer<void>): OTree {
+    return this.defaultNode('arrowFunction', node, context);
+  }
+
+  public functionExpression(node: ts.FunctionExpression, context: AstRenderer<void>): OTree {
+    return this.defaultNode('functionExpression', node, context);
+  }
+
   public spreadElement(node: ts.SpreadElement, context: AstRenderer<void>): OTree {
     return this.defaultNode('spreadElement', node, context);
   }

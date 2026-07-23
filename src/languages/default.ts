@@ -104,6 +104,20 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
     return this.unsupported(node, context);
   }
 
+  public arrowFunction(node: ts.ArrowFunction, context: AstRenderer<C>): OTree {
+    // Function values don't translate uniformly — most target languages model
+    // jsii callbacks as interface implementations, not bare functions. Report
+    // as unsupported by default (raw source text in best-effort mode, exactly
+    // as before this handler existed); languages with a natural lambda form
+    // (e.g. Ruby) override this.
+    return this.unsupported(node, context);
+  }
+
+  public functionExpression(node: ts.FunctionExpression, context: AstRenderer<C>): OTree {
+    // See arrowFunction.
+    return this.unsupported(node, context);
+  }
+
   public translateBinaryOperator(operator: string) {
     if (operator === '===') {
       return '==';
