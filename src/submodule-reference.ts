@@ -166,12 +166,15 @@ function isLikelyNamespace(node: ts.Node, typeChecker: ts.TypeChecker): boolean 
   }
 
   // If the identifier was bound to a symbol, we can inspect the declarations of
-  // it to validate they are all module or namespace declarations.
+  // it to validate they are all module or namespace declarations. Symbols may
+  // have no declarations at all (e.g. error symbols produced for property
+  // accesses into modules that could not be resolved), in which case we fall
+  // through to the name-based heuristic below.
   const symbol = typeChecker.getSymbolAtLocation(node);
-  if (symbol != null) {
+  if (symbol?.declarations != null) {
     return (
-      symbol.declarations!.length > 0 &&
-      symbol.declarations!.every(
+      symbol.declarations.length > 0 &&
+      symbol.declarations.every(
         (decl) => ts.isModuleDeclaration(decl) || ts.isNamespaceExport(decl) || ts.isNamespaceImport(decl),
       )
     );
