@@ -4894,8 +4894,8 @@ __metadata:
   linkType: soft
 
 "jsii@npm:~6.0.0":
-  version: 6.0.6
-  resolution: "jsii@npm:6.0.6"
+  version: 6.0.7
+  resolution: "jsii@npm:6.0.7"
   dependencies:
     "@jsii/check-node": "npm:1.139.0"
     "@jsii/spec": "npm:1.139.0"
@@ -4906,12 +4906,12 @@ __metadata:
     semver: "npm:^7.8.5"
     semver-intersect: "npm:^1.5.0"
     sort-json: "npm:^2.0.1"
-    spdx-license-list: "npm:^6.11.0"
+    spdx-license-list: "npm:^6.12.0"
     typescript: "npm:~6.0"
     yargs: "npm:^17.7.3"
   bin:
     jsii: bin/jsii
-  checksum: 10c0/7bcfad39be645b703f31bbda58eae9485119ade84d47ea6abf8f38cbf767147927dcf284574f884c386cb74628bcb246577ee06365514d39889cc078ffa913dc
+  checksum: 10c0/7f4e7d1711cd3ddf369bab8560e1a845198be75ae67552bde5b67374bbae08e28dedaa84239fbb9122b406e1f296b80251b173ef25279e155630330c261e8075
   languageName: node
   linkType: hard
 
@@ -6388,10 +6388,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spdx-license-list@npm:^6.11.0":
-  version: 6.11.0
-  resolution: "spdx-license-list@npm:6.11.0"
-  checksum: 10c0/2fcf0d162088aa5a827f8ccab9c6f8694c2f8da1eef39d999fb5502ededc985971281c80b8b01dbe6ecae10216f7697a11dc6084bdf993f14b094658674df066
+"spdx-license-list@npm:^6.12.0":
+  version: 6.12.0
+  resolution: "spdx-license-list@npm:6.12.0"
+  checksum: 10c0/e65657a6e4324ab00722dd9bf624a06d498014dee1a1ebdc89bbdd7c9816eee5a401839ef0f8b257f5a8bcb6976cad36937f434fd15ed11cee5f06ead8508926
   languageName: node
   linkType: hard
 
