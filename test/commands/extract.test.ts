@@ -614,6 +614,97 @@ describe('can find fqns via symbolId when ', () => {
       otherAssembly.cleanup();
     }
   });
+
+  test('there is no jsii.tsc in package.json (package uses jsii.tsconfig)', async () => {
+    const outDir = 'jsii-outDir';
+    const otherAssembly = createAssemblyWithDirectories(undefined, outDir);
+    try {
+      // Simulate a package that manages its own tsconfig.json (`jsii.tsconfig`):
+      // no `jsii.tsc` in package.json, and no tsconfig.json published to npm.
+      // The assembly still records `metadata.tscRootDir`, but make sure it does
+      // not record `metadata.tscOutDir` (newer compilers may write it, and this
+      // test must exercise the heuristic used for assemblies that lack it).
+      const packageJsonPath = path.join(otherAssembly.moduleDirectory, 'package.json');
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+      delete packageJson.jsii.tsc;
+      packageJson.jsii.tsconfig = 'tsconfig.json';
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+      delete (otherAssembly.assembly.metadata as any)?.tscOutDir;
+      otherAssembly.updateAssembly();
+
+      const outputFile = path.join(otherAssembly.moduleDirectory, 'test.tabl.json');
+      await extract.extractSnippets([otherAssembly.moduleDirectory], {
+        cacheToFile: outputFile,
+        ...defaultExtractOptions,
+      });
+
+      const tablet = await LanguageTablet.fromFile(outputFile);
+      const tr = tablet.tryGetSnippet(tablet.snippetKeys[0]);
+      expect(tr?.fqnsReferenced()).toEqual(['my_assembly.ClassA']);
+    } finally {
+      otherAssembly.cleanup();
+    }
+  });
+
+  test('outDir is only recorded in assembly metadata (tscOutDir)', async () => {
+    const outDir = 'jsii-outDir';
+    const otherAssembly = createAssemblyWithDirectories(undefined, outDir);
+    try {
+      // Simulate a `jsii.tsconfig` package built by a jsii compiler that
+      // records `tscOutDir` in the assembly metadata (symmetric with
+      // `tscRootDir`): no `jsii.tsc` in package.json, but the assembly
+      // carries the exact outDir.
+      const packageJsonPath = path.join(otherAssembly.moduleDirectory, 'package.json');
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+      delete packageJson.jsii.tsc;
+      packageJson.jsii.tsconfig = 'tsconfig.json';
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+      (otherAssembly.assembly.metadata as any).tscOutDir = outDir;
+      otherAssembly.updateAssembly();
+
+      const outputFile = path.join(otherAssembly.moduleDirectory, 'test.tabl.json');
+      await extract.extractSnippets([otherAssembly.moduleDirectory], {
+        cacheToFile: outputFile,
+        ...defaultExtractOptions,
+      });
+
+      const tablet = await LanguageTablet.fromFile(outputFile);
+      const tr = tablet.tryGetSnippet(tablet.snippetKeys[0]);
+      expect(tr?.fqnsReferenced()).toEqual(['my_assembly.ClassA']);
+    } finally {
+      otherAssembly.cleanup();
+    }
+  });
+
+  test('warns when the symbol id cannot be resolved at all', async () => {
+    const outDir = 'jsii-outDir';
+    const otherAssembly = createAssemblyWithDirectories(undefined, outDir);
+    const warningSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      // Remove every source of outDir/rootDir information: resolution is now impossible
+      const packageJsonPath = path.join(otherAssembly.moduleDirectory, 'package.json');
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+      delete packageJson.jsii.tsc;
+      fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+      delete (otherAssembly.assembly.metadata as any)?.tscRootDir;
+      delete (otherAssembly.assembly.metadata as any)?.tscOutDir;
+      otherAssembly.updateAssembly();
+
+      // Translate in-process so we can observe the warning
+      otherAssembly.translateHere(`
+        import { ClassA } from 'my_assembly';
+        new ClassA();
+      `);
+
+      expect(warningSpy).toHaveBeenCalledWith(expect.stringContaining('Could not resolve symbol id'));
+    } finally {
+      warningSpy.mockRestore();
+      otherAssembly.cleanup();
+    }
+  });
 });
 
 test('extract and infuse in one command', async () => {
