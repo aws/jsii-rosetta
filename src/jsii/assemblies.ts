@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import { loadAssemblyFromFile, loadAssemblyFromPath, findAssemblyFile } from '@jsii/spec';
 import * as spec from '@jsii/spec';
 import { fixturize } from '../fixtures';
+import * as logging from '../logging';
 import { extractTypescriptSnippetsFromMarkdown } from '../markdown/extract-snippets';
 import {
   TypeScriptSnippet,
@@ -306,6 +307,111 @@ function loadLookupAssembly(directory: string): TypeLookupAssembly | undefined {
   } catch {
     return undefined;
   }
+}
+
+/**
+ * Look up the jsii fqn for a given symbolId in a `TypeLookupAssembly`
+ *
+ * The symbolId as computed from the TypeScript AST is not guaranteed to
+ * match the symbolId recorded in the assembly: symbolIds in the assembly are
+ * relative to the package's source root (`rootDir`), while the symbolId
+ * computed by a consumer is derived from the shipped `.d.ts` files (under
+ * `outDir`).
+ *
+ * `symbolIdentifier()` normalizes the path if it can determine both `rootDir`
+ * and `outDir`, but packages that manage their own `tsconfig.json` (via
+ * `jsii.tsconfig`) don't have `jsii.tsc` in their `package.json`, and their
+ * `tsconfig.json` is typically not published to npm. In that case the computed
+ * symbolId comes out as (e.g.) `lib/construct:Construct` while the assembly
+ * records `src/construct:Construct`, and a direct map lookup misses.
+ *
+ * To compensate, if the direct lookup fails we try to reconstruct the source
+ * path ourselves:
+ *
+ * - If the assembly records the `outDir` in its metadata (`tscOutDir`, written
+ *   by newer jsii compilers, symmetric with `tscRootDir`), we re-root the path
+ *   exactly.
+ * - Otherwise (e.g. `constructs@10.8.0`), we only know the `rootDir`, so we
+ *   progressively strip leading path segments (candidate `outDir`s) from the
+ *   computed symbolId, prepend the `rootDir`, and accept the first candidate
+ *   that matches a symbolId recorded in the assembly.
+ */
+export function resolveSymbolIdFqn(lookup: TypeLookupAssembly, symbolId: string): string | undefined {
+  const direct = lookup.symbolIdMap[symbolId];
+  if (direct !== undefined) {
+    return direct;
+  }
+
+  const metadata = lookup.assembly.metadata as { tscRootDir?: string; tscOutDir?: string } | undefined;
+  const tsc = lookup.packageJson.jsii?.tsc;
+  const rootDir = splitPrefix(tsc?.rootDir ?? metadata?.tscRootDir);
+  if (rootDir === undefined) {
+    return undefined;
+  }
+
+  const parts = symbolId.split(':');
+  if (parts.length !== 2) {
+    return undefined;
+  }
+  const [fileName, typeName] = parts;
+  const segments = fileName.split('/');
+
+  const outDir = splitPrefix(tsc?.outDir ?? metadata?.tscOutDir);
+  if (outDir !== undefined) {
+    // We know the exact outDir: re-root the path and do a single lookup
+    if (!outDir.every((seg, i) => segments[i] === seg)) {
+      return undefined;
+    }
+    return lookup.symbolIdMap[`${[...rootDir, ...segments.slice(outDir.length)].join('/')}:${typeName}`];
+  }
+
+  // The outDir is unknown: try candidate outDirs of increasing depth
+  for (let strip = 0; strip <= segments.length - 1; strip++) {
+    const found = lookup.symbolIdMap[`${[...rootDir, ...segments.slice(strip)].join('/')}:${typeName}`];
+    if (found !== undefined) {
+      return found;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Split a relative directory prefix into segments, treating '', '.' and undefined appropriately
+ */
+function splitPrefix(dir: string | undefined): string[] | undefined {
+  if (dir === undefined) {
+    return undefined;
+  }
+  return dir.split('/').filter((seg) => seg !== '' && seg !== '.');
+}
+
+/**
+ * Symbol ids we have already warned about, so we only warn once per unique failure
+ */
+const REPORTED_UNRESOLVED_SYMBOL_IDS = new Set<string>();
+
+/**
+ * Warn (once per unique occurrence) that a symbolId could not be resolved against an assembly
+ *
+ * If we get here, the type demonstrably lives in a package with a jsii
+ * assembly, so we *should* have been able to resolve it. Failing to do so
+ * means the translation will silently fall back to guessing target names,
+ * which may well be wrong. Make that failure visible.
+ */
+export function reportUnresolvedSymbolId(lookup: TypeLookupAssembly, symbolId: string) {
+  const key = `${lookup.assembly.name}:${symbolId}`;
+  if (REPORTED_UNRESOLVED_SYMBOL_IDS.has(key)) {
+    return;
+  }
+  REPORTED_UNRESOLVED_SYMBOL_IDS.add(key);
+  logging.warn(
+    `Could not resolve symbol id ${JSON.stringify(symbolId)} against the assembly of ${JSON.stringify(
+      lookup.assembly.name,
+    )}. Target language names for this symbol will be guessed and may be incorrect. ` +
+      `To fix this, rebuild ${JSON.stringify(
+        lookup.assembly.name,
+      )} with an up-to-date jsii compiler, or report the issue to the library maintainers.`,
+  );
 }
 
 function findPackageJsonLocation(currentPath: string): string | undefined {

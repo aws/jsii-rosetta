@@ -2,7 +2,7 @@ import * as spec from '@jsii/spec';
 import { symbolIdentifier } from 'jsii/common';
 import * as ts from 'typescript';
 
-import { findTypeLookupAssembly, TypeLookupAssembly } from './assemblies';
+import { findTypeLookupAssembly, reportUnresolvedSymbolId, resolveSymbolIdFqn, TypeLookupAssembly } from './assemblies';
 import { ObjectLiteralStruct } from './jsii-types';
 import { AstRenderer } from '../renderer';
 import { typeContainsUndefined } from '../typescript/types';
@@ -214,7 +214,7 @@ export function lookupJsiiSymbol(typeChecker: ts.TypeChecker, sym: ts.Symbol): J
                 sym,
                 fmap(sourceAssembly, (sa) => ({ assembly: sa.assembly })),
               ),
-              (symbolId) => sourceAssembly?.symbolIdMap[symbolId],
+              (symbolId) => fmap(sourceAssembly, (sa) => resolveSymbolIdFqn(sa, symbolId)),
             ) ?? sourceAssembly?.assembly.name,
           sourceAssembly: asm,
           symbolType: 'module',
@@ -244,15 +244,24 @@ export function lookupJsiiSymbol(typeChecker: ts.TypeChecker, sym: ts.Symbol): J
   }
 
   return fmap(/([^#]*)(#.*)?/.exec(symbolId), ([, typeSymbolId, memberFragment]) => {
+    const fqn = fmap(sourceAssembly, (sa) => resolveSymbolIdFqn(sa, typeSymbolId));
+    if (fqn === undefined) {
+      // The symbol lives in a package that demonstrably has a jsii assembly,
+      // yet we cannot resolve it. Warn user about guessed target names.
+      if (sourceAssembly) {
+        reportUnresolvedSymbolId(sourceAssembly, typeSymbolId);
+      }
+      return undefined;
+    }
+
     if (memberFragment) {
-      return fmap(sourceAssembly?.symbolIdMap[typeSymbolId], (fqn) => ({
+      return {
         fqn: `${fqn}${memberFragment}`,
         sourceAssembly,
         symbolType: 'member',
-      }));
+      } as JsiiSymbol;
     }
-
-    return fmap(sourceAssembly?.symbolIdMap[typeSymbolId], (fqn) => ({ fqn, sourceAssembly, symbolType: 'type' }));
+    return { fqn, sourceAssembly, symbolType: 'type' } as JsiiSymbol;
   });
 }
 
