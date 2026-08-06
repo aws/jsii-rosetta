@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { inspect } from 'node:util';
 import * as ts from 'typescript';
 
-import { TARGET_LANGUAGES, TargetLanguage } from './languages';
+import { TargetLanguage, visitorFactoryFor } from './languages';
 import { RecordReferencesVisitor } from './languages/record-references';
 import { supportsTransitiveSubmoduleAccess } from './languages/target-language';
 import * as logging from './logging';
@@ -128,7 +128,10 @@ export class Translator {
         if (array.slice(0, idx).includes(lang)) {
           return [];
         }
-        const languageConverterFactory = TARGET_LANGUAGES[lang];
+        const languageConverterFactory = visitorFactoryFor(lang);
+        if (languageConverterFactory === undefined) {
+          throw new Error(`Unknown target language: ${lang}`);
+        }
         const translated = translator.renderUsing(languageConverterFactory.createVisitor());
         return [[lang, { source: translated, version: languageConverterFactory.version }] as const];
       }),
