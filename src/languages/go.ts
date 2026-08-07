@@ -82,7 +82,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '1';
+  public static readonly VERSION = '2';
 
   public readonly indentChar = '\t';
 
@@ -191,11 +191,13 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
   }
 
   public override newExpression(node: ts.NewExpression, renderer: GoRenderer): OTree {
-    const { classNamespace, className } = determineClassName.call(this, node.expression);
+    const { classNamespace, className, unexported } = determineClassName.call(this, node.expression);
     return new OTree(
       [
         ...(classNamespace ? [classNamespace, '.'] : []),
-        'New', // Should this be "new" if the class is unexported?
+        // Constructors of unexported (snippet-local) classes render unexported
+        // (see constructorDeclaration) — the call site must match.
+        unexported ? 'new' : 'New',
         className,
         '(',
       ],
@@ -203,7 +205,10 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
       { canBreakLine: true, separator: ', ', suffix: ')' },
     );
 
-    function determineClassName(this: GoVisitor, expr: ts.Expression): { classNamespace?: OTree; className: string } {
+    function determineClassName(
+      this: GoVisitor,
+      expr: ts.Expression,
+    ): { classNamespace?: OTree; className: string; unexported?: boolean } {
       if (ts.isIdentifier(expr)) {
         // Imported names are referred to by the original (i.e: exported) name, qualified with the source module's go
         // package name.
@@ -225,7 +230,18 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
           };
         }
 
-        return { className: ucFirst(expr.text) };
+        // A snippet-local class renders an unexported constructor. Classes
+        // that model library types (jsii-resolvable, incl. 'fake-from-jsii'
+        // test fixtures) keep the exported naming even when declared
+        // unexported in the snippet.
+        const classDeclaration = symbol?.declarations?.find(ts.isClassDeclaration);
+        return {
+          className: ucFirst(expr.text),
+          unexported:
+            classDeclaration != null &&
+            !isExported(classDeclaration) &&
+            lookupJsiiSymbolFromNode(renderer.typeChecker, expr) == null,
+        };
       }
       if (ts.isPropertyAccessExpression(expr)) {
         if (ts.isIdentifier(expr.expression)) {
@@ -615,14 +631,20 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
   public override binaryExpression(node: ts.BinaryExpression, renderer: AstRenderer<GoLanguageContext>): OTree {
     if (node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
       const symbol = symbolFor(renderer.typeChecker, node.left);
+      // Parameters and properties are pointer-valued: a pointer-valued RHS
+      // must not be dereferenced (isPtrAssignmentRValue), and a literal RHS
+      // must be wrapped (wrapPtr) — `this.env = "production"` needs
+      // `jsii.String("production")`, not a raw literal.
+      const pointerTarget =
+        symbol?.valueDeclaration != null &&
+        (ts.isParameter(symbol.valueDeclaration) || ts.isPropertyDeclaration(symbol.valueDeclaration));
       return new OTree([
         renderer.convert(node.left),
         ' = ',
         renderer
           .updateContext({
-            isPtrAssignmentRValue:
-              symbol?.valueDeclaration &&
-              (ts.isParameter(symbol.valueDeclaration) || ts.isPropertyDeclaration(symbol.valueDeclaration)),
+            isPtrAssignmentRValue: pointerTarget,
+            wrapPtr: pointerTarget || renderer.currentContext.wrapPtr,
           })
           .convert(node.right),
       ]);
