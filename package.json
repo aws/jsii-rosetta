@@ -55,7 +55,6 @@
     "mock-fs": "^5.5.0",
     "prettier": "^2.8.8",
     "projen": "^0.104.1",
-    "tar": "^6.2.1",
     "ts-jest": "^29",
     "ts-node": "^10.9.2"
   },
@@ -70,6 +69,7 @@
     "semver": "^7.8.5",
     "semver-intersect": "^1.5.0",
     "stream-json": "^3.7.0",
+    "tar": "^6.2.1",
     "typescript": "~6.0",
     "workerpool": "^6.5.1",
     "yargs": "^17.7.3"

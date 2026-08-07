@@ -56,7 +56,7 @@ export const SUPPORTED_LANGUAGES = new Array<SupportedLanguage>(
   },
 );
 
-const translationsRoot = path.join(__dirname, 'translations');
+const translationsRoot = path.join(__dirname, '..', 'corpus');
 const typeScriptTests = allFiles(translationsRoot)
   .filter((f) => f.endsWith('.ts') && !f.endsWith('.d.ts'))
   .filter((f) => !f.endsWith('.test.ts')); // Exclude self and other jest tests in this dir

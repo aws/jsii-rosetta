@@ -276,7 +276,7 @@
             "--peer",
             "--no-deprecated",
             "--dep=dev,prod,peer,optional",
-            "--filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/tar,@types/workerpool,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,tar,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
+            "--filter=@actions/core,@actions/github,@types/commonmark,@types/jest,@types/mock-fs,@types/semver,@types/tar,@types/workerpool,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint-plugin-unicorn,fs-monkey,jest,memfs,mock-fs,prettier,projen,ts-jest,ts-node,@xmldom/xmldom,commonmark,fast-glob,semver,semver-intersect,stream-json,workerpool,yargs"
           ]
         },
         {
@@ -311,7 +311,6 @@
             "mock-fs",
             "prettier",
             "projen",
-            "tar",
             "ts-jest",
             "ts-node",
             "@xmldom/xmldom",
@@ -321,6 +320,7 @@
             "semver",
             "semver-intersect",
             "stream-json",
+            "tar",
             "workerpool",
             "yargs"
           ]
