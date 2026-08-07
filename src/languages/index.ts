@@ -49,17 +49,12 @@ const EXTERNAL_TARGET_LANGUAGES: Record<string, VisitorFactory> = {};
  *                 built-in language.
  * @param factory  the visitor factory for the language.
  */
-export function registerTargetLanguage(
-  language: string,
-  factory: VisitorFactory,
-): void {
+export function registerTargetLanguage(language: string, factory: VisitorFactory): void {
   if (!language) {
     throw new Error('Cannot register a target language with an empty name');
   }
   if (Object.values(TargetLanguage).includes(language as TargetLanguage)) {
-    throw new Error(
-      `Cannot register target language '${language}': collides with a built-in language`,
-    );
+    throw new Error(`Cannot register target language '${language}': collides with a built-in language`);
   }
   if (language in EXTERNAL_TARGET_LANGUAGES) {
     throw new Error(`Target language '${language}' is already registered`);
@@ -72,29 +67,21 @@ export function registerTargetLanguage(
  * `undefined` if the language is unknown.
  */
 export function visitorFactoryFor(language: string): VisitorFactory | undefined {
-  return (
-    (TARGET_LANGUAGES as Record<string, VisitorFactory>)[language] ??
-    EXTERNAL_TARGET_LANGUAGES[language]
-  );
+  return (TARGET_LANGUAGES as Record<string, VisitorFactory>)[language] ?? EXTERNAL_TARGET_LANGUAGES[language];
 }
 
 /**
  * All currently valid target language names (built-in and registered).
  */
 export function allTargetLanguages(): string[] {
-  return [
-    ...Object.values(TargetLanguage),
-    ...Object.keys(EXTERNAL_TARGET_LANGUAGES),
-  ];
+  return [...Object.values(TargetLanguage), ...Object.keys(EXTERNAL_TARGET_LANGUAGES)];
 }
 
 export function getVisitorFromLanguage(language: string | undefined) {
   if (language !== undefined) {
     const factory = visitorFactoryFor(language);
     if (factory === undefined) {
-      throw new Error(
-        `Unknown target language: ${language}. Expected one of ${allTargetLanguages().join(', ')}`,
-      );
+      throw new Error(`Unknown target language: ${language}. Expected one of ${allTargetLanguages().join(', ')}`);
     }
     return factory.createVisitor();
   }
