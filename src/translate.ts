@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { inspect } from 'node:util';
 import * as ts from 'typescript';
 
-import { TargetLanguage, visitorFactoryFor } from './languages';
+import { allTargetLanguages, TargetLanguage, visitorFactoryFor } from './languages';
 import { RecordReferencesVisitor } from './languages/record-references';
 import { supportsTransitiveSubmoduleAccess } from './languages/target-language';
 import * as logging from './logging';
@@ -45,6 +45,19 @@ export function translateTypeScript(
  * Can be configured to fully typecheck the samples, or perform only syntactical
  * translation.
  */
+/**
+ * The languages a translation covers when the caller does not name any.
+ *
+ * Sourced from the language REGISTRY, not the built-in `TargetLanguage` enum:
+ * an externally registered language (a jsii-pacmak language plugin) must be
+ * translated by default too, otherwise registering it has no effect on the
+ * paths callers actually use and its snippets silently come back as the
+ * original TypeScript.
+ */
+function defaultTargetLanguages(): readonly TargetLanguage[] {
+  return allTargetLanguages() as TargetLanguage[];
+}
+
 export class Translator {
   private readonly compiler = new TypeScriptCompiler();
   #diagnostics: ts.Diagnostic[] = [];
@@ -72,7 +85,7 @@ export class Translator {
   /**
    * Translates a single snippet in its own TS context.
    */
-  public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
+  public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = defaultTargetLanguages()) {
     const translator = this.translatorFor(snip);
     const translated = this.translateSnippet(snip, translator, languages);
     return translated;
@@ -83,7 +96,7 @@ export class Translator {
    */
   public translateSnippets(
     snippets: TypeScriptSnippet[],
-    languages: readonly TargetLanguage[] = Object.values(TargetLanguage),
+    languages: readonly TargetLanguage[] = defaultTargetLanguages(),
   ): TranslatedSnippet[] {
     const start = performance.now();
     logging.debug(`Translating batch of ${snippets.length} snippets`);
@@ -102,7 +115,7 @@ export class Translator {
 
   private translateBatch(
     snippets: TypeScriptSnippet[],
-    languages: readonly TargetLanguage[] = Object.values(TargetLanguage),
+    languages: readonly TargetLanguage[] = defaultTargetLanguages(),
   ): TranslatedSnippet[] {
     const translatedSnippets: TranslatedSnippet[] = [];
 
