@@ -192,7 +192,12 @@ export class RosettaTranslator {
 
     let result;
     try {
-      result = await translateAll(snippets, this.includeCompilerDiagnostics, options?.batchSize);
+      result = await translateAll(
+        snippets,
+        this.includeCompilerDiagnostics,
+        options?.batchSize,
+        options?.pluginModules,
+      );
     } finally {
       process.chdir(origDir);
       if (cleanCompilationDir) {
@@ -313,6 +318,17 @@ export interface ReadFromCacheResults {
 }
 
 export interface TranslateAllOptions {
+  /**
+   * Modules to load in each translation worker before translating.
+   *
+   * Worker threads are fresh module contexts, so an externally registered
+   * target language has to be registered again in each of them; without this
+   * the language is silently absent from everything that is translated.
+   *
+   * @default - none
+   */
+  readonly pluginModules?: readonly string[];
+
   /**
    * @default - Create a temporary directory with all necessary packages
    */

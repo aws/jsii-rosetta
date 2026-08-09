@@ -22,6 +22,17 @@ export interface ExtractResult {
 }
 
 export interface ExtractOptions {
+  /**
+   * Modules to load in each translation worker before translating.
+   *
+   * Worker threads are fresh module contexts, so an externally registered
+   * target language has to be registered again in each of them; without this
+   * the language is silently absent from everything that is translated.
+   *
+   * @default - none
+   */
+  readonly pluginModules?: readonly string[];
+
   readonly includeCompilerDiagnostics?: boolean;
   readonly validateAssemblies?: boolean;
   readonly only?: string[];
@@ -192,6 +203,7 @@ export async function extractSnippets(
       compilationDirectory: options.compilationDirectory,
       cleanup: options.cleanup,
       batchSize: options.batchSize,
+      pluginModules: options.pluginModules,
     });
 
     const delta = (Date.now() - startTime) / 1000;

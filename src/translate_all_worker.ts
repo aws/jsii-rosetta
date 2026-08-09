@@ -18,6 +18,30 @@ export interface TranslateBatchRequest {
   readonly includeCompilerDiagnostics: boolean;
   readonly logLevel?: logging.Level;
   readonly batchSize?: number;
+
+  /**
+   * Modules to load before translating, so that the languages they register
+   * exist in this worker.
+   *
+   * A worker is a fresh module context: languages registered in the main
+   * thread are not present here, and an externally registered language would
+   * otherwise be silently missing from every translation this worker produces.
+   */
+  readonly pluginModules?: readonly string[];
+}
+
+/** Plugin modules already loaded in this worker; loading twice is wasteful. */
+const loadedPlugins = new Set<string>();
+
+function loadPlugins(pluginModules: readonly string[] = []) {
+  for (const pluginModule of pluginModules) {
+    if (loadedPlugins.has(pluginModule)) {
+      continue;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require(pluginModule);
+    loadedPlugins.add(pluginModule);
+  }
 }
 
 export interface TranslateBatchResponse {
@@ -29,6 +53,8 @@ export interface TranslateBatchResponse {
 function translateBatch(request: TranslateBatchRequest): TranslateBatchResponse {
   // because we are in a worker process we need to explicitly configure the log level again
   logging.configure({ level: request.logLevel ?? logging.Level.QUIET, prefix: request.workerName });
+
+  loadPlugins(request.pluginModules);
 
   if (process.env.TIMING === '1' && request.batchSize) {
     logging.warn('TIMING=1 is not supported in batch compilation mode');
