@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import * as spec from '@jsii/spec';
 
 import { TypeFingerprinter } from './jsii/fingerprinting';
-import { TARGET_LANGUAGES } from './languages';
+import { allTargetLanguages, visitorFactoryFor } from './languages';
 import * as logging from './logging';
 import { TypeScriptSnippet, completeSource } from './snippet';
 import {
@@ -264,8 +264,14 @@ function tryReadFromCache(
   }
 
   const dirtySource = completeSource(sourceSnippet) !== fromCache.snippet.fullSource;
-  const dirtyTranslator = !Object.entries(TARGET_LANGUAGES).every(
-    ([lang, translator]) => fromCache.snippet.translations?.[lang]?.version === translator.version,
+  // Every registered language, not just the built-in ones: a library's shipped
+  // tablet was translated for the languages that existed when it was
+  // published, so an externally registered language is missing from all of
+  // them. Comparing only the built-ins made every such snippet a cache hit,
+  // and it was then copied to the output untranslated — an extract that
+  // "succeeded" in seconds having translated almost nothing.
+  const dirtyTranslator = !allTargetLanguages().every(
+    (lang) => fromCache.snippet.translations?.[lang]?.version === visitorFactoryFor(lang)?.version,
   );
   const dirtyTypes = fingerprinter.fingerprintAll(fromCache.fqnsReferenced()) !== fromCache.snippet.fqnsFingerprint;
   const dirtyDidntCompile = compiledOnly && !fromCache.snippet.didCompile;
