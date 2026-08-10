@@ -23,6 +23,7 @@ export async function translateAll(
   includeCompilerDiagnostics: boolean,
   batchSize?: number,
   pluginModules?: readonly string[],
+  assemblyLocations?: readonly string[],
 ): Promise<TranslateAllResult> {
   // Use about half the advertised cores because hyperthreading doesn't seem to
   // help that much, or we become I/O-bound at some point. On my machine, using
@@ -47,6 +48,7 @@ export async function translateAll(
       batchSize,
       shouldBatchCompilation,
       pluginModules,
+      assemblyLocations,
     );
 
     const responses: TranslateBatchResponse[] = await Promise.all(
@@ -82,6 +84,7 @@ function batchSnippets(
   batchSize = 10,
   shouldBatchCompilation: boolean = false,
   pluginModules?: readonly string[],
+  assemblyLocations?: readonly string[],
 ): TranslateBatchRequest[] {
   const logLevel = logging.current();
   const ret: TranslateBatchRequest[] = [];
@@ -96,6 +99,7 @@ function batchSnippets(
       logLevel,
       batchSize: shouldBatchCompilation ? batchSize : undefined,
       pluginModules,
+      assemblyLocations,
     });
   }
 

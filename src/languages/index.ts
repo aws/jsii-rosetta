@@ -11,6 +11,30 @@ export { TargetLanguage };
 export interface VisitorFactory {
   readonly version: string;
   createVisitor(): AstHandler<any>;
+
+  /**
+   * Told what this process is translating for, before any translation happens.
+   *
+   * Optional, and no built-in language implements it: Java and C# reach a type
+   * through a namespace import, and none of them render an enum member
+   * differently from a static property, so the assembly tells them nothing
+   * they need. A language where those differ has no other source for the
+   * answer, because a published example does not typecheck.
+   *
+   * May be called more than once (a worker handles many batches), so
+   * implementations must be idempotent.
+   */
+  prepare?(context: LanguageContext): void;
+}
+
+/** What a language is translating for. */
+export interface LanguageContext {
+  /**
+   * Package directories of the assemblies whose examples are being translated.
+   * Locations rather than loaded assemblies: an assembly runs to tens of
+   * megabytes, and a language should read only the parts it needs.
+   */
+  readonly assemblyLocations: readonly string[];
 }
 
 export const TARGET_LANGUAGES: { [key in TargetLanguage]: VisitorFactory } = {

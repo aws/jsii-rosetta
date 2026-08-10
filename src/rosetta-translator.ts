@@ -197,6 +197,7 @@ export class RosettaTranslator {
         this.includeCompilerDiagnostics,
         options?.batchSize,
         options?.pluginModules,
+        options?.assemblyLocations,
       );
     } finally {
       process.chdir(origDir);
@@ -334,6 +335,17 @@ export interface TranslateAllOptions {
    * @default - none
    */
   readonly pluginModules?: readonly string[];
+
+  /**
+   * Package directories of the assemblies whose examples are being translated,
+   * offered to any registered language that asks for them (`VisitorFactory.prepare`).
+   *
+   * A published example generally does not typecheck, so for some languages
+   * the assembly is the only thing that can say what a name refers to.
+   *
+   * @default - none
+   */
+  readonly assemblyLocations?: readonly string[];
 
   /**
    * @default - Create a temporary directory with all necessary packages

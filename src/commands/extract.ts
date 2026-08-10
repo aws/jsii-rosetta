@@ -204,6 +204,8 @@ export async function extractSnippets(
       cleanup: options.cleanup,
       batchSize: options.batchSize,
       pluginModules: options.pluginModules,
+      // Already in hand: `extractSnippets` is given these to find snippets in.
+      assemblyLocations,
     });
 
     const delta = (Date.now() - startTime) / 1000;
