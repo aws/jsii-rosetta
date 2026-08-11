@@ -1590,11 +1590,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 26.1.2
-  resolution: "@types/node@npm:26.1.2"
+  version: 26.2.0
+  resolution: "@types/node@npm:26.2.0"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10c0/a45503222c7db8f374afd5c9381db63dd95b6b1f703abea0890dd3d4a09eeb41da489e08a1a45baf18fe89fb77fbf310ff2789f680c490b04dafc41a60800a86
+  checksum: 10c0/f8566d88162241eb55a46f7e4ea097188eab0aaafefea7a58e63adab8c4144eb98c08b7911452c846104c339a0f82282f5e1ed4b26b578d60709614fe2843f4d
   languageName: node
   linkType: hard
 
@@ -4878,7 +4878,7 @@ __metadata:
     memfs: "npm:^4.68.0"
     mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
-    projen: "npm:^0.101.27"
+    projen: "npm:^0.101.29"
     semver: "npm:^7.8.5"
     semver-intersect: "npm:^1.5.0"
     stream-json: "npm:^1.9.1"
@@ -5825,9 +5825,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.101.27":
-  version: 0.101.27
-  resolution: "projen@npm:0.101.27"
+"projen@npm:^0.101.29":
+  version: 0.101.29
+  resolution: "projen@npm:0.101.29"
   dependencies:
     "@iarna/toml": "npm:^2.2.5"
     case: "npm:^1.6.3"
@@ -5848,7 +5848,7 @@ __metadata:
     constructs: ^10.5.0
   bin:
     projen: bin/projen
-  checksum: 10c0/ff24871b0b1601196bf59e0b1b239c2ad5e040114c772c66dda9b1f4556981b9ce1f39e629cbcc1a984e4e549b98fc88313d4788c8d0b197ec1763b4657ef667
+  checksum: 10c0/2886a1dc0d5c7c2ebf8fff6cf18aecc3194b42a2ab1f82e7d8f956a1a25d77f498d4efa151f361e672173060d48071c67794397dcc74d6036859d0420e2d159e
   languageName: node
   linkType: hard
 
