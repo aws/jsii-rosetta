@@ -326,6 +326,14 @@ export class AstRenderer<C> {
         return visitor.asExpression(tree as ts.AsExpression, this);
       case ts.SyntaxKind.PrefixUnaryExpression:
         return visitor.prefixUnaryExpression(tree as ts.PrefixUnaryExpression, this);
+      case ts.SyntaxKind.PostfixUnaryExpression:
+        return visitor.postfixUnaryExpression(tree as ts.PostfixUnaryExpression, this);
+      case ts.SyntaxKind.ConditionalExpression:
+        return visitor.conditionalExpression(tree as ts.ConditionalExpression, this);
+      case ts.SyntaxKind.ArrowFunction:
+        return visitor.arrowFunction(tree as ts.ArrowFunction, this);
+      case ts.SyntaxKind.FunctionExpression:
+        return visitor.functionExpression(tree as ts.FunctionExpression, this);
       case ts.SyntaxKind.SpreadAssignment:
         if (this.textOf(tree) === '...') {
           return visitor.ellipsis(tree as ts.SpreadAssignment, this);
@@ -353,8 +361,19 @@ export class AstRenderer<C> {
         if (ts.isToken(tree)) {
           return visitor.token(tree, this);
         }
-        this.reportUnsupported(tree, undefined);
+        return this.renderUnsupported(tree, undefined);
     }
+  }
+
+  /**
+   * Fallback for a node that cannot be translated: report it, then render its source text
+   *
+   * This is the treatment nodes without a typed dispatch case receive; typed handlers
+   * that cannot translate a node (such as the `DefaultVisitor` ternary and postfix
+   * `++`/`--` handlers) call this to get the identical fallback.
+   */
+  public renderUnsupported(tree: ts.Node, language: TargetLanguage | undefined): OTree {
+    this.reportUnsupported(tree, language);
 
     if (this.options.bestEffort !== false) {
       // When doing best-effort conversion and we don't understand the node type, just return the complete text of it as-is
@@ -474,6 +493,10 @@ export interface AstHandler<C> {
   methodSignature(node: ts.MethodSignature, context: AstRenderer<C>): OTree;
   asExpression(node: ts.AsExpression, context: AstRenderer<C>): OTree;
   prefixUnaryExpression(node: ts.PrefixUnaryExpression, context: AstRenderer<C>): OTree;
+  postfixUnaryExpression(node: ts.PostfixUnaryExpression, context: AstRenderer<C>): OTree;
+  conditionalExpression(node: ts.ConditionalExpression, context: AstRenderer<C>): OTree;
+  arrowFunction(node: ts.ArrowFunction, context: AstRenderer<C>): OTree;
+  functionExpression(node: ts.FunctionExpression, context: AstRenderer<C>): OTree;
   spreadElement(node: ts.SpreadElement, context: AstRenderer<C>): OTree;
   spreadAssignment(node: ts.SpreadAssignment, context: AstRenderer<C>): OTree;
   templateExpression(node: ts.TemplateExpression, context: AstRenderer<C>): OTree;

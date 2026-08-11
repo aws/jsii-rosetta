@@ -54,6 +54,11 @@ export const SUPPORTED_LANGUAGES = new Array<SupportedLanguage>(
     extension: '.go',
     visitorFactory: TARGET_LANGUAGES[TargetLanguage.GO],
   },
+  {
+    name: 'Ruby',
+    extension: '.rb',
+    visitorFactory: TARGET_LANGUAGES[TargetLanguage.RUBY],
+  },
 );
 
 const translationsRoot = path.join(__dirname, 'translations');

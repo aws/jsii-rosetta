@@ -5,17 +5,19 @@ export enum TargetLanguage {
   CSHARP = 'csharp',
   JAVA = 'java',
   GO = 'go',
+  RUBY = 'ruby',
   /** @internal an alias of PYTHON to make intent clear when language is irrelevant, must be last */
   VISUALIZE = 'python',
 }
 
 const VALID_TARGET_LANGUAGES = new Set(Object.values(TargetLanguage));
 
-export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go';
+export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go' | 'ruby';
 export function targetName(language: TargetLanguage.PYTHON): 'python';
 export function targetName(language: TargetLanguage.CSHARP): 'dotnet';
 export function targetName(language: TargetLanguage.JAVA): 'java';
 export function targetName(language: TargetLanguage.GO): 'go';
+export function targetName(language: TargetLanguage.RUBY): 'ruby';
 /** @internal an alias of PYTHON to make intent clear when language is irrelevant, must be last override */
 export function targetName(language: TargetLanguage.VISUALIZE): 'python';
 
@@ -24,8 +26,8 @@ export function targetName(language: TargetLanguage.VISUALIZE): 'python';
  *
  * @returns the name of the target configuration block for the given language.
  */
-export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go';
-export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go' {
+export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go' | 'ruby';
+export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'java' | 'go' | 'ruby' {
   // The TypeScript compiler should guarantee the below `switch` statement covers all possible
   // values of the TargetLanguage enum, but we add an assert here for clarity of intent.
   assert(VALID_TARGET_LANGUAGES.has(language), `Invalid/unexpected target language identifier: ${language}`);
@@ -40,6 +42,8 @@ export function targetName(language: TargetLanguage): 'python' | 'dotnet' | 'jav
       return 'java';
     case TargetLanguage.GO:
       return 'go';
+    case TargetLanguage.RUBY:
+      return 'ruby';
   }
 }
 
@@ -71,6 +75,8 @@ export function supportsTransitiveSubmoduleAccess(language: TargetLanguage): boo
     case TargetLanguage.PYTHON:
       return true;
     case TargetLanguage.CSHARP:
+      return true;
+    case TargetLanguage.RUBY:
       return true;
     case TargetLanguage.JAVA:
       return false;

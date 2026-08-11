@@ -1,0 +1,1 @@
+TakingClass3.new({input: ProvidedClass.new})

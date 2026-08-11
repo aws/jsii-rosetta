@@ -60,6 +60,7 @@ test('Can use preloaded tablet', () => {
       csharp: 'Not Really Translated C#',
       java: 'Not Really Translated Java',
       go: 'Not Really Translated Go',
+      ruby: 'Not Really Translated Ruby',
     }),
   );
   rosetta.addTablet(tablet);
@@ -232,6 +233,7 @@ describe('with mocked filesystem', () => {
       csharp: 'My Stored Translation C#',
       java: 'My Stored Translation Java',
       go: 'My Stored Translation Go',
+      ruby: 'My Stored Translation Ruby',
     }),
   );
 
