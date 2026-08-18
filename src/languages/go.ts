@@ -631,20 +631,23 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
   public override binaryExpression(node: ts.BinaryExpression, renderer: AstRenderer<GoLanguageContext>): OTree {
     if (node.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
       const symbol = symbolFor(renderer.typeChecker, node.left);
-      // Parameters and properties are pointer-valued: a pointer-valued RHS
-      // must not be dereferenced (isPtrAssignmentRValue), and a literal RHS
-      // must be wrapped (wrapPtr) — `this.env = "production"` needs
-      // `jsii.String("production")`, not a raw literal.
-      const pointerTarget =
-        symbol?.valueDeclaration != null &&
-        (ts.isParameter(symbol.valueDeclaration) || ts.isPropertyDeclaration(symbol.valueDeclaration));
+      // What the right-hand side must be follows from how the left-hand side
+      // *renders*, and that differs between the two pointer-valued
+      // declarations. A property renders as the pointer field itself
+      // (`this.env`), so the RHS has to be a pointer: leave a pointer
+      // undereferenced, and wrap a literal — `this.env = "production"` needs
+      // `jsii.String("production")`. A parameter renders dereferenced (`*name`,
+      // see goName at the bottom of this file), so the target is a value and
+      // the RHS has to be one too — exactly the opposite of a property.
+      const target = symbol?.valueDeclaration;
+      const targetRendersAsPointer = target != null && ts.isPropertyDeclaration(target);
       return new OTree([
         renderer.convert(node.left),
         ' = ',
         renderer
           .updateContext({
-            isPtrAssignmentRValue: pointerTarget,
-            wrapPtr: pointerTarget || renderer.currentContext.wrapPtr,
+            isPtrAssignmentRValue: targetRendersAsPointer,
+            wrapPtr: targetRendersAsPointer,
           })
           .convert(node.right),
       ]);
