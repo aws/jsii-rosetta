@@ -919,7 +919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/check-node@npm:1.139.0, @jsii/check-node@npm:^1.139.0":
+"@jsii/check-node@npm:1.139.0":
   version: 1.139.0
   resolution: "@jsii/check-node@npm:1.139.0"
   dependencies:
@@ -929,10 +929,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/spec@npm:1.139.0, @jsii/spec@npm:^1.139.0":
+"@jsii/check-node@npm:^1.140.0":
+  version: 1.140.0
+  resolution: "@jsii/check-node@npm:1.140.0"
+  dependencies:
+    chalk: "npm:^4.1.2"
+    semver: "npm:^7.8.5"
+  checksum: 10c0/f08e039d79f5f775b8303c546c1a96bb06e16c97f1f1bac8be5f08fe288bcd9d4a7546b02571b06825cbecf5fe5443d5b09de7f6e6ee0d7853cbaa24676755df
+  languageName: node
+  linkType: hard
+
+"@jsii/spec@npm:1.139.0":
   version: 1.139.0
   resolution: "@jsii/spec@npm:1.139.0"
   checksum: 10c0/6b8ac762a3f0220381bfab51f170baa6e611393f18d4482da09538ee589b11d2b145da107ea3b265a7cc66bd265b156fb2510acd0e74601e6ef431b68786d4a1
+  languageName: node
+  linkType: hard
+
+"@jsii/spec@npm:^1.140.0":
+  version: 1.140.0
+  resolution: "@jsii/spec@npm:1.140.0"
+  checksum: 10c0/096180c3fd86a35bdd48fb8fb26dbd123439f25a4287652a14244903689b83df90ef8f1aa55ecbcaf7ce5025f5ee4249c5f0b7bd2ecaaa52924163c24c8db508
   languageName: node
   linkType: hard
 
@@ -4849,8 +4866,8 @@ __metadata:
   dependencies:
     "@actions/core": "npm:^1.11.1"
     "@actions/github": "npm:^5.1.1"
-    "@jsii/check-node": "npm:^1.139.0"
-    "@jsii/spec": "npm:^1.139.0"
+    "@jsii/check-node": "npm:^1.140.0"
+    "@jsii/spec": "npm:^1.140.0"
     "@types/commonmark": "npm:^0.27.10"
     "@types/jest": "npm:^29.5.14"
     "@types/mock-fs": "npm:^4.13.4"
@@ -4894,8 +4911,8 @@ __metadata:
   linkType: soft
 
 "jsii@npm:~5.9.1":
-  version: 5.9.52
-  resolution: "jsii@npm:5.9.52"
+  version: 5.9.53
+  resolution: "jsii@npm:5.9.53"
   dependencies:
     "@jsii/check-node": "npm:1.139.0"
     "@jsii/spec": "npm:1.139.0"
@@ -4911,7 +4928,7 @@ __metadata:
     yargs: "npm:^17.7.3"
   bin:
     jsii: bin/jsii
-  checksum: 10c0/e20c85ca27a3e62bcdb339ee0b3c0f02457305e4913b109aedbdc300f4124a9f2d5d4c5702587e27c60711c54131c3e92d39bc8e59d251c17123961ebaf94784
+  checksum: 10c0/e53dbc4ff8845ab68f2795040b4329dc241662ce7c0b820a6aad5e6240a1b6e50bd4cb239eec74ff0dce4111baa7e22ea11e3de34061ab98493269a1e5aada02
   languageName: node
   linkType: hard
 
