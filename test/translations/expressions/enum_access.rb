@@ -1,0 +1,1 @@
+puts(EnumType::ENUM_VALUE_A)
