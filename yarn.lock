@@ -919,17 +919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/check-node@npm:1.139.0":
-  version: 1.139.0
-  resolution: "@jsii/check-node@npm:1.139.0"
-  dependencies:
-    chalk: "npm:^4.1.2"
-    semver: "npm:^7.8.5"
-  checksum: 10c0/240413fd8240519f750d215652103933df67446d3bf38f879346be790b88ee1e21ed3515eed19dbd1b782b546fd9c37f726980fc0b36e52c3779389c197d7d28
-  languageName: node
-  linkType: hard
-
-"@jsii/check-node@npm:^1.140.0":
+"@jsii/check-node@npm:1.140.0, @jsii/check-node@npm:^1.140.0":
   version: 1.140.0
   resolution: "@jsii/check-node@npm:1.140.0"
   dependencies:
@@ -939,14 +929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/spec@npm:1.139.0":
-  version: 1.139.0
-  resolution: "@jsii/spec@npm:1.139.0"
-  checksum: 10c0/6b8ac762a3f0220381bfab51f170baa6e611393f18d4482da09538ee589b11d2b145da107ea3b265a7cc66bd265b156fb2510acd0e74601e6ef431b68786d4a1
-  languageName: node
-  linkType: hard
-
-"@jsii/spec@npm:^1.140.0":
+"@jsii/spec@npm:1.140.0, @jsii/spec@npm:^1.140.0":
   version: 1.140.0
   resolution: "@jsii/spec@npm:1.140.0"
   checksum: 10c0/096180c3fd86a35bdd48fb8fb26dbd123439f25a4287652a14244903689b83df90ef8f1aa55ecbcaf7ce5025f5ee4249c5f0b7bd2ecaaa52924163c24c8db508
@@ -4911,11 +4894,11 @@ __metadata:
   linkType: soft
 
 "jsii@npm:~6.0.0":
-  version: 6.0.11
-  resolution: "jsii@npm:6.0.11"
+  version: 6.0.12
+  resolution: "jsii@npm:6.0.12"
   dependencies:
-    "@jsii/check-node": "npm:1.139.0"
-    "@jsii/spec": "npm:1.139.0"
+    "@jsii/check-node": "npm:1.140.0"
+    "@jsii/spec": "npm:1.140.0"
     case: "npm:^1.6.3"
     chalk: "npm:^4"
     fast-deep-equal: "npm:^3.1.3"
@@ -4928,7 +4911,7 @@ __metadata:
     yargs: "npm:^17.7.3"
   bin:
     jsii: bin/jsii
-  checksum: 10c0/4796235ecf5c956aebf1892573c9ab59171e1f14e14eea293dea90ac4ed08f81f9d58766c2224400f2d52a969c7d601ccc84726d85b2cb5b749048eb29ae5c2c
+  checksum: 10c0/59d7171f0169d1286e1977e41f6f31ab2c16772b6f38a8747ab687040c088e752ae4e681bc9307ea55e98d9446a276f1c1c9891b6d31083c73aebe11194cf1de
   languageName: node
   linkType: hard
 
