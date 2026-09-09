@@ -77,7 +77,7 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '1';
+  public static readonly VERSION = '2';
 
   public readonly language = TargetLanguage.CSHARP;
 
@@ -340,12 +340,35 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
 
     // Suppress the LHS of the dot operator if it's "this." (not necessary in C#)
     // or if it's an imported module reference (C# has namespace-wide imports).
+    // Exception: keep "this." when the member, as it will be rendered, is
+    // shadowed by a parameter of an enclosing function. This matters for
+    // private fields (which keep their camelCase name): in a constructor
+    // assigning a same-named field, dropping the qualifier degrades
+    // `this.resource = resource` into the self-assignment `resource = resource;`.
+    const dropThis = lhs === 'this' && !this.memberShadowedByParameter(node, renderer);
     const objectExpression =
-      lhs === 'this' || this.dropPropertyAccesses.has(lhs)
+      dropThis || this.dropPropertyAccesses.has(lhs)
         ? []
         : [renderer.updateContext({ propertyOrMethod: false }).convert(node.expression), '.'];
 
     return new OTree([...objectExpression, renderer.updateContext({ propertyOrMethod: true }).convert(node.name)]);
+  }
+
+  private memberShadowedByParameter(node: ts.PropertyAccessExpression, renderer: CSharpRenderer): boolean {
+    const text = node.name.text;
+    // The name the member will render as: private properties keep their
+    // camelCase name, everything else is PascalCased (see `identifier`).
+    const renderedName = renderer.currentContext.privatePropertyNames.includes(text) ? text : ucFirst(text);
+
+    for (let current: ts.Node | undefined = node.parent; current != null; current = current.parent) {
+      if (
+        ts.isFunctionLike(current) &&
+        current.parameters.some((p) => ts.isIdentifier(p.name) && p.name.text === renderedName)
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public override parameterDeclaration(node: ts.ParameterDeclaration, renderer: CSharpRenderer): OTree {
