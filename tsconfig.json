@@ -33,7 +33,6 @@
       "mock-fs",
       "node",
       "semver",
-      "stream-json",
       "tar",
       "workerpool"
     ],

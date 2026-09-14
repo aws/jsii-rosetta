@@ -12,6 +12,11 @@ import {
   UnknownSnippetMode,
 } from '../lib';
 import { TargetLanguage } from '../lib/languages';
+import { eagerlyLoadStreamJsonBeforeMockFs } from '../src/json';
+
+beforeAll(async () => {
+  await eagerlyLoadStreamJsonBeforeMockFs();
+});
 
 const SAMPLE_CODE: TypeScriptSnippet = {
   visibleSource: 'callThisFunction();',

@@ -806,7 +806,7 @@ describe('infused examples', () => {
         cacheToFile,
         ...defaultExtractOptions,
       }),
-    ).rejects.toThrowError(/Sample uses literate source/);
+    ).rejects.toThrow(/Sample uses literate source/);
 
     // Add infused to metadata and update assembly
     infusedAssembly.assembly.types!['my_assembly.ClassA'].docs!.custom!.exampleMetadata = 'lit=integ.test.ts infused';
