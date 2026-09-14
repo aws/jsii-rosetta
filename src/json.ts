@@ -11,19 +11,16 @@ const asyncPipeline = promisify(pipeline);
 // inside `parse`/`stringify`). Module load happens on the very first `require` of
 // this file, before any consumer has a chance to swap the filesystem out from
 // under us (e.g. tests using `mock-fs`). Resolving the `stream-json` files lazily
-// on first call would instead race against such mocks and fail with a spurious
-// "Cannot find module" error.
-const streamJson = Promise.all([
-  import('stream-json/parser.js'),
-  import('stream-json/assembler.js'),
-  import('stream-json/disassembler.js'),
-  import('stream-json/stringer.js'),
-]).then(([parserMod, assemblerMod, disassemblerMod, stringerMod]) => ({
-  parser: parserMod.parser,
-  Assembler: assemblerMod.default,
-  disassembler: disassemblerMod.disassembler,
-  stringer: stringerMod.stringer,
-}));
+// on first call would instead race against such mocks and fail with "Cannot find module" error.
+//
+// We would love to use `Promise.all` to do all the imports in parallel, but according
+// to AI Node 20 and 22 have a bug in the ESM importer that causes a
+// "request for '../index.js' is not in cache" error. So we do it in a loop instead.
+
+const parserP = import('stream-json/parser.js').then((mod) => mod.parser);
+const AssemblerP = import('stream-json/assembler.js').then((mod) => mod.default);
+const disassemblerP = import('stream-json/disassembler.js').then((mod) => mod.disassembler);
+const stringerP = import('stream-json/stringer.js').then((mod) => mod.stringer);
 
 /**
  * Asynchronously parses a single JSON value from the provided reader. The JSON
@@ -38,7 +35,8 @@ const streamJson = Promise.all([
  * @returns the parse JSON value as a Javascript value.
  */
 export async function parse(reader: Readable): Promise<any> {
-  const { parser, Assembler } = await streamJson;
+  const parser = await parserP;
+  const Assembler = await AssemblerP;
 
   const assembler = new Assembler();
   // v3's subpath factories expose `.asStream()` to obtain a Node Duplex stream
@@ -63,7 +61,8 @@ export async function stringify(
   value: any,
   ...writers: Array<NodeJS.ReadWriteStream | NodeJS.WritableStream>
 ): Promise<void> {
-  const { disassembler, stringer } = await streamJson;
+  const disassembler = await disassemblerP;
+  const stringer = await stringerP;
 
   const reader = new Readable({ objectMode: true });
   reader.push(value);

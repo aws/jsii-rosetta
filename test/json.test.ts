@@ -50,7 +50,7 @@ describe(parse, () => {
     readable.end('{"bad": "JSON",');
 
     return expect(parse(readable)).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"request for '../index.js' can not be resolved on module '/Users/huijbers/Workspaces/PublicCDK/jsii-rosetta/node_modules/stream-chain/src/node/index.js' that is not linked"`,
+      `"Parser cannot parse input: expected an object key"`,
     );
   });
 });
