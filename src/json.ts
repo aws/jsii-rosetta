@@ -5,6 +5,26 @@ import { promisify } from 'node:util';
 const asyncPipeline = promisify(pipeline);
 
 /**
+ * Load 'stream-json' eagerly, not lazily.
+ *
+ * Necessary for tests that use mockfs, otherwise the mocks will
+ * interfere with the lazy import() call.
+ */
+export async function eagerlyLoadStreamJsonBeforeMockFs() {
+  await loadStreamJson();
+}
+
+async function loadStreamJson() {
+  // Must not be loaded through Promise.all() because then we get race conditions
+  // on Node 20-22.
+  const { parser } = await import('stream-json/parser.js');
+  const { Assembler } = await import('stream-json/assembler.js');
+  const { disassembler } = await import('stream-json/disassembler.js');
+  const { stringer } = await import('stream-json/stringer.js');
+  return { parser, Assembler, disassembler, stringer };
+}
+
+/**
  * Asynchronously parses a single JSON value from the provided reader. The JSON
  * text might be longer than what could fit in a single string value, since the
  * processing is done in a streaming manner.
@@ -18,8 +38,7 @@ const asyncPipeline = promisify(pipeline);
  */
 export async function parse(reader: Readable): Promise<any> {
   // Load ESM package from CJS. Not in parallel to avoid triggering a bug in Nodes 20-22.
-  const { parser } = await import('stream-json/parser.js');
-  const { Assembler } = await import('stream-json/assembler.js');
+  const { parser, Assembler } = await loadStreamJson();
 
   const assembler = new Assembler();
   // v3's subpath factories expose `.asStream()` to obtain a Node Duplex stream
@@ -45,8 +64,7 @@ export async function stringify(
   ...writers: Array<NodeJS.ReadWriteStream | NodeJS.WritableStream>
 ): Promise<void> {
   // Load ESM package from CJS. Not in parallel to avoid triggering a bug in Nodes 20-22.
-  const { disassembler } = await import('stream-json/disassembler.js');
-  const { stringer } = await import('stream-json/stringer.js');
+  const { disassembler, stringer } = await loadStreamJson();
 
   const reader = new Readable({ objectMode: true });
   reader.push(value);
