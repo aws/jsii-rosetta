@@ -237,12 +237,7 @@
       "description": "Run tests",
       "steps": [
         {
-          "execArgs": [
-            "jest",
-            "--passWithNoTests",
-            "--updateSnapshot"
-          ],
-          "receiveArgs": true
+          "exec": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --passWithNoTests --updateSnapshot"
         },
         {
           "spawn": "eslint"

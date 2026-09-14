@@ -192,43 +192,11 @@ if (project.jest?.config?.globals?.['ts-jest']) {
   ];
 }
 
-// `stream-json` v3+ is an ESM-only package (see src/json.ts for how the runtime
-// bridges CommonJS -> ESM via dynamic `import()`). Jest runs tests in a CommonJS
-// sandbox that cannot execute native dynamic `import()` of an ESM package, so we
-// adjust the test-time transform (this does NOT affect the production build,
-// which stays on `nodenext`):
-//   1. Compile test/source TypeScript with `module: commonjs`, which makes
-//      ts-jest downlevel `import()` into a `require()`-based helper Jest can run.
-//   2. Whitelist `stream-json` and its `stream-chain` dependency in
-//      `transformIgnorePatterns` so Jest transpiles their ESM to CommonJS too,
-//      making them `require()`-able.
-if (project.jest) {
-  // Replace the default ts-jest transform with one that emits CommonJS at test time.
-  project.jest.config.transform = {
-    '^.+\\.[tj]sx?$': [
-      'ts-jest',
-      {
-        tsconfig: {
-          // Force CommonJS emit so dynamic `import()` is downleveled to a form
-          // Jest's CommonJS runtime supports. These options mirror the project's
-          // tsconfig where it matters, but pin the module system for tests.
-          module: 'commonjs',
-          moduleResolution: 'node16',
-          target: 'es2020',
-          esModuleInterop: true,
-          // Allow ts-jest to transpile the ESM JavaScript of stream-json/stream-chain.
-          allowJs: true,
-          // TypeScript >= 6 deprecates the classic resolvers; silence the error
-          // since `node16` is intentional here.
-          ignoreDeprecations: '6.0',
-        },
-      },
-    ],
-  };
-  // By default Jest ignores everything under node_modules for transformation.
-  // stream-json and stream-chain ship ESM only, so they must be transformed.
-  project.jest.config.transformIgnorePatterns = ['/node_modules/(?!(?:stream-json|stream-chain)/)'];
-}
+project.tasks.tryFind('test')?.updateStep(0, {
+  // `stream-json` v3+ is an ESM-only package (see src/json.ts for how the runtime
+  // bridges CommonJS -> ESM via dynamic `import()`). Needs an opt-in flag for jest
+  exec: 'NODE_OPTIONS="$NODE_OPTIONS --experimental-vm-modules" jest --passWithNoTests --updateSnapshot',
+});
 
 // Add fixtures & other exemptions to npmignore
 project.npmignore?.addPatterns(
