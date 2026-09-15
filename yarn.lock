@@ -5425,15 +5425,9 @@ __metadata:
     eslint-plugin-unicorn: "npm:^56.0.1"
     fast-glob: "npm:^3.3.3"
     fs-monkey: "npm:^1.1.0"
-<<<<<<< HEAD
-    jest: "npm:^29.7.0"
+    jest: "npm:^30"
     jsii: "npm:~5.9.1"
     memfs: "npm:^4.75.0"
-=======
-    jest: "npm:^30"
-    jsii: "npm:~6.0.0"
-    memfs: "npm:^4.74.0"
->>>>>>> a0086fd4 (fix: remove transitive CVE (#3833))
     mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
     projen: "npm:^0.103.23"
