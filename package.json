@@ -51,7 +51,7 @@
     "eslint-plugin-unicorn": "^56.0.1",
     "fs-monkey": "^1.1.0",
     "jest": "^30",
-    "memfs": "^4.75.0",
+    "memfs": "^4.76.0",
     "mock-fs": "^5.5.0",
     "prettier": "^2.8.8",
     "projen": "^0.103.23",
