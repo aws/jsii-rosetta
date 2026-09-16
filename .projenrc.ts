@@ -112,7 +112,6 @@ const project = new typescript.TypeScriptProject({
     '@types/commonmark',
     '@types/mock-fs',
     '@types/semver',
-    '@types/stream-json',
     '@types/tar',
     '@types/workerpool',
     'fs-monkey',
@@ -193,6 +192,12 @@ if (project.jest?.config?.globals?.['ts-jest']) {
     },
   ];
 }
+
+project.tasks.tryFind('test')?.updateStep(0, {
+  // `stream-json` v3+ is an ESM-only package (see src/json.ts for how the runtime
+  // bridges CommonJS -> ESM via dynamic `import()`). Needs an opt-in flag for jest
+  exec: 'NODE_OPTIONS="$NODE_OPTIONS --experimental-vm-modules" jest --passWithNoTests --updateSnapshot',
+});
 
 // Add fixtures & other exemptions to npmignore
 project.npmignore?.addPatterns(
