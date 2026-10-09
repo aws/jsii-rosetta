@@ -1193,17 +1193,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/check-node@npm:1.140.0":
-  version: 1.140.0
-  resolution: "@jsii/check-node@npm:1.140.0"
-  dependencies:
-    chalk: "npm:^4.1.2"
-    semver: "npm:^7.8.5"
-  checksum: 10c0/f08e039d79f5f775b8303c546c1a96bb06e16c97f1f1bac8be5f08fe288bcd9d4a7546b02571b06825cbecf5fe5443d5b09de7f6e6ee0d7853cbaa24676755df
-  languageName: node
-  linkType: hard
-
-"@jsii/check-node@npm:^1.141.0":
+"@jsii/check-node@npm:1.141.0, @jsii/check-node@npm:^1.141.0":
   version: 1.141.0
   resolution: "@jsii/check-node@npm:1.141.0"
   dependencies:
@@ -1213,14 +1203,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/spec@npm:1.140.0":
-  version: 1.140.0
-  resolution: "@jsii/spec@npm:1.140.0"
-  checksum: 10c0/096180c3fd86a35bdd48fb8fb26dbd123439f25a4287652a14244903689b83df90ef8f1aa55ecbcaf7ce5025f5ee4249c5f0b7bd2ecaaa52924163c24c8db508
-  languageName: node
-  linkType: hard
-
-"@jsii/spec@npm:^1.141.0":
+"@jsii/spec@npm:1.141.0, @jsii/spec@npm:^1.141.0":
   version: 1.141.0
   resolution: "@jsii/spec@npm:1.141.0"
   checksum: 10c0/d31aad2da9f381d9aed0c2fe0fe7b0e43fe2c792839e062b49d3d561ffb769d09ab74abd946be2988c72de008d2316fa090d105f10a0075fe1d4bb07703a9b65
@@ -5506,11 +5489,11 @@ __metadata:
   linkType: soft
 
 "jsii@npm:~5.9.1":
-  version: 5.9.54
-  resolution: "jsii@npm:5.9.54"
+  version: 5.9.55
+  resolution: "jsii@npm:5.9.55"
   dependencies:
-    "@jsii/check-node": "npm:1.140.0"
-    "@jsii/spec": "npm:1.140.0"
+    "@jsii/check-node": "npm:1.141.0"
+    "@jsii/spec": "npm:1.141.0"
     case: "npm:^1.6.3"
     chalk: "npm:^4"
     fast-deep-equal: "npm:^3.1.3"
@@ -5523,7 +5506,7 @@ __metadata:
     yargs: "npm:^17.7.3"
   bin:
     jsii: bin/jsii
-  checksum: 10c0/3d4b7f0fc061a6698f2be0ac0a5b15645eba41201eed78b777b29dfdf92d8612361c33558897fa19e7abea1ad44af4333683b30847a1a89bfc018be7203812fd
+  checksum: 10c0/528524eda1981d20e6cdd8f6afed50492d360bc5d4ea6862cd2ef3a42906509faacd4bb2b835542e674fe518ee8cacd8744ab215a80e5ddd10db3f9eb27cd3a9
   languageName: node
   linkType: hard
 
