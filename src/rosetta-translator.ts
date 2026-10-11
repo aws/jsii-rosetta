@@ -1,9 +1,11 @@
 import { promises as fs } from 'node:fs';
+import * as path from 'node:path';
 import * as spec from '@jsii/spec';
 
 import { TypeFingerprinter } from './jsii/fingerprinting';
-import { TARGET_LANGUAGES } from './languages';
+import { allTargetLanguages, visitorFactoryFor } from './languages';
 import * as logging from './logging';
+import { resolvePluginModules } from './plugins';
 import { TypeScriptSnippet, completeSource } from './snippet';
 import {
   collectDependencies,
@@ -186,13 +188,24 @@ export class RosettaTranslator {
       cleanCompilationDir = true;
     }
 
+    // Paths the caller gave relative to its working directory, resolved before
+    // that changes below.
+    const pluginModules = resolvePluginModules(options?.pluginModules);
+    const assemblyLocations = options?.assemblyLocations?.map((location) => path.resolve(location));
+
     const origDir = process.cwd();
     // Easiest way to get a fixed working directory (for sources) in is to chdir
     process.chdir(compilationDirectory);
 
     let result;
     try {
-      result = await translateAll(snippets, this.includeCompilerDiagnostics, options?.batchSize);
+      result = await translateAll(
+        snippets,
+        this.includeCompilerDiagnostics,
+        options?.batchSize,
+        pluginModules,
+        assemblyLocations,
+      );
     } finally {
       process.chdir(origDir);
       if (cleanCompilationDir) {
@@ -259,8 +272,14 @@ function tryReadFromCache(
   }
 
   const dirtySource = completeSource(sourceSnippet) !== fromCache.snippet.fullSource;
-  const dirtyTranslator = !Object.entries(TARGET_LANGUAGES).every(
-    ([lang, translator]) => fromCache.snippet.translations?.[lang]?.version === translator.version,
+  // Every registered language, not just the built-in ones: a library's shipped
+  // tablet was translated for the languages that existed when it was
+  // published, so an externally registered language is missing from all of
+  // them. Comparing only the built-ins made every such snippet a cache hit,
+  // and it was then copied to the output untranslated — an extract that
+  // "succeeded" in seconds having translated almost nothing.
+  const dirtyTranslator = !allTargetLanguages().every(
+    (lang) => fromCache.snippet.translations?.[lang]?.version === visitorFactoryFor(lang)?.version,
   );
   const dirtyTypes = fingerprinter.fingerprintAll(fromCache.fqnsReferenced()) !== fromCache.snippet.fqnsFingerprint;
   const dirtyDidntCompile = compiledOnly && !fromCache.snippet.didCompile;
@@ -313,6 +332,28 @@ export interface ReadFromCacheResults {
 }
 
 export interface TranslateAllOptions {
+  /**
+   * Modules to load in each translation worker before translating.
+   *
+   * Worker threads are fresh module contexts, so an externally registered
+   * target language has to be registered again in each of them; without this
+   * the language is silently absent from everything that is translated.
+   *
+   * @default - none
+   */
+  readonly pluginModules?: readonly string[];
+
+  /**
+   * Package directories of the assemblies whose examples are being translated,
+   * offered to any registered language that asks for them (`VisitorFactory.prepare`).
+   *
+   * A published example generally does not typecheck, so for some languages
+   * the assembly is the only thing that can say what a name refers to.
+   *
+   * @default - none
+   */
+  readonly assemblyLocations?: readonly string[];
+
   /**
    * @default - Create a temporary directory with all necessary packages
    */

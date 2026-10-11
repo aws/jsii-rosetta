@@ -66,7 +66,12 @@ export class SubmoduleReference {
 
   public get lastNode(): ts.Node {
     if (this.path.length === 0) {
-      const node = this.root.valueDeclaration ?? this.root.declarations![0];
+      // Same caveat as isLikelyNamespace: a root symbol can carry neither a
+      // value declaration nor any declarations at all.
+      const node = this.root.valueDeclaration ?? this.root.declarations?.[0];
+      if (node == null) {
+        return this.submoduleChain;
+      }
       return ts.isNamespaceImport(node) || ts.isImportSpecifier(node) ? node.name : node;
     }
     return this.path[this.path.length - 1];
@@ -168,10 +173,16 @@ function isLikelyNamespace(node: ts.Node, typeChecker: ts.TypeChecker): boolean 
   // If the identifier was bound to a symbol, we can inspect the declarations of
   // it to validate they are all module or namespace declarations.
   const symbol = typeChecker.getSymbolAtLocation(node);
+  // `declarations` is optional: the checker hands back symbols without any
+  // (its error symbol, for one), which is routine in snippets that do not
+  // fully typecheck. Nothing is known about such a symbol, so it is not a
+  // namespace.
+  const declarations = symbol?.declarations;
   if (symbol != null) {
     return (
-      symbol.declarations!.length > 0 &&
-      symbol.declarations!.every(
+      declarations != null &&
+      declarations.length > 0 &&
+      declarations.every(
         (decl) => ts.isModuleDeclaration(decl) || ts.isNamespaceExport(decl) || ts.isNamespaceImport(decl),
       )
     );

@@ -116,7 +116,6 @@ const project = new typescript.TypeScriptProject({
     'fs-monkey',
     'memfs',
     'mock-fs',
-    'tar',
     'ts-node',
   ],
   deps: [
@@ -130,6 +129,10 @@ const project = new typescript.TypeScriptProject({
     'semver-intersect',
     'semver',
     'stream-json',
+    // Used by lib/testing (the published translations-corpus harness) to
+    // extract the fixture tarballs into a compilation directory. Pinned to
+    // the major the tests already used as a devDependency.
+    'tar@^6.2.1',
     `typescript@~${SUPPORT_POLICY.current}`,
     'workerpool',
     'yargs',
@@ -158,8 +161,8 @@ project.tsconfig?.file?.patch(
   JsonPatch.add('/compilerOptions/declarationMap', true),
 );
 // Don't try to compile files under the `test/translations` directory with tests...
-project.tsconfigDev.addExclude('test/translations/**/*.ts');
-project.eslint?.addIgnorePattern('test/translations/**/*.ts');
+project.tsconfigDev.addExclude('corpus/**/*.ts');
+project.eslint?.addIgnorePattern('corpus/**/*.ts');
 
 // Don't show .gitignore'd files in the VSCode explorer
 project.vscode!.settings.addSetting('explorer.excludeGitIgnore', true);
@@ -174,6 +177,10 @@ project.vscode!.settings.addSetting('eslint.validate', ['typescript']);
 project.package.addField('exports', {
   '.': `./${project.package.entrypoint}`,
   './package.json': './package.json',
+  // The language-plugin API, and the corpus harness plugins test against.
+  // Everything else under lib/ stays internal.
+  './lib/plugin-api': './lib/plugin-api.js',
+  './lib/testing/translations-corpus': './lib/testing/translations-corpus.js',
 });
 
 // Remove TypeScript devDependency (it's a direct/normal dependency here)
@@ -198,13 +205,15 @@ project.tasks.tryFind('test')?.updateStep(0, {
   exec: 'NODE_OPTIONS="$NODE_OPTIONS --experimental-vm-modules" jest --passWithNoTests --updateSnapshot',
 });
 
-// Add fixtures & other exemptions to npmignore
+// Add exemptions to npmignore. NOTE: /fixtures/ and /corpus/ are deliberately
+// NOT ignored — they ship in the package so external language plugins can run
+// the translations corpus (via lib/testing) against their own visitors.
 project.npmignore?.addPatterns(
   '/.*',
   '/CODE_OF_CONDUCT.md',
   '/CONTRIBUTING.md',
   '/build-tools/',
-  '/fixtures/',
+  '/corpus/tsconfig.json', // an editor aid for the snippets; its paths point into this repository
   '/projenrc/',
   '*.tsbuildinfo',
   '*.d.ts.map', // Declarations map aren't useful in published packages.

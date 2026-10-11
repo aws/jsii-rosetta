@@ -4,6 +4,7 @@
 import { inspect } from 'node:util';
 import * as workerpool from 'workerpool';
 
+import { allTargetLanguages, visitorFactoryFor } from './languages';
 import * as logging from './logging';
 import { formatLocation, TypeScriptSnippet } from './snippet';
 import { snippetKey } from './tablets/key';
@@ -18,6 +19,56 @@ export interface TranslateBatchRequest {
   readonly includeCompilerDiagnostics: boolean;
   readonly logLevel?: logging.Level;
   readonly batchSize?: number;
+
+  /**
+   * Modules to load before translating, so that the languages they register
+   * exist in this worker.
+   *
+   * A worker is a fresh module context: languages registered in the main
+   * thread are not present here, and an externally registered language would
+   * otherwise be silently missing from every translation this worker produces.
+   */
+  readonly pluginModules?: readonly string[];
+
+  /**
+   * Package directories of the assemblies whose examples are being translated.
+   *
+   * A published example generally does not typecheck — the fixtures it relies
+   * on are not shipped — so a visitor cannot ask the type checker what a name
+   * refers to. For some languages that does not matter; for others the
+   * assembly is the only thing that can say whether `Foo.BAR` is an enum
+   * member or a static property, or which submodule a type lives in. Passed as
+   * locations rather than loaded assemblies: an assembly is tens of megabytes,
+   * and each worker should read only what its languages actually need.
+   */
+  readonly assemblyLocations?: readonly string[];
+}
+
+/** Plugin modules already loaded in this worker; loading twice is wasteful. */
+const loadedPlugins = new Set<string>();
+
+function loadPlugins(pluginModules: readonly string[] = []) {
+  for (const pluginModule of pluginModules) {
+    if (loadedPlugins.has(pluginModule)) {
+      continue;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require(pluginModule);
+    loadedPlugins.add(pluginModule);
+  }
+}
+
+/**
+ * Tell every registered language what this worker is translating for, after
+ * the plugins that register them have loaded.
+ *
+ * Idempotent by contract: a worker handles many batches, so a language must
+ * expect to be told the same thing repeatedly.
+ */
+function prepareLanguages(assemblyLocations: readonly string[] = []) {
+  for (const language of allTargetLanguages()) {
+    visitorFactoryFor(language)?.prepare?.({ assemblyLocations });
+  }
 }
 
 export interface TranslateBatchResponse {
@@ -29,6 +80,10 @@ export interface TranslateBatchResponse {
 function translateBatch(request: TranslateBatchRequest): TranslateBatchResponse {
   // because we are in a worker process we need to explicitly configure the log level again
   logging.configure({ level: request.logLevel ?? logging.Level.QUIET, prefix: request.workerName });
+
+  loadPlugins(request.pluginModules);
+  // After loadPlugins: a language cannot be told anything before it exists.
+  prepareLanguages(request.assemblyLocations);
 
   if (process.env.TIMING === '1' && request.batchSize) {
     logging.warn('TIMING=1 is not supported in batch compilation mode');

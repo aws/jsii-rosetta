@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { inspect } from 'node:util';
 import * as ts from 'typescript';
 
-import { TARGET_LANGUAGES, TargetLanguage } from './languages';
+import { allTargetLanguages, visitorFactoryFor } from './languages';
 import { RecordReferencesVisitor } from './languages/record-references';
 import { supportsTransitiveSubmoduleAccess } from './languages/target-language';
 import * as logging from './logging';
@@ -45,6 +45,19 @@ export function translateTypeScript(
  * Can be configured to fully typecheck the samples, or perform only syntactical
  * translation.
  */
+/**
+ * The languages a translation covers when the caller does not name any.
+ *
+ * Sourced from the language REGISTRY, not the built-in `TargetLanguage` enum:
+ * an externally registered language (a jsii-pacmak language plugin) must be
+ * translated by default too, otherwise registering it has no effect on the
+ * paths callers actually use and its snippets silently come back as the
+ * original TypeScript.
+ */
+function defaultTargetLanguages(): readonly string[] {
+  return allTargetLanguages();
+}
+
 export class Translator {
   private readonly compiler = new TypeScriptCompiler();
   #diagnostics: ts.Diagnostic[] = [];
@@ -72,7 +85,7 @@ export class Translator {
   /**
    * Translates a single snippet in its own TS context.
    */
-  public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = Object.values(TargetLanguage)) {
+  public translate(snip: TypeScriptSnippet, languages: readonly string[] = defaultTargetLanguages()) {
     const translator = this.translatorFor(snip);
     const translated = this.translateSnippet(snip, translator, languages);
     return translated;
@@ -83,7 +96,7 @@ export class Translator {
    */
   public translateSnippets(
     snippets: TypeScriptSnippet[],
-    languages: readonly TargetLanguage[] = Object.values(TargetLanguage),
+    languages: readonly string[] = defaultTargetLanguages(),
   ): TranslatedSnippet[] {
     const start = performance.now();
     logging.debug(`Translating batch of ${snippets.length} snippets`);
@@ -102,7 +115,7 @@ export class Translator {
 
   private translateBatch(
     snippets: TypeScriptSnippet[],
-    languages: readonly TargetLanguage[] = Object.values(TargetLanguage),
+    languages: readonly string[] = defaultTargetLanguages(),
   ): TranslatedSnippet[] {
     const translatedSnippets: TranslatedSnippet[] = [];
 
@@ -121,14 +134,17 @@ export class Translator {
   private translateSnippet(
     snippet: TypeScriptSnippet,
     translator: ISnippetTranslator,
-    languages: readonly TargetLanguage[],
+    languages: readonly string[],
   ): TranslatedSnippet {
     const translations = mkDict(
       languages.flatMap((lang, idx, array) => {
         if (array.slice(0, idx).includes(lang)) {
           return [];
         }
-        const languageConverterFactory = TARGET_LANGUAGES[lang];
+        const languageConverterFactory = visitorFactoryFor(lang);
+        if (languageConverterFactory === undefined) {
+          throw new Error(`Unknown target language: ${lang}`);
+        }
         const translated = translator.renderUsing(languageConverterFactory.createVisitor());
         return [[lang, { source: translated, version: languageConverterFactory.version }] as const];
       }),

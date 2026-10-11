@@ -8,6 +8,7 @@ import {
   compressedTabletExists,
 } from '../jsii/assemblies';
 import * as logging from '../logging';
+import { loadLanguagePlugins } from '../plugins';
 import { RosettaTranslator, RosettaTranslatorOptions } from '../rosetta-translator';
 import { TypeScriptSnippet, SnippetParameters } from '../snippet';
 import { snippetKey } from '../tablets/key';
@@ -22,6 +23,20 @@ export interface ExtractResult {
 }
 
 export interface ExtractOptions {
+  /**
+   * Language plugins to load: module specifiers, resolved from the working
+   * directory as `require` would resolve them there.
+   *
+   * Each is loaded in this process and in every translation worker. A language
+   * has to be registered in both: here, where cached translations are checked
+   * against the registered languages, and in each worker, a fresh module
+   * context, where translation happens. Missing either, the language is
+   * silently absent from the tablet.
+   *
+   * @default - none
+   */
+  readonly pluginModules?: readonly string[];
+
   readonly includeCompilerDiagnostics?: boolean;
   readonly validateAssemblies?: boolean;
   readonly only?: string[];
@@ -128,6 +143,9 @@ export async function extractSnippets(
 ): Promise<ExtractResult> {
   const only = options.only ?? [];
 
+  // Before anything consults the registered languages.
+  const pluginModules = loadLanguagePlugins(options.pluginModules);
+
   logging.info(`Loading ${assemblyLocations.length} assemblies`);
   const assemblies = loadAssemblies(assemblyLocations, options.validateAssemblies ?? false);
 
@@ -192,6 +210,9 @@ export async function extractSnippets(
       compilationDirectory: options.compilationDirectory,
       cleanup: options.cleanup,
       batchSize: options.batchSize,
+      pluginModules,
+      // Already in hand: `extractSnippets` is given these to find snippets in.
+      assemblyLocations,
     });
 
     const delta = (Date.now() - startTime) / 1000;

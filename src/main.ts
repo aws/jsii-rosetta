@@ -265,6 +265,13 @@ async function main() {
             // coerce is only called if the option is present
             coerce: (value) => (value == null ? 1000 : value),
           })
+          .option('plugin', {
+            type: 'string',
+            array: true,
+            describe:
+              'Load a language plugin (an npm package name or a path); may be repeated. Its language is translated alongside the built-in ones',
+            default: [],
+          })
           .conflicts('loose', 'strict')
           .conflicts('loose', 'fail'),
       wrapHandler(async (args) => {
@@ -293,6 +300,7 @@ async function main() {
           compressCacheToFile: args['compress-cache'],
           cleanup: args.cleanup,
           batchSize: args.batch,
+          pluginModules: args.plugin,
         };
 
         const result = args.infuse

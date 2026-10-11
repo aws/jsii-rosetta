@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import * as workerpool from 'workerpool';
 
 import * as logging from './logging';
+import { resolvePluginModules } from './plugins';
 import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippet } from './tablets/tablets';
 import { RosettaDiagnostic, SnippetTimingInfo, extractTimingInfo } from './translate';
@@ -22,6 +23,8 @@ export async function translateAll(
   snippets: TypeScriptSnippet[],
   includeCompilerDiagnostics: boolean,
   batchSize?: number,
+  pluginModules?: readonly string[],
+  assemblyLocations?: readonly string[],
 ): Promise<TranslateAllResult> {
   // Use about half the advertised cores because hyperthreading doesn't seem to
   // help that much, or we become I/O-bound at some point. On my machine, using
@@ -40,7 +43,18 @@ export async function translateAll(
 
   try {
     const shouldBatchCompilation = batchSize != null;
-    const requests = batchSnippets(snippetArr, includeCompilerDiagnostics, batchSize, shouldBatchCompilation);
+    const requests = batchSnippets(
+      snippetArr,
+      includeCompilerDiagnostics,
+      batchSize,
+      shouldBatchCompilation,
+      // Resolved here: a worker would resolve a specifier from jsii-rosetta's
+      // own location, not the caller's.
+      resolvePluginModules(pluginModules),
+      // Absolute for the same reason, and because translation runs from a
+      // temporary compilation directory, where a relative path means nothing.
+      assemblyLocations?.map((location) => path.resolve(location)),
+    );
 
     const responses: TranslateBatchResponse[] = await Promise.all(
       requests.map((request) => pool.exec('translateBatch', [request])),
@@ -74,6 +88,8 @@ function batchSnippets(
   includeCompilerDiagnostics: boolean,
   batchSize = 10,
   shouldBatchCompilation: boolean = false,
+  pluginModules?: readonly string[],
+  assemblyLocations?: readonly string[],
 ): TranslateBatchRequest[] {
   const logLevel = logging.current();
   const ret: TranslateBatchRequest[] = [];
@@ -87,6 +103,8 @@ function batchSnippets(
       includeCompilerDiagnostics,
       logLevel,
       batchSize: shouldBatchCompilation ? batchSize : undefined,
+      pluginModules,
+      assemblyLocations,
     });
   }
 
