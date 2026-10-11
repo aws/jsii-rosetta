@@ -126,6 +126,48 @@ describe('extractSnippets with a language plugin', () => {
   });
 });
 
+describe('assembly locations given to a language plugin', () => {
+  const LOCATION_PLUGIN = path.resolve(__dirname, 'fixtures', 'location-checking-language-plugin.js');
+
+  let assembly: TestJsiiModule;
+  beforeEach(() => {
+    assembly = TestJsiiModule.fromSource(
+      {
+        'index.ts': 'export class ClassA { public someMethod() {} }',
+        'README.md': "```ts\nimport * as ass from 'my_assembly';\nnew ass.ClassA().someMethod();\n```",
+      },
+      { name: 'my_assembly', jsii: DUMMY_JSII_CONFIG },
+    );
+  });
+  afterEach(() => assembly.cleanup());
+
+  test('can be opened by a worker, even when the caller passed a relative path', async () => {
+    const cacheToFile = path.join(assembly.moduleDirectory, 'test.tabl.json');
+
+    // A short relative path, from the assembly's parent directory. (One that
+    // climbs to the filesystem root resolves the same from anywhere.)
+    const origDir = process.cwd();
+    process.chdir(path.dirname(assembly.moduleDirectory));
+    try {
+      await extractSnippets([path.basename(assembly.moduleDirectory)], {
+        cacheToFile,
+        includeCompilerDiagnostics: false,
+        validateAssemblies: false,
+        pluginModules: [LOCATION_PLUGIN],
+      });
+    } finally {
+      process.chdir(origDir);
+    }
+
+    const tablet = new LanguageTablet();
+    await tablet.load(cacheToFile);
+    const [key] = tablet.snippetKeys;
+    expect(tablet.tryGetSnippet(key)?.snippet.translations?.['location-checking-plugin']?.source).toContain(
+      'someMethod@found',
+    );
+  });
+});
+
 describe('plugin-api', () => {
   test('exports what an out-of-tree language needs at runtime', () => {
     // The values the reference Ruby plugin uses; the types it uses are checked

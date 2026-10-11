@@ -1,9 +1,11 @@
 import { promises as fs } from 'node:fs';
+import * as path from 'node:path';
 import * as spec from '@jsii/spec';
 
 import { TypeFingerprinter } from './jsii/fingerprinting';
 import { allTargetLanguages, visitorFactoryFor } from './languages';
 import * as logging from './logging';
+import { resolvePluginModules } from './plugins';
 import { TypeScriptSnippet, completeSource } from './snippet';
 import {
   collectDependencies,
@@ -186,6 +188,11 @@ export class RosettaTranslator {
       cleanCompilationDir = true;
     }
 
+    // Paths the caller gave relative to its working directory, resolved before
+    // that changes below.
+    const pluginModules = resolvePluginModules(options?.pluginModules);
+    const assemblyLocations = options?.assemblyLocations?.map((location) => path.resolve(location));
+
     const origDir = process.cwd();
     // Easiest way to get a fixed working directory (for sources) in is to chdir
     process.chdir(compilationDirectory);
@@ -196,8 +203,8 @@ export class RosettaTranslator {
         snippets,
         this.includeCompilerDiagnostics,
         options?.batchSize,
-        options?.pluginModules,
-        options?.assemblyLocations,
+        pluginModules,
+        assemblyLocations,
       );
     } finally {
       process.chdir(origDir);

@@ -51,7 +51,9 @@ export async function translateAll(
       // Resolved here: a worker would resolve a specifier from jsii-rosetta's
       // own location, not the caller's.
       resolvePluginModules(pluginModules),
-      assemblyLocations,
+      // Absolute for the same reason, and because translation runs from a
+      // temporary compilation directory, where a relative path means nothing.
+      assemblyLocations?.map((location) => path.resolve(location)),
     );
 
     const responses: TranslateBatchResponse[] = await Promise.all(
