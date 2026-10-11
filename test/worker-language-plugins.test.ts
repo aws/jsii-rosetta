@@ -1,8 +1,8 @@
 import * as path from 'node:path';
 
-import { translateAll } from '../lib/translate_all';
-import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
 import { testSnippetLocation } from './testutil';
+import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
+import { translateAll } from '../lib/translate_all';
 
 const PLUGIN = path.resolve(__dirname, 'fixtures', 'shouty-language-plugin.js');
 
@@ -14,11 +14,7 @@ const PLUGIN = path.resolve(__dirname, 'fixtures', 'shouty-language-plugin.js');
 // only shows up much later as untranslated examples in published docs.
 describe('language plugins in worker threads', () => {
   const snippet = () =>
-    typeScriptSnippetFromCompleteSource(
-      'const someValue = 1;',
-      testSnippetLocation('worker-language-plugins'),
-      false,
-    );
+    typeScriptSnippetFromCompleteSource('const someValue = 1;', testSnippetLocation('worker-language-plugins'), false);
 
   test('a plugin language is translated when the workers are told to load it', async () => {
     const result = await translateAll([snippet()], false, undefined, [PLUGIN]);

@@ -2,12 +2,12 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { DefaultVisitor } from '../lib/languages/default';
+import { testSnippetLocation } from './testutil';
 import { registerTargetLanguage, TargetLanguage } from '../lib/languages';
+import { DefaultVisitor } from '../lib/languages/default';
 import { OTree } from '../lib/o-tree';
 import { RosettaTranslator } from '../lib/rosetta-translator';
 import { typeScriptSnippetFromVisibleSource } from '../lib/snippet';
-import { testSnippetLocation } from './testutil';
 
 const location = testSnippetLocation('cache-missing-language');
 

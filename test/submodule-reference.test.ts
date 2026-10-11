@@ -11,11 +11,7 @@ import { SubmoduleReference } from '../lib/submodule-reference';
 // library `@example` blocks with compiler diagnostics off, so snippets that
 // do not fully resolve are routine.
 describe('SubmoduleReference with declaration-less symbols', () => {
-  const SOURCE = [
-    "import * as masm from 'my_assembly';",
-    'const x = masm.submod.Thing;',
-    '',
-  ].join('\n');
+  const SOURCE = ["import * as masm from 'my_assembly';", 'const x = masm.submod.Thing;', ''].join('\n');
 
   /**
    * A checker that resolves the import name to a stable symbol (so the

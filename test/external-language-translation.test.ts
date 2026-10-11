@@ -1,9 +1,9 @@
-import { DefaultVisitor } from '../lib/languages/default';
-import { allTargetLanguages, registerTargetLanguage, TargetLanguage } from '../lib/languages';
-import { OTree } from '../lib/o-tree';
-import { SnippetTranslator, Translator } from '../lib/translate';
-import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
 import { testSnippetLocation } from './testutil';
+import { allTargetLanguages, registerTargetLanguage, TargetLanguage } from '../lib/languages';
+import { DefaultVisitor } from '../lib/languages/default';
+import { OTree } from '../lib/o-tree';
+import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
+import { SnippetTranslator, Translator } from '../lib/translate';
 
 /**
  * A minimal external language plugin: it renders every identifier in upper

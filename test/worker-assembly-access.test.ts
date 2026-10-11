@@ -1,8 +1,8 @@
 import * as path from 'node:path';
 
-import { translateAll } from '../lib/translate_all';
-import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
 import { testSnippetLocation } from './testutil';
+import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
+import { translateAll } from '../lib/translate_all';
 
 const PLUGIN = path.resolve(__dirname, 'fixtures', 'assembly-aware-language-plugin.js');
 
@@ -18,11 +18,7 @@ const PLUGIN = path.resolve(__dirname, 'fixtures', 'assembly-aware-language-plug
 // every language would reinvent differently.
 describe('assembly locations reach language plugins in workers', () => {
   const snippet = () =>
-    typeScriptSnippetFromCompleteSource(
-      'const someValue = 1;',
-      testSnippetLocation('worker-assembly-access'),
-      false,
-    );
+    typeScriptSnippetFromCompleteSource('const someValue = 1;', testSnippetLocation('worker-assembly-access'), false);
 
   const ASSEMBLIES = ['/some/assembly/one', '/some/assembly/two'];
 
@@ -30,9 +26,7 @@ describe('assembly locations reach language plugins in workers', () => {
     const result = await translateAll([snippet()], false, undefined, [PLUGIN], ASSEMBLIES);
     const translated = result.translatedSnippets[0];
     // The fixture renders `<name>@<count>`; 2 means both locations arrived.
-    expect(translated.snippet.translations!['assembly-aware-plugin'].source).toContain(
-      'someValue@2',
-    );
+    expect(translated.snippet.translations!['assembly-aware-plugin'].source).toContain('someValue@2');
   });
 
   test('a plugin told nothing still translates', async () => {
@@ -40,9 +34,7 @@ describe('assembly locations reach language plugins in workers', () => {
     // hook must be optional rather than a precondition.
     const result = await translateAll([snippet()], false, undefined, [PLUGIN]);
     const translated = result.translatedSnippets[0];
-    expect(translated.snippet.translations!['assembly-aware-plugin'].source).toContain(
-      'someValue@0',
-    );
+    expect(translated.snippet.translations!['assembly-aware-plugin'].source).toContain('someValue@0');
   });
 
   test('built-in languages are unaffected', async () => {
