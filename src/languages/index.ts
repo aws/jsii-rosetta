@@ -4,6 +4,7 @@ import { JavaVisitor } from './java';
 import { PythonVisitor } from './python';
 import { TargetLanguage } from './target-language';
 import { VisualizeAstVisitor } from './visualize';
+import { isCompatiblePluginApi, PLUGIN_API_VERSION } from '../plugins';
 import { AstHandler } from '../renderer';
 
 export { TargetLanguage };
@@ -59,29 +60,63 @@ export const TARGET_LANGUAGES: { [key in TargetLanguage]: VisitorFactory } = {
 /**
  * Externally-registered target languages (language plugins).
  *
- * The plugin API is experimental: visitors extend internal interfaces
- * (`AstHandler`, `DefaultVisitor`, `OTree`, ...) which carry no cross-version
- * compatibility guarantee yet.
+ * Null prototype: a language named like an `Object.prototype` member
+ * (`toString`, `constructor`, ...) must neither count as already registered
+ * nor resolve to an inherited function.
  */
-const EXTERNAL_TARGET_LANGUAGES: Record<string, VisitorFactory> = {};
+const EXTERNAL_TARGET_LANGUAGES: Record<string, VisitorFactory> = Object.create(null);
+
+export interface RegisterTargetLanguageOptions {
+  /**
+   * The plugin API version the plugin was written against (`PLUGIN_API_VERSION`
+   * of the jsii-rosetta it was built with).
+   */
+  readonly pluginApiVersion: string;
+}
 
 /**
  * Registers an external target language, making it resolvable everywhere a
- * built-in language is (snippet translation, tablets, the CLI).
+ * built-in language is: snippet translation, tablets, and translation workers
+ * that load the plugin (`jsii-rosetta extract --plugin`).
+ *
+ * Registering the same language again with the same visitor version does
+ * nothing, since a plugin registers when it is loaded and may be loaded more
+ * than once. A different version is an error.
  *
  * @param language the language name. Must not collide with a
  *                 built-in language.
  * @param factory  the visitor factory for the language.
+ * @param options  the plugin API version the plugin was written against.
  */
-export function registerTargetLanguage(language: string, factory: VisitorFactory): void {
+export function registerTargetLanguage(
+  language: string,
+  factory: VisitorFactory,
+  options: RegisterTargetLanguageOptions,
+): void {
   if (!language) {
     throw new Error('Cannot register a target language with an empty name');
   }
   if (Object.values(TargetLanguage).includes(language as TargetLanguage)) {
     throw new Error(`Cannot register target language '${language}': collides with a built-in language`);
   }
-  if (language in EXTERNAL_TARGET_LANGUAGES) {
-    throw new Error(`Target language '${language}' is already registered`);
+  if (typeof options?.pluginApiVersion !== 'string') {
+    throw new Error(
+      `Cannot register target language '${language}': the plugin must declare the 'pluginApiVersion' it was written against (this jsii-rosetta implements ${PLUGIN_API_VERSION})`,
+    );
+  }
+  if (!isCompatiblePluginApi(options.pluginApiVersion)) {
+    throw new Error(
+      `Cannot register target language '${language}': the plugin requires plugin API ${options.pluginApiVersion}, but this jsii-rosetta implements ${PLUGIN_API_VERSION}`,
+    );
+  }
+  const existing = EXTERNAL_TARGET_LANGUAGES[language];
+  if (existing !== undefined) {
+    if (existing.version === factory.version) {
+      return;
+    }
+    throw new Error(
+      `Target language '${language}' is already registered with visitor version ${existing.version}; cannot register version ${factory.version}`,
+    );
   }
   EXTERNAL_TARGET_LANGUAGES[language] = factory;
 }
@@ -91,7 +126,11 @@ export function registerTargetLanguage(language: string, factory: VisitorFactory
  * `undefined` if the language is unknown.
  */
 export function visitorFactoryFor(language: string): VisitorFactory | undefined {
-  return (TARGET_LANGUAGES as Record<string, VisitorFactory>)[language] ?? EXTERNAL_TARGET_LANGUAGES[language];
+  // An own-property check: TARGET_LANGUAGES is an ordinary object, so a plain
+  // lookup of `constructor` would return Object.
+  return Object.prototype.hasOwnProperty.call(TARGET_LANGUAGES, language)
+    ? TARGET_LANGUAGES[language as TargetLanguage]
+    : EXTERNAL_TARGET_LANGUAGES[language];
 }
 
 /**

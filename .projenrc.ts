@@ -177,11 +177,10 @@ project.vscode!.settings.addSetting('eslint.validate', ['typescript']);
 project.package.addField('exports', {
   '.': `./${project.package.entrypoint}`,
   './package.json': './package.json',
-  // Language plugins build against internal APIs (renderer, target-language
-  // registry, testing harness) that the curated root export does not surface.
-  // The `.js` suffix matters: node16 resolution does not do extension probing
-  // through an exports wildcard.
-  './lib/*': './lib/*.js',
+  // The language-plugin API, and the corpus harness plugins test against.
+  // Everything else under lib/ stays internal.
+  './lib/plugin-api': './lib/plugin-api.js',
+  './lib/testing/translations-corpus': './lib/testing/translations-corpus.js',
 });
 
 // Remove TypeScript devDependency (it's a direct/normal dependency here)

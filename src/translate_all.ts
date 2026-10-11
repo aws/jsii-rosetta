@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import * as workerpool from 'workerpool';
 
 import * as logging from './logging';
+import { resolvePluginModules } from './plugins';
 import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippet } from './tablets/tablets';
 import { RosettaDiagnostic, SnippetTimingInfo, extractTimingInfo } from './translate';
@@ -47,7 +48,9 @@ export async function translateAll(
       includeCompilerDiagnostics,
       batchSize,
       shouldBatchCompilation,
-      pluginModules,
+      // Resolved here: a worker would resolve a specifier from jsii-rosetta's
+      // own location, not the caller's.
+      resolvePluginModules(pluginModules),
       assemblyLocations,
     );
 

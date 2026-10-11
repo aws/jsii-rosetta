@@ -16,6 +16,7 @@
 
 const { DefaultVisitor } = require('../../lib/languages/default');
 const { registerTargetLanguage } = require('../../lib/languages');
+const { PLUGIN_API_VERSION } = require('../../lib/plugins');
 const { OTree } = require('../../lib/o-tree');
 
 /** Set by `prepare`, which the worker calls before translating. */
@@ -35,16 +36,11 @@ class AssemblyAwareVisitor extends DefaultVisitor {
   }
 }
 
-try {
-  registerTargetLanguage('assembly-aware-plugin', {
-    version: '1',
-    createVisitor: () => new AssemblyAwareVisitor(),
-    prepare: (context) => {
-      known = [...(context.assemblyLocations ?? [])];
-    },
-  });
-} catch (e) {
-  if (!/already registered/.test(String(e && e.message))) {
-    throw e;
-  }
-}
+// Registers on load; loading it again (as each worker does) is harmless.
+registerTargetLanguage('assembly-aware-plugin', {
+  version: '1',
+  createVisitor: () => new AssemblyAwareVisitor(),
+  prepare: (context) => {
+    known = [...(context.assemblyLocations ?? [])];
+  },
+}, { pluginApiVersion: PLUGIN_API_VERSION });

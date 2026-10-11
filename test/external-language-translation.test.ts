@@ -2,6 +2,7 @@ import { testSnippetLocation } from './testutil';
 import { allTargetLanguages, registerTargetLanguage, TargetLanguage } from '../lib/languages';
 import { DefaultVisitor } from '../lib/languages/default';
 import { OTree } from '../lib/o-tree';
+import { PLUGIN_API_VERSION } from '../lib/plugins';
 import { typeScriptSnippetFromCompleteSource } from '../lib/snippet';
 import { SnippetTranslator, Translator } from '../lib/translate';
 
@@ -21,10 +22,14 @@ class ShoutyVisitor extends DefaultVisitor<object> {
 }
 
 beforeAll(() => {
-  registerTargetLanguage('shouty', {
-    version: '1',
-    createVisitor: () => new ShoutyVisitor(),
-  });
+  registerTargetLanguage(
+    'shouty',
+    {
+      version: '1',
+      createVisitor: () => new ShoutyVisitor(),
+    },
+    { pluginApiVersion: PLUGIN_API_VERSION },
+  );
 });
 
 describe('an externally registered language', () => {

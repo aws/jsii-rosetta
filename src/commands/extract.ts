@@ -8,6 +8,7 @@ import {
   compressedTabletExists,
 } from '../jsii/assemblies';
 import * as logging from '../logging';
+import { loadLanguagePlugins } from '../plugins';
 import { RosettaTranslator, RosettaTranslatorOptions } from '../rosetta-translator';
 import { TypeScriptSnippet, SnippetParameters } from '../snippet';
 import { snippetKey } from '../tablets/key';
@@ -23,11 +24,14 @@ export interface ExtractResult {
 
 export interface ExtractOptions {
   /**
-   * Modules to load in each translation worker before translating.
+   * Language plugins to load: module specifiers, resolved from the working
+   * directory as `require` would resolve them there.
    *
-   * Worker threads are fresh module contexts, so an externally registered
-   * target language has to be registered again in each of them; without this
-   * the language is silently absent from everything that is translated.
+   * Each is loaded in this process and in every translation worker. A language
+   * has to be registered in both: here, where cached translations are checked
+   * against the registered languages, and in each worker, a fresh module
+   * context, where translation happens. Missing either, the language is
+   * silently absent from the tablet.
    *
    * @default - none
    */
@@ -139,6 +143,9 @@ export async function extractSnippets(
 ): Promise<ExtractResult> {
   const only = options.only ?? [];
 
+  // Before anything consults the registered languages.
+  const pluginModules = loadLanguagePlugins(options.pluginModules);
+
   logging.info(`Loading ${assemblyLocations.length} assemblies`);
   const assemblies = loadAssemblies(assemblyLocations, options.validateAssemblies ?? false);
 
@@ -203,7 +210,7 @@ export async function extractSnippets(
       compilationDirectory: options.compilationDirectory,
       cleanup: options.cleanup,
       batchSize: options.batchSize,
-      pluginModules: options.pluginModules,
+      pluginModules,
       // Already in hand: `extractSnippets` is given these to find snippets in.
       assemblyLocations,
     });

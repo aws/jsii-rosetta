@@ -6,6 +6,7 @@ import { testSnippetLocation } from './testutil';
 import { registerTargetLanguage, TargetLanguage } from '../lib/languages';
 import { DefaultVisitor } from '../lib/languages/default';
 import { OTree } from '../lib/o-tree';
+import { PLUGIN_API_VERSION } from '../lib/plugins';
 import { RosettaTranslator } from '../lib/rosetta-translator';
 import { typeScriptSnippetFromVisibleSource } from '../lib/snippet';
 
@@ -38,10 +39,14 @@ describe('a cached snippet missing a registered language', () => {
       await cacheBuilder.translateAll([snippet]);
       await cacheBuilder.tablet.save(join(cacheDir, 'cache.tabl.json'));
 
-      registerTargetLanguage('latecomer', {
-        version: '1',
-        createVisitor: () => new LatecomerVisitor(),
-      });
+      registerTargetLanguage(
+        'latecomer',
+        {
+          version: '1',
+          createVisitor: () => new LatecomerVisitor(),
+        },
+        { pluginApiVersion: PLUGIN_API_VERSION },
+      );
 
       const translator = new RosettaTranslator({ includeCompilerDiagnostics: true });
       await translator.loadCache(join(cacheDir, 'cache.tabl.json'));

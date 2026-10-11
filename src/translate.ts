@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { inspect } from 'node:util';
 import * as ts from 'typescript';
 
-import { allTargetLanguages, TargetLanguage, visitorFactoryFor } from './languages';
+import { allTargetLanguages, visitorFactoryFor } from './languages';
 import { RecordReferencesVisitor } from './languages/record-references';
 import { supportsTransitiveSubmoduleAccess } from './languages/target-language';
 import * as logging from './logging';
@@ -54,8 +54,8 @@ export function translateTypeScript(
  * paths callers actually use and its snippets silently come back as the
  * original TypeScript.
  */
-function defaultTargetLanguages(): readonly TargetLanguage[] {
-  return allTargetLanguages() as TargetLanguage[];
+function defaultTargetLanguages(): readonly string[] {
+  return allTargetLanguages();
 }
 
 export class Translator {
@@ -85,7 +85,7 @@ export class Translator {
   /**
    * Translates a single snippet in its own TS context.
    */
-  public translate(snip: TypeScriptSnippet, languages: readonly TargetLanguage[] = defaultTargetLanguages()) {
+  public translate(snip: TypeScriptSnippet, languages: readonly string[] = defaultTargetLanguages()) {
     const translator = this.translatorFor(snip);
     const translated = this.translateSnippet(snip, translator, languages);
     return translated;
@@ -96,7 +96,7 @@ export class Translator {
    */
   public translateSnippets(
     snippets: TypeScriptSnippet[],
-    languages: readonly TargetLanguage[] = defaultTargetLanguages(),
+    languages: readonly string[] = defaultTargetLanguages(),
   ): TranslatedSnippet[] {
     const start = performance.now();
     logging.debug(`Translating batch of ${snippets.length} snippets`);
@@ -115,7 +115,7 @@ export class Translator {
 
   private translateBatch(
     snippets: TypeScriptSnippet[],
-    languages: readonly TargetLanguage[] = defaultTargetLanguages(),
+    languages: readonly string[] = defaultTargetLanguages(),
   ): TranslatedSnippet[] {
     const translatedSnippets: TranslatedSnippet[] = [];
 
@@ -134,7 +134,7 @@ export class Translator {
   private translateSnippet(
     snippet: TypeScriptSnippet,
     translator: ISnippetTranslator,
-    languages: readonly TargetLanguage[],
+    languages: readonly string[],
   ): TranslatedSnippet {
     const translations = mkDict(
       languages.flatMap((lang, idx, array) => {

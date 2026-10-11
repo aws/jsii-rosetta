@@ -10,6 +10,7 @@
 
 const { DefaultVisitor } = require('../../lib/languages/default');
 const { registerTargetLanguage } = require('../../lib/languages');
+const { PLUGIN_API_VERSION } = require('../../lib/plugins');
 const { OTree } = require('../../lib/o-tree');
 
 class ShoutyVisitor extends DefaultVisitor {
@@ -26,13 +27,8 @@ class ShoutyVisitor extends DefaultVisitor {
   }
 }
 
-try {
-  registerTargetLanguage('shouty-plugin', {
-    version: '1',
-    createVisitor: () => new ShoutyVisitor(),
-  });
-} catch (e) {
-  if (!/already registered/.test(String(e && e.message))) {
-    throw e;
-  }
-}
+// Registers on load; loading it again (as each worker does) is harmless.
+registerTargetLanguage('shouty-plugin', {
+  version: '1',
+  createVisitor: () => new ShoutyVisitor(),
+}, { pluginApiVersion: PLUGIN_API_VERSION });
