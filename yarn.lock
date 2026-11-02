@@ -5473,10 +5473,10 @@ __metadata:
     memfs: "npm:^4.80.0"
     mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
-    projen: "npm:^0.104.19"
+    projen: "npm:^0.104.20"
     semver: "npm:^7.8.5"
     semver-intersect: "npm:^1.5.0"
-    stream-json: "npm:^3.7.0"
+    stream-json: "npm:^3.8.0"
     tar: "npm:^6.2.1"
     ts-jest: "npm:^29"
     ts-node: "npm:^10.9.2"
@@ -6447,9 +6447,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.104.19":
-  version: 0.104.19
-  resolution: "projen@npm:0.104.19"
+"projen@npm:^0.104.20":
+  version: 0.104.20
+  resolution: "projen@npm:0.104.20"
   dependencies:
     "@iarna/toml": "npm:^2.2.5"
     case: "npm:^1.6.3"
@@ -6471,7 +6471,7 @@ __metadata:
     constructs: ^10.5.0
   bin:
     projen: bin/projen
-  checksum: 10c0/d8f9caaaddae13ba51f1b047544d2dc6094679919add66aaac60c1537441d15b47d39086c64135ae6f1982abdd7c9bff4da58c0d778c67dbcaa373d7296ec252
+  checksum: 10c0/69dcfb67d9e8e7b61e27d67a9cad6c8b32ee02ee08872c49aff08f337e4ff0c20b7ba9598303f56691d6c88c0e903eba2197c7dd5f7aceaf28abd1fe46d68329
   languageName: node
   linkType: hard
 
@@ -7031,19 +7031,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-chain@npm:^4.2.5":
-  version: 4.2.5
-  resolution: "stream-chain@npm:4.2.5"
-  checksum: 10c0/c47e3895344e356d0aa641b08735c9f4cc7486a12275cef9549a114ea0e8348f75443f31f75053eefef0eee620a13bf6e9841479c64954b8d4dcc1a41a5511b8
+"stream-chain@npm:^4.4.1":
+  version: 4.4.1
+  resolution: "stream-chain@npm:4.4.1"
+  checksum: 10c0/130fc6d677f378a223c8fe3e5ee47e10ad898f2551f1e2b2134c2f77d0f8ac98d62d6ba185f99603332ac02f56b4c7b4abc86f23cecfed81b217885a306d410c
   languageName: node
   linkType: hard
 
-"stream-json@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "stream-json@npm:3.7.0"
+"stream-json@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "stream-json@npm:3.8.0"
   dependencies:
-    stream-chain: "npm:^4.2.5"
-  checksum: 10c0/5f56acbd01245580f947697de546f469c67714656ee31765631972841aed336984a25ebeb70fcb6cccf1c638827a9655d552a4f7a4ab9687bf26463e0cf24394
+    stream-chain: "npm:^4.4.1"
+  checksum: 10c0/4c652f988b391477d37ad32a58751e3898b50b132696907d6f407591a42408b4a4bbe7e2f6ef9d27a02a2030637c0c892e7f348cc5ff8f9cfc4d797671873a76
   languageName: node
   linkType: hard
 
