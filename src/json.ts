@@ -4,16 +4,6 @@ import { promisify } from 'node:util';
 // NB: In node 15+, there is a node:stream.promises object that has this built-in.
 const asyncPipeline = promisify(pipeline);
 
-/**
- * Load 'stream-json' eagerly, not lazily.
- *
- * Necessary for tests that use mockfs, otherwise the mocks will
- * interfere with the lazy import() call.
- */
-export async function eagerlyLoadStreamJsonBeforeMockFs() {
-  await loadStreamJson();
-}
-
 async function loadStreamJson() {
   // Must not be loaded through Promise.all() because then we get race conditions
   // on Node 20-22.
