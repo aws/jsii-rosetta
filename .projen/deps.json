@@ -17,10 +17,6 @@
       "type": "build"
     },
     {
-      "name": "@types/mock-fs",
-      "type": "build"
-    },
-    {
       "name": "@types/node",
       "version": "^20",
       "type": "build"
@@ -87,10 +83,6 @@
     },
     {
       "name": "memfs",
-      "type": "build"
-    },
-    {
-      "name": "mock-fs",
       "type": "build"
     },
     {
