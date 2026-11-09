@@ -30,7 +30,6 @@
     "types": [
       "commonmark",
       "jest",
-      "mock-fs",
       "node",
       "semver",
       "tar",
