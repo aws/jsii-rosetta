@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import * as mockfs from 'mock-fs';
-=======
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
->>>>>>> 9a2108ea (chore: remove mock-fs (#3920))
 
 import { fakeAssembly } from './jsii/fake-assembly';
 import { testSnippetLocation } from './testutil';
