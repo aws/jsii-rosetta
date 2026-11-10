@@ -2014,15 +2014,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mock-fs@npm:^4.13.4":
-  version: 4.13.4
-  resolution: "@types/mock-fs@npm:4.13.4"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/687c8e36d91031529924fd89011b7a87167ea33a1b92a9d845f0feb1a5157f168412c62ee308e57b9a71fd938197b4c71ca1784eb44e8a7cbdd816011ffd7f65
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*":
   version: 26.6.6
   resolution: "@types/node@npm:26.6.6"
@@ -5449,7 +5440,6 @@ __metadata:
     "@jsii/spec": "npm:^1.142.0"
     "@types/commonmark": "npm:^0.27.10"
     "@types/jest": "npm:^30"
-    "@types/mock-fs": "npm:^4.13.4"
     "@types/node": "npm:^20"
     "@types/semver": "npm:^7.8.0"
     "@types/tar": "npm:^6.1.13"
@@ -5471,7 +5461,6 @@ __metadata:
     jest: "npm:^30"
     jsii: "npm:~5.9.1"
     memfs: "npm:^4.80.0"
-    mock-fs: "npm:^5.5.0"
     prettier: "npm:^2.8.8"
     projen: "npm:^0.104.27"
     semver: "npm:^7.8.6"
@@ -5942,13 +5931,6 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 10c0/46ea0f3ffa8bc6a5bc0c7081ffc3907777f0ed6516888d40a518c5111f8366d97d2678911ad1a6882bf592fa9de6c784fea32e1687bb94e1f4944170af48a5cf
-  languageName: node
-  linkType: hard
-
-"mock-fs@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "mock-fs@npm:5.5.0"
-  checksum: 10c0/56539c9ab1d29b72c4b3b54f003808c7c51e5c82454a80fc46fd811f40401652da32412bbf26daa4eabff0e44a08eeafbeb6c885c60c1111b5429a4279efbda4
   languageName: node
   linkType: hard
 

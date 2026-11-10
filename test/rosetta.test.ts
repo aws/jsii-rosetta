@@ -1,4 +1,6 @@
-import * as mockfs from 'mock-fs';
+import * as fs from 'node:fs';
+import * as os from 'node:os';
+import * as path from 'node:path';
 
 import { fakeAssembly } from './jsii/fake-assembly';
 import { testSnippetLocation } from './testutil';
@@ -12,11 +14,6 @@ import {
   UnknownSnippetMode,
 } from '../lib';
 import { TargetLanguage } from '../lib/languages';
-import { eagerlyLoadStreamJsonBeforeMockFs } from '../src/json';
-
-beforeAll(async () => {
-  await eagerlyLoadStreamJsonBeforeMockFs();
-});
 
 const SAMPLE_CODE: TypeScriptSnippet = {
   visibleSource: 'callThisFunction();',
@@ -222,12 +219,13 @@ describe('Rosetta object with disclaimers', () => {
   });
 });
 
-describe('with mocked filesystem', () => {
+describe('with tablet files on disk', () => {
+  let dir: string;
   beforeEach(() => {
-    mockfs();
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rosetta-test-'));
   });
   afterEach(() => {
-    mockfs.restore();
+    fs.rmSync(dir, { recursive: true, force: true });
   });
 
   const tablet = new LanguageTablet();
@@ -242,11 +240,11 @@ describe('with mocked filesystem', () => {
 
   test('Can save language tablet and load it in Rosetta class', async () => {
     // GIVEN
-    await tablet.save('/test.tablet');
+    await tablet.save(path.join(dir, 'test.tablet'));
 
     // WHEN
     const rosetta = new Rosetta();
-    await rosetta.loadTabletFromFile('/test.tablet');
+    await rosetta.loadTabletFromFile(path.join(dir, 'test.tablet'));
     const translated = rosetta.translateSnippet(SAMPLE_CODE, TargetLanguage.PYTHON);
 
     // THEN
@@ -258,11 +256,11 @@ describe('with mocked filesystem', () => {
 
   test('Rosetta class automatically loads default-named tablets in same directory as assembly', async () => {
     // GIVEN
-    await tablet.save(`/${DEFAULT_TABLET_NAME}`);
+    await tablet.save(path.join(dir, DEFAULT_TABLET_NAME));
 
     // WHEN
     const rosetta = new Rosetta();
-    await rosetta.addAssembly(fakeAssembly({}), '/');
+    await rosetta.addAssembly(fakeAssembly({}), dir);
     const translated = rosetta.translateSnippet(SAMPLE_CODE, TargetLanguage.PYTHON);
 
     // THEN
