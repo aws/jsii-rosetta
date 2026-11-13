@@ -23,6 +23,7 @@ import {
   stripCommentMarkers,
   voidExpressionString,
   quoteStringLiteral,
+  unescapeAndEscapeInterpolationBraces,
 } from '../typescript/ast-utils';
 import { ImportStatement } from '../typescript/imports';
 import { parameterAcceptsUndefined } from '../typescript/types';
@@ -111,7 +112,7 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '2';
+  public static readonly VERSION = '3';
 
   public readonly language = TargetLanguage.PYTHON;
   public readonly defaultContext = {};
@@ -658,12 +659,12 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   public override templateExpression(node: ts.TemplateExpression, context: PythonVisitorContext): OTree {
     const parts = new Array<string>();
     if (node.head.rawText) {
-      parts.push(quoteStringLiteral(node.head.rawText));
+      parts.push(quoteStringLiteral(unescapeAndEscapeInterpolationBraces(node.head.rawText)));
     }
     for (const span of node.templateSpans) {
       parts.push(`{${context.textOf(span.expression)}}`);
       if (span.literal.rawText) {
-        parts.push(quoteStringLiteral(span.literal.rawText));
+        parts.push(quoteStringLiteral(unescapeAndEscapeInterpolationBraces(span.literal.rawText)));
       }
     }
 

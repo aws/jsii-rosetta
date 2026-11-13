@@ -1,0 +1,10 @@
+String str = "problematic!";
+System.out.println("Simple Template without escapes");
+System.out.println(String.format("Simple Template with simple escapes: %s", 10));
+System.out.println(String.format("\\${Template with Terraform Escape sequence: %s!}", str));
+System.out.println(String.format("\\$\\{Template with more escaped Terraform Escape sequence: %s!\\}", str));
+System.out.println(String.format("$\\{Template with differently escaped Terraform Escape sequence: %s!\\}", str));
+System.out.println(String.format("prefix \\${literal} %s suffix", str));
+System.out.println(String.format("prefix \\\\\\${literal} %s suffix", str));
+System.out.println("${foo}");
+System.out.println(String.format("%n\\${escaped}%n%s%n", str));
