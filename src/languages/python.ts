@@ -464,7 +464,8 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   }
 
   public override arrayLiteralExpression(node: ts.ArrayLiteralExpression, context: PythonVisitorContext): OTree {
-    return new OTree(['['], context.convertAll(node.elements), {
+    // Neutralize tail-position so structs inside arrays keep their constructor form.
+    return new OTree(['['], context.updateContext({ tailPositionArgument: false }).convertAll(node.elements), {
       suffix: context.mirrorNewlineBefore(node.elements[0], ']'),
       separator: ', ',
       indent: 4,
