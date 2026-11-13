@@ -111,7 +111,7 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '2';
+  public static readonly VERSION = '3';
 
   public readonly language = TargetLanguage.PYTHON;
   public readonly defaultContext = {};
@@ -463,7 +463,8 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   }
 
   public override arrayLiteralExpression(node: ts.ArrayLiteralExpression, context: PythonVisitorContext): OTree {
-    return new OTree(['['], context.convertAll(node.elements), {
+    // Neutralize tail-position so structs inside arrays keep their constructor form.
+    return new OTree(['['], context.updateContext({ tailPositionArgument: false }).convertAll(node.elements), {
       suffix: context.mirrorNewlineBefore(node.elements[0], ']'),
       separator: ', ',
       indent: 4,
