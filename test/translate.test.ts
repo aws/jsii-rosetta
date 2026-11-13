@@ -46,6 +46,35 @@ test('does not fail on "Debug Failure"', () => {
   `);
 });
 
+test('multi-line variable assignment with a function call on the right hand side stays on one line in Python', () => {
+  // GIVEN
+  const source = [
+    'function aFunction() {',
+    '  return "hello";',
+    '}',
+    '',
+    'export function main() {',
+    '  let aSimpleThing = ',
+    '    aFunction();',
+    '',
+    '  return aSimpleThing;',
+    '}',
+  ].join('\n');
+  const snippet: TypeScriptSnippet = {
+    completeSource: source,
+    location,
+    visibleSource: source,
+    strict: false,
+  };
+
+  // WHEN
+  const subject = new SnippetTranslator(snippet);
+  const python = subject.renderUsing(new PythonVisitor());
+
+  // THEN
+  expect(python).toContain('a_simple_thing = a_function()');
+});
+
 test('rejects ?? operator', () => {
   const snippet: TypeScriptSnippet = {
     completeSource: 'const x = false; const y = x ?? true;',
