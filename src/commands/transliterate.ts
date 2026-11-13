@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs';
 import { resolve } from 'node:path';
-import { Assembly, Docs, SPEC_FILE_NAME, Type, TypeKind, loadAssemblyFromPath } from '@jsii/spec';
+import { Assembly, Docs, ReadMe, SPEC_FILE_NAME, Type, TypeKind, loadAssemblyFromPath } from '@jsii/spec';
 
 import { extractSnippets } from './extract';
 import { SUPPORTED_ASSEMBLY_FEATURES } from '../jsii/assemblies';
@@ -114,13 +114,9 @@ export async function transliterateAssembly(
         continue;
       }
 
-      if (result.readme?.markdown) {
-        result.readme.markdown = rosetta.translateSnippetsInMarkdown(
-          { api: 'moduleReadme', moduleFqn: result.name },
-          result.readme.markdown,
-          language,
-          true /* strict */,
-        );
+      transliterateModuleReadme(result.readme, result.name, rosetta, language);
+      for (const [submoduleFqn, submodule] of Object.entries(result.submodules ?? {})) {
+        transliterateModuleReadme(submodule.readme, submoduleFqn, rosetta, language);
       }
       for (const type of Object.values(result.types ?? {})) {
         transliterateType(type, rosetta, language);
@@ -170,6 +166,23 @@ async function loadAssemblies(
 }
 
 type AssemblyLoader = () => Mutable<Assembly>;
+
+function transliterateModuleReadme(
+  readme: ReadMe | undefined,
+  moduleFqn: string,
+  rosetta: RosettaTabletReader,
+  language: TargetLanguage,
+): void {
+  if (!readme?.markdown) {
+    return;
+  }
+  readme.markdown = rosetta.translateSnippetsInMarkdown(
+    { api: 'moduleReadme', moduleFqn },
+    readme.markdown,
+    language,
+    true /* strict */,
+  );
+}
 
 function transliterateType(type: Type, rosetta: RosettaTabletReader, language: TargetLanguage): void {
   transliterateDocs({ api: 'type', fqn: type.fqn }, type.docs);
