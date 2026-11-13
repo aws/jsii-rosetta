@@ -1,0 +1,10 @@
+str := "problematic!"
+fmt.Println("Simple Template without escapes")
+fmt.Println(fmt.Sprintf("Simple Template with simple escapes: %v", 10))
+fmt.Println(fmt.Sprintf("\\${Template with Terraform Escape sequence: %v!}", str))
+fmt.Println(fmt.Sprintf("\\$\\{Template with more escaped Terraform Escape sequence: %v!\\}", str))
+fmt.Println(fmt.Sprintf("$\\{Template with differently escaped Terraform Escape sequence: %v!\\}", str))
+fmt.Println(fmt.Sprintf("prefix \\${literal} %v suffix", str))
+fmt.Println(fmt.Sprintf("prefix \\\\\\${literal} %v suffix", str))
+fmt.Println("${foo}")
+fmt.Println(fmt.Sprintf("\n\\${escaped}\n%v\n", str))

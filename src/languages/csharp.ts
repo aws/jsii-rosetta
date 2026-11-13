@@ -11,6 +11,7 @@ import {
   matchAst,
   nodeOfType,
   quoteStringLiteral,
+  unescapeAndEscapeInterpolationBraces,
   visibility,
   isReadOnly,
   findSuperCall,
@@ -77,7 +78,7 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '2';
+  public static readonly VERSION = '3';
 
   public readonly language = TargetLanguage.CSHARP;
 
@@ -632,12 +633,14 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
 
     const parts = new Array<string>();
     if (node.head.rawText) {
-      parts.push(isMultiLine ? node.head.rawText.replace(/"/g, '""') : quoteStringLiteral(node.head.rawText));
+      const head = unescapeAndEscapeInterpolationBraces(node.head.rawText);
+      parts.push(isMultiLine ? head.replace(/"/g, '""') : quoteStringLiteral(head));
     }
     for (const span of node.templateSpans) {
       parts.push(`{${context.textOf(span.expression)}}`);
       if (span.literal.rawText) {
-        parts.push(isMultiLine ? span.literal.rawText.replace(/"/g, '""') : quoteStringLiteral(span.literal.rawText));
+        const literal = unescapeAndEscapeInterpolationBraces(span.literal.rawText);
+        parts.push(isMultiLine ? literal.replace(/"/g, '""') : quoteStringLiteral(literal));
       }
     }
 
