@@ -104,7 +104,7 @@ export class JavaVisitor extends DefaultVisitor<JavaContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '1';
+  public static readonly VERSION = '2';
 
   /**
    * Aliases for modules
