@@ -22,7 +22,11 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
   public abstract mergeContext(old: C, update: C): C;
 
   public commentRange(comment: CommentSyntax, _context: AstRenderer<C>): OTree {
-    return new OTree([comment.isTrailing ? ' ' : '', comment.text, comment.hasTrailingNewLine ? '\n' : '']);
+    return new OTree([comment.isTrailing ? ' ' : '', comment.text, comment.hasTrailingNewLine ? '\n' : ''], [], {
+      // Make sure comment is rendered exactly once in the output tree, no
+      // matter how many source nodes it is attached to.
+      renderOnce: `comment-${comment.pos}`,
+    });
   }
 
   public sourceFile(node: ts.SourceFile, context: AstRenderer<C>): OTree {
