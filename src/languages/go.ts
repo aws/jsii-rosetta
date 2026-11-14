@@ -82,7 +82,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '2';
+  public static readonly VERSION = '3';
 
   public readonly indentChar = '\t';
 
@@ -281,7 +281,14 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
       ? this.renderType(node, elementType.symbol, elementType, true, 'interface{}', renderer)
       : 'interface{}';
 
-    return new OTree(['[]', typeName, '{'], renderer.convertAll(node.elements), {
+    // jsii-pacmak types jsii struct collection fields as pointer-to-slice
+    // (`removeHeaders?: string[]` → `RemoveHeaders *[]*string`). Property
+    // assignment supplies pointer context (`isPtr`); take the address of the
+    // slice literal so copied examples compile. Local slices, method args,
+    // map values, and nested array elements stay `[]T{}`.
+    const prefix = shouldPointerizeArrayLiteral(node, renderer) ? '&[]' : '[]';
+
+    return new OTree([prefix, typeName, '{'], renderer.convertAll(node.elements), {
       separator: ',',
       trailingSeparator: true,
       suffix: '}',
@@ -1098,6 +1105,23 @@ function ucFirst(x: string) {
  */
 function lcFirst(x: string) {
   return x.substring(0, 1).toLowerCase() + x.substring(1);
+}
+
+/**
+ * Whether this array literal is assigned to a jsii struct collection field.
+ *
+ * Pacmak emits those fields as `*[]*T` (optional and required). Local structs
+ * declare `[]*T` and keep an unaddressed slice.
+ */
+function shouldPointerizeArrayLiteral(node: ts.ArrayLiteralExpression, renderer: GoRenderer): boolean {
+  if (!renderer.currentContext.isPtr || renderer.currentContext.inMapLiteral) {
+    return false;
+  }
+  if (!ts.isPropertyAssignment(node.parent) || !ts.isObjectLiteralExpression(node.parent.parent)) {
+    return false;
+  }
+  const lit = analyzeObjectLiteral(renderer.typeChecker, node.parent.parent);
+  return lit.kind === 'struct';
 }
 
 function wrapPtrExpression(typeChecker: ts.TypeChecker, node: ts.Expression, unwrapped: OTree): OTree {
