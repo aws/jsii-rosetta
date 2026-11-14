@@ -82,7 +82,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '3';
+  public static readonly VERSION = '4';
 
   public readonly indentChar = '\t';
 
@@ -277,16 +277,18 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
     const arrayType =
       inferredTypeOfExpression(renderer.typeChecker, node) ?? renderer.typeChecker.getTypeAtLocation(node);
     const [elementType] = renderer.typeChecker.getTypeArguments(arrayType as ts.TypeReference);
-    const typeName = elementType
+    let typeName = elementType
       ? this.renderType(node, elementType.symbol, elementType, true, 'interface{}', renderer)
       : 'interface{}';
 
-    // jsii-pacmak types jsii struct collection fields as pointer-to-slice
-    // (`removeHeaders?: string[]` → `RemoveHeaders *[]*string`). Property
-    // assignment supplies pointer context (`isPtr`); take the address of the
-    // slice literal so copied examples compile. Local slices, method args,
-    // map values, and nested array elements stay `[]T{}`.
-    const prefix = shouldPointerizeArrayLiteral(node, renderer) ? '&[]' : '[]';
+    const pointerize = shouldPointerizeArrayLiteral(node, renderer);
+    if (pointerize && elementType) {
+      const elementJsii = determineJsiiType(renderer.typeChecker, elementType);
+      if (elementJsii.kind === 'list') {
+        typeName = typeName.replace(/\[\]/g, '*[]');
+      }
+    }
+    const prefix = pointerize ? '&[]' : '[]';
 
     return new OTree([prefix, typeName, '{'], renderer.convertAll(node.elements), {
       separator: ',',
@@ -442,7 +444,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
         ),
         '{',
       ],
-      renderer.updateContext({ isExported: exported, isStruct: true }).convertAll(node.properties),
+      renderer.updateContext({ isExported: exported, isStruct: true, inMapLiteral: false }).convertAll(node.properties),
       {
         suffix: '}',
         separator: ',',
@@ -470,12 +472,22 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
         }
         // To make linter understand there is no fall-through here...
         throw new AssertionError({ message: 'unreachable' });
-      default:
+      case 'list':
+      case 'map':
+        return renderer.convert(node.expression);
+      case 'unknown':
+      case 'error':
+      case 'namedType':
+      case 'intersection':
         return new OTree(
           [renderer.convert(node.expression), '.(', this.renderTypeNode(node.type, false, renderer), ')'],
           [],
           { canBreakLine: true },
         );
+      default: {
+        const _exhaustive: never = jsiiType;
+        throw new AssertionError({ message: String(_exhaustive) });
+      }
     }
   }
 
@@ -1107,21 +1119,51 @@ function lcFirst(x: string) {
   return x.substring(0, 1).toLowerCase() + x.substring(1);
 }
 
-/**
- * Whether this array literal is assigned to a jsii struct collection field.
- *
- * Pacmak emits those fields as `*[]*T` (optional and required). Local structs
- * declare `[]*T` and keep an unaddressed slice.
- */
+/** True when this slice is assigned to a jsii struct collection field (`*[]*T`). */
 function shouldPointerizeArrayLiteral(node: ts.ArrayLiteralExpression, renderer: GoRenderer): boolean {
   if (!renderer.currentContext.isPtr || renderer.currentContext.inMapLiteral) {
     return false;
   }
-  if (!ts.isPropertyAssignment(node.parent) || !ts.isObjectLiteralExpression(node.parent.parent)) {
+  const assignment = enclosingPropertyAssignment(node);
+  if (!assignment || !ts.isObjectLiteralExpression(assignment.parent)) {
     return false;
   }
-  const lit = analyzeObjectLiteral(renderer.typeChecker, node.parent.parent);
-  return lit.kind === 'struct';
+  return analyzeObjectLiteral(renderer.typeChecker, assignment.parent).kind === 'struct';
+}
+
+function enclosingPropertyAssignment(node: ts.Node): ts.PropertyAssignment | undefined {
+  let current: ts.Node = node;
+  for (;;) {
+    const parent = current.parent;
+    if (!parent) {
+      return undefined;
+    }
+    if (wrapperOperand(parent) === current) {
+      current = parent;
+      continue;
+    }
+    if (ts.isArrayLiteralExpression(parent)) {
+      current = parent;
+      continue;
+    }
+    if (ts.isPropertyAssignment(parent) && parent.initializer === current) {
+      return parent;
+    }
+    return undefined;
+  }
+}
+
+function wrapperOperand(node: ts.Node): ts.Expression | undefined {
+  if (
+    ts.isParenthesizedExpression(node) ||
+    ts.isAsExpression(node) ||
+    ts.isTypeAssertionExpression(node) ||
+    ts.isNonNullExpression(node) ||
+    ts.isSatisfiesExpression(node)
+  ) {
+    return node.expression;
+  }
+  return undefined;
 }
 
 function wrapPtrExpression(typeChecker: ts.TypeChecker, node: ts.Expression, unwrapped: OTree): OTree {

@@ -6,8 +6,12 @@ class ResponseHeadersPolicy {
 
 interface ResponseHeadersPolicyProps {
   readonly removeHeaders?: string[];
+  readonly parenHeaders?: string[];
+  readonly asHeaders?: string[];
+  readonly bangHeaders?: string[];
   readonly requiredHeaders: string[];
   readonly items?: Item[];
+  readonly nested?: string[][];
   readonly tags?: { [key: string]: string };
 }
 
@@ -19,8 +23,12 @@ function takesHeaders(_headers: string[]): void { }
 /// !show
 new ResponseHeadersPolicy(this, 'Policy', {
   removeHeaders: ['Server'],
+  parenHeaders: (['Paren']),
+  asHeaders: ['As'] as string[],
+  bangHeaders: ['Bang']!,
   requiredHeaders: ['X-Custom'],
   items: [{ name: 'n' }],
+  nested: [['a', 'b']],
   tags: { env: 'prod' },
 });
 

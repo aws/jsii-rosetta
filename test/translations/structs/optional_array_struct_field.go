@@ -2,12 +2,27 @@ NewResponseHeadersPolicy(this, jsii.String("Policy"), &responseHeadersPolicyProp
 	RemoveHeaders: &[]*string{
 		jsii.String("Server"),
 	},
+	ParenHeaders: (&[]*string{
+		jsii.String("Paren"),
+	}),
+	AsHeaders: &[]*string{
+		jsii.String("As"),
+	},
+	BangHeaders: &[]*string{
+		jsii.String("Bang"),
+	},
 	RequiredHeaders: &[]*string{
 		jsii.String("X-Custom"),
 	},
 	Items: &[]*item{
 		&item{
 			Name: jsii.String("n"),
+		},
+	},
+	Nested: &[]*[]*string{
+		&[]*string{
+			jsii.String("a"),
+			jsii.String("b"),
 		},
 	},
 	Tags: map[string]*string{

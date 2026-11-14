@@ -10,5 +10,3 @@ public class LocalProps {
 }
 
 LocalProps localProps = new LocalProps().headers(List.of("H"));
-String[] local = List.of("local");
-String[] empty = List.of();

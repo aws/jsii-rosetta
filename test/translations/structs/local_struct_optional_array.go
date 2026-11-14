@@ -7,8 +7,3 @@ localProps := &localProps{
 		jsii.String("H"),
 	},
 }
-local := []*string{
-	"local",
-}
-empty := []*string{
-}
