@@ -478,13 +478,15 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
     // node.name is either an identifier or a string literal. The string literal
     // needs to be converted differently depending on whether it needs to be a
     // string or a keyword argument.
-    let name = ts.isStringLiteral(node.name)
-      ? new OTree([
-          context.currentContext.inMap // If in map, don't mangle the keys
-            ? node.name.text
-            : mangleIdentifier(node.name.text),
-        ])
-      : context.convert(node.name);
+    // Map keys are quoted strings, not Python identifiers: keep them from being
+    // keyword-escaped (string literals stay verbatim; identifier keys still
+    // snake_case). Keyword-argument names continue to go through convert().
+    let name =
+      context.currentContext.inMap && (ts.isIdentifier(node.name) || ts.isStringLiteral(node.name))
+        ? new OTree([ts.isStringLiteral(node.name) ? node.name.text : mangleIdentifier(node.name.text, false)])
+        : ts.isStringLiteral(node.name)
+        ? new OTree([mangleIdentifier(node.name.text)])
+        : context.convert(node.name);
 
     // If this isn't a computed property, we must quote the key (unless it's rendered as a keyword)
     if (
@@ -513,7 +515,13 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
       mid = '=';
     }
 
-    return new OTree([before, context.convert(node.name), mid, context.convert(node.name)], [], { canBreakLine: true });
+    // Dict keys stay unescaped; the value identifier still gets keyword escaping.
+    const keyName =
+      context.currentContext.inMap && !context.currentContext.renderObjectLiteralAsKeywords
+        ? mangleIdentifier(node.name.text, false)
+        : context.convert(node.name);
+
+    return new OTree([before, keyName, mid, context.convert(node.name)], [], { canBreakLine: true });
   }
 
   public override newExpression(node: ts.NewExpression, context: PythonVisitorContext): OTree {
@@ -839,7 +847,7 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   }
 }
 
-function mangleIdentifier(originalIdentifier: string) {
+function mangleIdentifier(originalIdentifier: string, escapeKeywords = true) {
   if (startsWithUppercase(originalIdentifier)) {
     // Probably a class, leave as-is
     return originalIdentifier;
@@ -851,7 +859,8 @@ function mangleIdentifier(originalIdentifier: string) {
     .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
     .toLowerCase();
-  return IDENTIFIER_KEYWORDS.includes(cased) ? `${cased}_` : cased;
+  // Already-suffixed names (e.g. with_) are not in IDENTIFIER_KEYWORDS, so they stay as-is.
+  return escapeKeywords && IDENTIFIER_KEYWORDS.has(cased) ? `${cased}_` : cased;
 }
 
 const BUILTIN_FUNCTIONS: { [key: string]: string } = {
@@ -866,7 +875,50 @@ const TOKEN_REWRITES: { [key: string]: string } = {
   false: 'False',
 };
 
-const IDENTIFIER_KEYWORDS: string[] = ['lambda'];
+/**
+ * Python reserved words, aligned with jsii-pacmak
+ * (`packages/jsii-pacmak/lib/targets/python/util.ts`).
+ *
+ * Matched after snake_case + toLowerCase, so `False`/`None`/`True` never hit
+ * (class-like names are also returned unchanged above). `lambda` stays escaped.
+ */
+const IDENTIFIER_KEYWORDS = new Set([
+  'False',
+  'None',
+  'True',
+  'and',
+  'as',
+  'assert',
+  'async',
+  'await',
+  'break',
+  'class',
+  'continue',
+  'def',
+  'del',
+  'elif',
+  'else',
+  'except',
+  'finally',
+  'for',
+  'from',
+  'global',
+  'if',
+  'import',
+  'in',
+  'is',
+  'lambda',
+  'nonlocal',
+  'not',
+  'or',
+  'pass',
+  'raise',
+  'return',
+  'try',
+  'while',
+  'with',
+  'yield',
+]);
 
 function last<A>(xs: readonly A[]): A {
   return xs[xs.length - 1];
