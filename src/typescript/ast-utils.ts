@@ -383,6 +383,22 @@ export function quoteStringLiteral(x: string) {
   return x.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
+/**
+ * Prepare a TypeScript template literal's rawText for Python f-strings and C#
+ * interpolated strings.
+ *
+ * TypeScript records escaped interpolations (`\${`, `\{`, `\}`) in `rawText`.
+ * Scan escape pairs left to right so `\\` stays a pair (a literal backslash
+ * before `$`/`{`/`}` is not an interpolation escape). Unescape `$`/`{`/`}`,
+ * then double `{`/`}` so they are not treated as substitutions.
+ */
+export function unescapeAndEscapeInterpolationBraces(rawText: string) {
+  return rawText
+    .replace(/\\(.)/gs, (match, char) => ('${}'.includes(char) ? char : match))
+    .replace(/{/g, '{{')
+    .replace(/}/g, '}}');
+}
+
 export function visibility(
   x:
     | ts.AccessorDeclaration
