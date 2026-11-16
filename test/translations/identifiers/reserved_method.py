@@ -1,0 +1,7 @@
+HttpRouteKey.with_("path")
+HttpRouteKey.with_("already")
+obj.with_("path")
+create_route(as_="alias")
+take_map({"with": "quoted-key"})
+take_map({"with": 1})
+take_map({"from": from_})
