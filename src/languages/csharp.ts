@@ -78,11 +78,7 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-<<<<<<< HEAD
-  public static readonly VERSION = '1';
-=======
-  public static readonly VERSION = '3';
->>>>>>> 029e3529 (fix: render escaped template interpolations as literals in Python and C# (#3939))
+  public static readonly VERSION = '2';
 
   public readonly language = TargetLanguage.CSHARP;
 
