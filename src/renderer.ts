@@ -380,17 +380,19 @@ export class AstRenderer<C> {
     // Add comments and leading whitespace
     const leadingRanges = scanText(this.sourceFile.text, node.getFullStart(), node.getStart(this.sourceFile));
 
-    // A line break between `=` and the initializer is not meaningful, and some
-    // languages (Python) would render it as a syntax error, so drop it.
-    const isVariableInitializer =
-      node.parent !== undefined && ts.isVariableDeclaration(node.parent) && node.parent.initializer === node;
+    // Whitespace between statements can preserve useful blank lines, but a
+    // newline before a value inside a statement is not meaningful. Some
+    // languages (Python) render it as a statement boundary, which can either
+    // produce invalid syntax or silently change the program's behavior.
+    const isStatementBoundary =
+      ts.isStatement(node) || ts.isClassElement(node) || ts.isTypeElement(node) || ts.isEnumMember(node);
 
     const precede: OTree[] = [];
     for (const range of leadingRanges) {
       let trivia: OTree | undefined = undefined;
       switch (range.type) {
         case 'other':
-          if (isVariableInitializer) {
+          if (!isStatementBoundary) {
             break;
           }
           trivia = new OTree([repeatNewlines(this.sourceFile.text.substring(range.pos, range.end))], [], {
