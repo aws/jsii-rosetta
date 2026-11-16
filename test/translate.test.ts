@@ -46,6 +46,64 @@ test('does not fail on "Debug Failure"', () => {
   `);
 });
 
+test('multi-line variable assignment with a function call on the right hand side stays on one line in Python', () => {
+  // GIVEN
+  const source = [
+    'function aFunction() {',
+    '  return "hello";',
+    '}',
+    '',
+    'export function main() {',
+    '  let aSimpleThing = ',
+    '    aFunction();',
+    '',
+    '  return aSimpleThing;',
+    '}',
+  ].join('\n');
+  const snippet: TypeScriptSnippet = {
+    completeSource: source,
+    location,
+    visibleSource: source,
+    strict: false,
+  };
+
+  // WHEN
+  const subject = new SnippetTranslator(snippet);
+  const python = subject.renderUsing(new PythonVisitor());
+
+  // THEN
+  expect(python).toContain('a_simple_thing = a_function()');
+});
+
+test.each([
+  ['plain reassignment', 'x =\n  aFunction();', 'x = a_function()'],
+  ['object literal property value', 'const x = { key:\n  aFunction() };', '"key": a_function()'],
+])('does not turn a newline before an expression into a Python statement boundary (%s)', (_name, source, expected) => {
+  const snippet: TypeScriptSnippet = {
+    completeSource: source,
+    location,
+    visibleSource: source,
+    strict: false,
+  };
+
+  const subject = new SnippetTranslator(snippet);
+  const python = subject.renderUsing(new PythonVisitor());
+
+  expect(python).toContain(expected);
+});
+
+test('preserves the statement boundary after a newline following return', () => {
+  // JavaScript's automatic semicolon insertion makes the call a separate
+  // statement, so joining it to return would change the source semantics.
+  const source = 'function main() {\n  return\n    aFunction();\n}';
+  const snippet: TypeScriptSnippet = { completeSource: source, location, visibleSource: source, strict: false };
+
+  const subject = new SnippetTranslator(snippet);
+  const python = subject.renderUsing(new PythonVisitor());
+
+  expect(python).toMatch(/return\n\s+a_function\(\)/);
+});
+
 test('rejects ?? operator', () => {
   const snippet: TypeScriptSnippet = {
     completeSource: 'const x = false; const y = x ?? true;',
