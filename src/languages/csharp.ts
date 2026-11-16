@@ -78,7 +78,7 @@ export class CSharpVisitor extends DefaultVisitor<CSharpLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '3';
+  public static readonly VERSION = '4';
 
   public readonly language = TargetLanguage.CSHARP;
 

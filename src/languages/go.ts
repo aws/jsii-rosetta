@@ -82,7 +82,7 @@ export class GoVisitor extends DefaultVisitor<GoLanguageContext> {
    * Bump this when you change something in the implementation to invalidate
    * existing cached translations.
    */
-  public static readonly VERSION = '2';
+  public static readonly VERSION = '3';
 
   public readonly indentChar = '\t';
 
