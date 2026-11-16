@@ -7,6 +7,7 @@ import { extractSnippets } from '../../lib/commands/extract';
 import { transliterateAssembly } from '../../lib/commands/transliterate';
 import { TargetLanguage, targetName } from '../../lib/languages/target-language';
 import { TabletSchema } from '../../lib/tablets/schema';
+import { LanguageTablet } from '../../lib/tablets/tablets';
 import { withTemporaryDirectory, TestJsiiModule, DUMMY_JSII_CONFIG } from '../testutil';
 
 jest.setTimeout(60_000);
@@ -16,6 +17,27 @@ const targets = Object.values(TargetLanguage).reduce((tgt, lang) => {
   tgt[targetName(lang)] = { phony: true };
   return tgt;
 }, {} as Record<string, any>);
+
+function writeLocalAssembly(
+  tmpDir: string,
+  compilationResult: { assembly: Assembly; files: Record<string, string> },
+): void {
+  fs.writeFileSync(
+    path.join(tmpDir, SPEC_FILE_NAME),
+    JSON.stringify({ ...compilationResult.assembly, targets }, null, 2),
+  );
+  for (const [file, content] of Object.entries(compilationResult.files)) {
+    const dest = path.resolve(tmpDir, file);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, content, 'utf-8');
+  }
+}
+
+function moduleReadmeApis(tablet: LanguageTablet) {
+  return tablet.snippetKeys
+    .map((key) => tablet.tryGetSnippet(key)?.snippet.location.api)
+    .filter((api) => api?.api === 'moduleReadme');
+}
 
 test('single assembly, all languages', () =>
   withTemporaryDirectory(async (tmpDir) => {
@@ -1676,6 +1698,113 @@ export class ClassName implements IInterface {
         expect(fs.statSync(path.join(outdir, `${SPEC_FILE_NAME}.${lang}`)).isFile()).toBe(true);
       }
     }
+  }));
+
+test('transliterates submodule READMEs using the submodule FQN', () =>
+  withTemporaryDirectory(async (tmpDir) => {
+    // GIVEN a local assembly with a root README, a submodule README, and a type example
+    const compilationResult = jsii.compileJsiiForTest({
+      'README.md': ['# Root', '', '```ts', 'rootHello();', '```', ''].join('\n'),
+      'index.ts': `
+        export * as nested from './nested';
+
+        /**
+         * @example typeHello();
+         */
+        export class RootClass {}
+      `,
+      'nested/index.ts': `
+        /**
+         * @example nestedTypeHello();
+         */
+        export class NestedClass {}
+      `,
+      'nested/README.md': ['# Nested', '', '```ts', 'nestedHello();', '```', ''].join('\n'),
+    });
+    const assemblyName = compilationResult.assembly.name;
+    const submoduleFqn = `${assemblyName}.nested`;
+    expect(compilationResult.assembly.submodules?.[submoduleFqn]?.readme?.markdown).toContain('nestedHello();');
+
+    writeLocalAssembly(tmpDir, compilationResult);
+
+    // WHEN extract then transliterate without a preloaded tablet (end-to-end)
+    const { tablet } = await extractSnippets([tmpDir], {
+      includeCompilerDiagnostics: true,
+      writeToImplicitTablets: false,
+    });
+    expect(moduleReadmeApis(tablet)).toEqual(
+      expect.arrayContaining([
+        { api: 'moduleReadme', moduleFqn: assemblyName },
+        { api: 'moduleReadme', moduleFqn: submoduleFqn },
+      ]),
+    );
+
+    await expect(
+      transliterateAssembly([tmpDir], [TargetLanguage.PYTHON], {
+        strict: true,
+      }),
+    ).resolves.not.toThrow();
+
+    // THEN both READMEs and type docs are translated; other metadata is unchanged
+    const translated: Assembly = JSON.parse(fs.readFileSync(path.join(tmpDir, `${SPEC_FILE_NAME}.python`), 'utf-8'));
+
+    expect(translated.readme?.markdown).toMatch(/```python\b/);
+    expect(translated.readme?.markdown).toContain('root_hello()');
+    expect(translated.readme?.markdown).not.toMatch(/```ts\b/);
+
+    const submoduleReadme = translated.submodules?.[submoduleFqn]?.readme?.markdown;
+    expect(submoduleReadme).toMatch(/```python\b/);
+    expect(submoduleReadme).toContain('nested_hello()');
+    expect(submoduleReadme).not.toMatch(/```ts\b/);
+
+    expect(translated.types?.[`${assemblyName}.RootClass`]?.docs?.example).toContain('type_hello()');
+    expect(translated.types?.[`${submoduleFqn}.NestedClass`]?.docs?.example).toContain('nested_type_hello()');
+
+    expect(translated.name).toBe(compilationResult.assembly.name);
+    expect(translated.version).toBe(compilationResult.assembly.version);
+    expect(translated.license).toBe(compilationResult.assembly.license);
+    expect(translated.fingerprint).toBe(compilationResult.assembly.fingerprint);
+    expect(translated.author).toEqual(compilationResult.assembly.author);
+  }));
+
+test('transliterates submodule READMEs when the root README is absent', () =>
+  withTemporaryDirectory(async (tmpDir) => {
+    // GIVEN a local assembly whose only README lives on a submodule
+    const compilationResult = jsii.compileJsiiForTest({
+      'index.ts': `
+        export * as nested from './nested';
+
+        /**
+         * @example typeHello();
+         */
+        export class RootClass {}
+      `,
+      'nested/index.ts': 'export class NestedClass {}',
+      'nested/README.md': ['# Nested', '', '```ts', 'nestedHello();', '```', ''].join('\n'),
+    });
+    const assemblyName = compilationResult.assembly.name;
+    const submoduleFqn = `${assemblyName}.nested`;
+    expect(compilationResult.assembly.readme).toBeUndefined();
+    expect(compilationResult.assembly.submodules?.[submoduleFqn]?.readme?.markdown).toContain('nestedHello();');
+
+    writeLocalAssembly(tmpDir, compilationResult);
+
+    await expect(
+      transliterateAssembly([tmpDir], [TargetLanguage.PYTHON], {
+        strict: true,
+      }),
+    ).resolves.not.toThrow();
+
+    const translated: Assembly = JSON.parse(fs.readFileSync(path.join(tmpDir, `${SPEC_FILE_NAME}.python`), 'utf-8'));
+
+    expect(translated.readme).toBeUndefined();
+    const submoduleReadme = translated.submodules?.[submoduleFqn]?.readme?.markdown;
+    expect(submoduleReadme).toMatch(/```python\b/);
+    expect(submoduleReadme).toContain('nested_hello()');
+    expect(submoduleReadme).not.toMatch(/```ts\b/);
+    expect(translated.types?.[`${assemblyName}.RootClass`]?.docs?.example).toContain('type_hello()');
+    expect(translated.name).toBe(compilationResult.assembly.name);
+    expect(translated.fingerprint).toBe(compilationResult.assembly.fingerprint);
   }));
 
 test('transliterate works with zipped assembly files', async () =>
