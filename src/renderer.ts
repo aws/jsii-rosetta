@@ -384,15 +384,21 @@ export class AstRenderer<C> {
     // newline before a value inside a statement is not meaningful. Some
     // languages (Python) render it as a statement boundary, which can either
     // produce invalid syntax or silently change the program's behavior.
-    const isStatementBoundary =
-      ts.isStatement(node) || ts.isClassElement(node) || ts.isTypeElement(node) || ts.isEnumMember(node);
+    const parent = node.parent;
+    const isAssignedValue =
+      parent !== undefined &&
+      ((ts.isVariableDeclaration(parent) && parent.initializer === node) ||
+        (ts.isPropertyAssignment(parent) && parent.initializer === node) ||
+        (ts.isBinaryExpression(parent) &&
+          parent.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
+          parent.right === node));
 
     const precede: OTree[] = [];
     for (const range of leadingRanges) {
       let trivia: OTree | undefined = undefined;
       switch (range.type) {
         case 'other':
-          if (!isStatementBoundary) {
+          if (isAssignedValue) {
             break;
           }
           trivia = new OTree([repeatNewlines(this.sourceFile.text.substring(range.pos, range.end))], [], {
