@@ -43,7 +43,7 @@ const project = new typescript.TypeScriptProject({
     },
   },
 
-  minNodeVersion: '20.16.0', // Node.js 20 LTS
+  minNodeVersion: '22.13.0', // Minimum Node.js version supported by the AWS CDK
   tsconfig: {
     compilerOptions: {
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
@@ -94,7 +94,7 @@ const project = new typescript.TypeScriptProject({
   buildWorkflow: false, // We have our own build workflow (need matrix test)
   release: false, // We have our own release workflow
   defaultReleaseBranch: 'main',
-  workflowNodeVersion: 'lts/*', // upgrade workflows should run on latest lts version
+  workflowNodeVersion: 'lts/-1', // upgrade workflows should run on the previous LTS version
 
   autoApproveUpgrades: true,
   autoApproveOptions: {
