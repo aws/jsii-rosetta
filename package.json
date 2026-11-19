@@ -35,7 +35,7 @@
     "@actions/github": "^5.1.1",
     "@types/commonmark": "^0.27.10",
     "@types/jest": "^30",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/semver": "^7.8.0",
     "@types/tar": "^6.1.13",
     "@types/workerpool": "^6.4.7",
@@ -52,7 +52,7 @@
     "jest": "^30",
     "memfs": "^4.80.1",
     "prettier": "^2.8.8",
-    "projen": "^0.104.31",
+    "projen": "^0.105.1",
     "tar": "^7.5.23",
     "ts-jest": "^29",
     "ts-node": "^10.9.2"
@@ -73,7 +73,7 @@
     "yargs": "^17.7.3"
   },
   "engines": {
-    "node": ">= 20.16.0"
+    "node": ">= 22.13.0"
   },
   "devEngines": {
     "packageManager": {

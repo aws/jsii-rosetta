@@ -43,7 +43,7 @@ const project = new typescript.TypeScriptProject({
     },
   },
 
-  minNodeVersion: '20.16.0', // Node.js 20 LTS
+  minNodeVersion: '22.13.0', // Node.js 22 LTS
   tsconfig: {
     compilerOptions: {
       // @see https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
