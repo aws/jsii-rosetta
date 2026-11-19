@@ -313,6 +313,11 @@ export class BuildWorkflow {
       autoMerge.on({
         pullRequestTarget: {
           types: ['opened', 'reopened', 'ready_for_review'],
+          // Restrict to known branches: an unscoped trigger fires for a PR
+          // targeting ANY branch, letting anyone opt their own PR into
+          // "merge when ready" with a write-scoped bot token
+          // (see https://github.com/projen/projen/pull/5090).
+          branches: [opts.defaultBranch ?? 'main', 'maintenance/*'],
         },
       });
       autoMerge.addJob('enable-auto-merge', {

@@ -29,7 +29,7 @@ jobs:
         id: setup_node_js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
           cache: yarn
       - name: Cache build outputs
         id: cache_build_outputs
@@ -199,7 +199,7 @@ jobs:
         id: setup_node_js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
           cache: yarn
       - name: Install dependencies
         id: install_dependencies
