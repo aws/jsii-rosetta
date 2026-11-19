@@ -36,7 +36,7 @@ jobs:
         id: setup_node_js
         uses: actions/setup-node@v7.1.0
         with:
-          node-version: lts/-1
+          node-version: lts/*
           package-manager-cache: false
       - name: Install dependencies
         id: install_dependencies
