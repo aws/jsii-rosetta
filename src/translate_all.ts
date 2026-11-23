@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import * as workerpool from 'workerpool';
@@ -7,6 +9,35 @@ import { TypeScriptSnippet } from './snippet';
 import { TranslatedSnippet } from './tablets/tablets';
 import { RosettaDiagnostic, SnippetTimingInfo, extractTimingInfo } from './translate';
 import type { TranslateBatchRequest, TranslateBatchResponse } from './translate_all_worker';
+
+const TRANSLATE_ALL_WORKER = 'translate_all_worker.js';
+
+/**
+ * Locate the workerpool script for `translate_all_worker`.
+ *
+ * Published `lib/` layout: the worker is next to this file (`__dirname`).
+ * Bundlers such as esbuild rewrite `__dirname` to the bundle directory and do not
+ * copy this dynamic worker path, so fall back to the installed package
+ * (`jsii-rosetta/package.json` is on the exports map).
+ */
+export function resolveTranslateAllWorker(fromDir: string = __dirname, fromFile: string = __filename): string {
+  const localWorker = path.join(fromDir, TRANSLATE_ALL_WORKER);
+  if (existsSync(localWorker)) {
+    return localWorker;
+  }
+
+  try {
+    const packageJson = createRequire(fromFile).resolve('jsii-rosetta/package.json');
+    const packagedWorker = path.join(path.dirname(packageJson), 'lib', TRANSLATE_ALL_WORKER);
+    if (existsSync(packagedWorker)) {
+      return packagedWorker;
+    }
+  } catch {
+    // Package not resolvable from this location.
+  }
+
+  return localWorker;
+}
 
 /**
  * Divide the work evenly over all processors by running 'translate_all_worker' in Worker Threads, then combine results
@@ -34,7 +65,7 @@ export async function translateAll(
   const batchesOf = batchSize ? ` (in batches of ${batchSize})` : '';
   logging.info(`Translating ${snippetArr.length} snippets using ${N} workers${batchesOf}`);
 
-  const pool = workerpool.pool(path.join(__dirname, 'translate_all_worker.js'), {
+  const pool = workerpool.pool(resolveTranslateAllWorker(), {
     maxWorkers: N,
   });
 
