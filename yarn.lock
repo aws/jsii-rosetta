@@ -1162,17 +1162,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jsii/check-node@npm:1.142.0":
-  version: 1.142.0
-  resolution: "@jsii/check-node@npm:1.142.0"
-  dependencies:
-    chalk: "npm:^4.1.2"
-    semver: "npm:^7.8.5"
-  checksum: 10c0/f35992d439ab1b6abf483b56b52326ea299815fea72f9aa945d13d237db270747c2449a47d0c9dc2538f65bff9d7482b09adc22e9f60e90275dd79258da92a4a
-  languageName: node
-  linkType: hard
-
-"@jsii/check-node@npm:^1.143.0":
+"@jsii/check-node@npm:1.143.0, @jsii/check-node@npm:^1.143.0":
   version: 1.143.0
   resolution: "@jsii/check-node@npm:1.143.0"
   dependencies:
@@ -5452,10 +5442,10 @@ __metadata:
   linkType: soft
 
 "jsii@npm:~6.0.0":
-  version: 6.0.24
-  resolution: "jsii@npm:6.0.24"
+  version: 6.0.25
+  resolution: "jsii@npm:6.0.25"
   dependencies:
-    "@jsii/check-node": "npm:1.142.0"
+    "@jsii/check-node": "npm:1.143.0"
     "@jsii/spec": "npm:1.143.0"
     case: "npm:^1.6.3"
     chalk: "npm:^4"
@@ -5469,7 +5459,7 @@ __metadata:
     yargs: "npm:^17.7.3"
   bin:
     jsii: bin/jsii
-  checksum: 10c0/4ee8d8ba2db129b6fe9876b44a04ef20261f592917c26b8becb60a8e6e98eefb9428807664539c2056f63e5ac6397de38e7a45b147dbebcb460dace0142caf0e
+  checksum: 10c0/d1ecb3b6f45b9dfdaa03a07f21900309b0915329a337fbf2301410f6cfb23c99d88cf44ce45fc7120c6ed4c95208f208f7673741245d5f8a6dfa0acd637d0b4a
   languageName: node
   linkType: hard
 
