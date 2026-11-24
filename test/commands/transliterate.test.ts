@@ -8,6 +8,7 @@ import { transliterateAssembly } from '../../lib/commands/transliterate';
 import { TargetLanguage, targetName } from '../../lib/languages/target-language';
 import { TabletSchema } from '../../lib/tablets/schema';
 import { LanguageTablet } from '../../lib/tablets/tablets';
+import { fakeAssembly } from '../jsii/fake-assembly';
 import { withTemporaryDirectory, TestJsiiModule, DUMMY_JSII_CONFIG } from '../testutil';
 
 jest.setTimeout(60_000);
@@ -38,6 +39,59 @@ function moduleReadmeApis(tablet: LanguageTablet) {
     .map((key) => tablet.tryGetSnippet(key)?.snippet.location.api)
     .filter((api) => api?.api === 'moduleReadme');
 }
+
+test('transliterates examples on re-declared interface members separately from their base members', () =>
+  withTemporaryDirectory(async (tmpDir) => {
+    const compiled = jsii.compileJsiiForTest({
+      'index.ts': `
+        export interface BaseOptions {
+          /**
+           * @default true
+           * @example const baseMarker = true;
+           */
+          readonly marker?: boolean;
+        }
+        export interface ChildOptions extends BaseOptions {
+          /**
+           * @default false
+           * @example const childMarker = false;
+           */
+          readonly marker?: boolean;
+        }
+      `,
+    });
+    const base = `${compiled.assembly.name}.BaseOptions`;
+    const child = `${compiled.assembly.name}.ChildOptions`;
+    writeLocalAssembly(tmpDir, compiled);
+
+    const { tablet } = await extractSnippets([tmpDir]);
+    const locations = tablet.snippetKeys.map((key) => tablet.tryGetSnippet(key)?.snippet.location.api);
+    expect(locations).toEqual(
+      expect.arrayContaining([
+        { api: 'member', fqn: base, memberName: 'marker' },
+        { api: 'member', fqn: child, memberName: 'marker' },
+      ]),
+    );
+
+    await transliterateAssembly([tmpDir], [TargetLanguage.PYTHON], { strict: true });
+    const translated = JSON.parse(fs.readFileSync(path.join(tmpDir, `${SPEC_FILE_NAME}.python`), 'utf-8'));
+    expect(translated).toMatchObject({
+      usedFeatures: ['interface-member-doc-overrides'],
+      types: {
+        [base]: { properties: [{ name: 'marker', docs: { default: 'true', example: 'base_marker = True' } }] },
+        [child]: { properties: [{ name: 'marker', docs: { default: 'false', example: 'child_marker = False' } }] },
+      },
+    });
+  }));
+
+test('rejects assemblies declaring an unknown feature', () =>
+  withTemporaryDirectory(async (tmpDir) => {
+    fs.writeFileSync(
+      path.join(tmpDir, SPEC_FILE_NAME),
+      JSON.stringify({ ...fakeAssembly({}), usedFeatures: ['future-feature'] }),
+    );
+    await expect(extractSnippets([tmpDir])).rejects.toThrow('unsupported feature(s): future-feature');
+  }));
 
 test('single assembly, all languages', () =>
   withTemporaryDirectory(async (tmpDir) => {
