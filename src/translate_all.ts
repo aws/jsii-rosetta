@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import * as workerpool from 'workerpool';
@@ -22,7 +23,15 @@ export async function translateAll(
   snippets: TypeScriptSnippet[],
   includeCompilerDiagnostics: boolean,
   batchSize?: number,
+  workerScript = path.join(__dirname, 'translate_all_worker.js'),
 ): Promise<TranslateAllResult> {
+  if (!existsSync(workerScript)) {
+    throw new Error(
+      `jsii-rosetta worker script not found: ${workerScript}. ` +
+        'If you bundle jsii-rosetta, also bundle its worker as translate_all_worker.js next to your bundle, ' +
+        'see https://github.com/aws/jsii-rosetta#bundling-jsii-rosetta',
+    );
+  }
   // Use about half the advertised cores because hyperthreading doesn't seem to
   // help that much, or we become I/O-bound at some point. On my machine, using
   // more than half the cores actually makes it slower.
@@ -34,7 +43,7 @@ export async function translateAll(
   const batchesOf = batchSize ? ` (in batches of ${batchSize})` : '';
   logging.info(`Translating ${snippetArr.length} snippets using ${N} workers${batchesOf}`);
 
-  const pool = workerpool.pool(path.join(__dirname, 'translate_all_worker.js'), {
+  const pool = workerpool.pool(workerScript, {
     maxWorkers: N,
   });
 
