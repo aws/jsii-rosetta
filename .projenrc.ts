@@ -171,6 +171,8 @@ project.vscode!.settings.addSetting('eslint.validate', ['typescript']);
 // Exports map...
 project.package.addField('exports', {
   '.': `./${project.package.entrypoint}`,
+  // Worker script used by translateAll(), exported so bundlers can emit it as a separate entry point
+  './translate_all_worker': './lib/translate_all_worker.js',
   './package.json': './package.json',
 });
 

@@ -392,6 +392,21 @@ The diagram below shows how data flows through the jsii tools when used together
 
 ## Advanced topics
 
+### Bundling jsii-rosetta
+
+`jsii-rosetta` translates snippets in worker threads that run the separate script
+`translate_all_worker.js`. It loads that script from the same directory as its own code.
+Bundlers like esbuild don't detect worker scripts, so if you bundle `jsii-rosetta` you need
+to emit the worker as an extra entry point named `translate_all_worker.js`, next to your bundle:
+
+```sh
+esbuild index.ts jsii-rosetta/translate_all_worker \
+  --bundle --platform=node --outdir=dist '--entry-names=[name]'
+```
+
+If the worker script is missing, `jsii-rosetta` logs a warning and translates all snippets
+in the main thread, which is slower.
+
 ### Hiding code from samples
 
 In order to make examples compile, boilerplate code may need to be added that detracts from the example at hand (such as
