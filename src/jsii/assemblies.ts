@@ -29,7 +29,11 @@ import { fmap, mkDict, pathExists, sortBy } from '../util';
  * we technically should advertise a known list here anyway since we don't
  * know what future extension are going to be.
  */
-export const SUPPORTED_ASSEMBLY_FEATURES: spec.JsiiFeature[] = ['intersection-types', 'class-covariant-overrides'];
+export const SUPPORTED_ASSEMBLY_FEATURES: spec.JsiiFeature[] = [
+  'intersection-types',
+  'class-covariant-overrides',
+  'interface-member-doc-overrides',
+];
 
 /**
  * The JSDoc tag users can use to associate non-visible metadata with an example
