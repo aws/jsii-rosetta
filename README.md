@@ -404,8 +404,7 @@ esbuild index.ts jsii-rosetta/translate_all_worker \
   --bundle --platform=node --outdir=dist '--entry-names=[name]'
 ```
 
-If the worker script is missing, `jsii-rosetta` logs a warning and translates all snippets
-in the main thread, which is slower.
+If the worker script is missing, `translateAll()` throws an error that points to this section.
 
 ### Hiding code from samples
 
