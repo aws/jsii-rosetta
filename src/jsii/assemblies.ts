@@ -481,9 +481,10 @@ async function withDependencies(asm: LoadedAssembly, snippet: TypeScriptSnippet)
   Object.assign(
     compilationDependencies,
     mkDict(
-      Object.entries(asm.packageJson?.jsiiRosetta?.exampleDependencies ?? {}).map(
-        ([name, versionRange]) => [name, { type: 'symbolic', versionRange }] as const,
-      ),
+      Object.entries(asm.packageJson?.jsiiRosetta?.exampleDependencies ?? {})
+        // The package itself is already available from disk, don't replace it with a version range
+        .filter(([name]) => name !== asm.assembly.name)
+        .map(([name, versionRange]) => [name, { type: 'symbolic', versionRange }] as const),
     ),
   );
 

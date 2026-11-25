@@ -4,7 +4,7 @@ import * as spec from '@jsii/spec';
 import { Volume } from 'memfs';
 
 import { fakeAssembly } from './fake-assembly';
-import { allTypeScriptSnippets } from '../../lib/jsii/assemblies';
+import { allTypeScriptSnippets, loadAssemblies } from '../../lib/jsii/assemblies';
 import { SnippetParameters } from '../../lib/snippet';
 import { TestJsiiModule, DUMMY_JSII_CONFIG } from '../testutil';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -273,6 +273,45 @@ test('rosetta fixture from submodule is preferred if it exists', async () => {
     ]);
 
     expect(snippets[0].completeSource).toMatch(/^pick me/);
+  } finally {
+    jsiiModule.cleanup();
+  }
+});
+
+test('exampleDependencies do not replace the package itself', async () => {
+  const jsiiModule = TestJsiiModule.fromSource(
+    {
+      'index.ts': `
+        /**
+         * @example
+         * import { ClassA } from 'my_assembly';
+         * new ClassA();
+         */
+        export class ClassA {
+        }`,
+    },
+    {
+      name: 'my_assembly',
+      jsii: DUMMY_JSII_CONFIG,
+      jsiiRosetta: {
+        exampleDependencies: {
+          'my_assembly': '*',
+          'other-package': '^1.0.0',
+        },
+      },
+    },
+  );
+  try {
+    const snippets = await allTypeScriptSnippets(loadAssemblies([jsiiModule.moduleDirectory], false));
+
+    expect(snippets[0].compilationDependencies?.my_assembly).toEqual({
+      type: 'concrete',
+      resolvedDirectory: await fs.realpath(jsiiModule.moduleDirectory),
+    });
+    expect(snippets[0].compilationDependencies?.['other-package']).toEqual({
+      type: 'symbolic',
+      versionRange: '^1.0.0',
+    });
   } finally {
     jsiiModule.cleanup();
   }
